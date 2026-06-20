@@ -25,8 +25,9 @@ export async function updateDonationSettingsAction(
   _prevState: DonationActionState,
   formData: FormData
 ): Promise<DonationActionState> {
+  await requireRole(["ADMIN"]);
+
   try {
-    await requireRole(["ADMIN"]);
 
     await prisma.donationSettings.upsert({
       where: { id: "default" },

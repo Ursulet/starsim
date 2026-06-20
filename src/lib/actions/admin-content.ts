@@ -78,6 +78,7 @@ function contentSlug(formData: FormData, fallback: string) {
   return slugify(str(formData, "slug") || fallback);
 }
 
+// requireAccess is called OUTSIDE try/catch so that redirect() can propagate freely
 async function requireAccess(type: AdminContentType) {
   if (type === "utilizatori") return requireRole(["ADMIN"]);
   return requireRole(["ADMIN", "EDITOR"]);
@@ -92,13 +93,7 @@ async function logAdminAction(
 ) {
   try {
     await prisma.auditLog.create({
-      data: {
-        actorId: user.id,
-        action,
-        entity,
-        entityId,
-        metadata
-      }
+      data: { actorId: user.id, action, entity, entityId, metadata }
     });
   } catch {}
 }
@@ -128,7 +123,6 @@ async function mediaIdFromForm(
     });
     return asset.id;
   }
-
   return nullable(formData, fieldName);
 }
 
@@ -158,15 +152,20 @@ async function assertSafeUserDelete(id: string, user: AdminUser) {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// CREATE
+// ─────────────────────────────────────────────────────────────────────────────
 export async function createAdminContentAction(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  try {
-    const type = typedModule(formData);
-    const user = await requireAccess(type);
-    let entityId: string | undefined;
+  // Auth check OUTSIDE try/catch so redirect() propagates correctly
+  const type = typedModule(formData);
+  const user = await requireAccess(type);
 
+  let entityId: string | undefined;
+
+  try {
     switch (type) {
       case "programe": {
         const status = str(formData, "status") || "DRAFT";
@@ -258,7 +257,7 @@ export async function createAdminContentAction(
             category: nullable(formData, "category"),
             tags: str(formData, "tags")
               .split(",")
-              .map((item) => item.trim())
+              .map((t) => t.trim())
               .filter(Boolean),
             status: status as any,
             featuredOnHome: boolValue(formData, "featuredOnHome"),
@@ -336,27 +335,30 @@ export async function createAdminContentAction(
         break;
       }
     }
-
-    await logAdminAction(user, "CREATE", typedModule(formData), entityId);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Eroare necunoscută.";
     return { error: message };
   }
 
-  redirectTo(typedModule(formData));
+  await logAdminAction(user, "CREATE", type, entityId);
+  redirectTo(type);
   return null;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// UPDATE
+// ─────────────────────────────────────────────────────────────────────────────
 export async function updateAdminContentAction(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  try {
-    const type = typedModule(formData);
-    const user = await requireAccess(type);
-    const id = str(formData, "id");
-    if (!id) throw new Error("Element lipsă.");
+  // Auth check OUTSIDE try/catch so redirect() propagates correctly
+  const type = typedModule(formData);
+  const user = await requireAccess(type);
+  const id = str(formData, "id");
+  if (!id) return { error: "Element lipsă." };
 
+  try {
     switch (type) {
       case "programe": {
         const status = str(formData, "status") || "DRAFT";
@@ -449,7 +451,7 @@ export async function updateAdminContentAction(
             category: nullable(formData, "category"),
             tags: str(formData, "tags")
               .split(",")
-              .map((item) => item.trim())
+              .map((t) => t.trim())
               .filter(Boolean),
             status: status as any,
             featuredOnHome: boolValue(formData, "featuredOnHome"),
@@ -512,11 +514,7 @@ export async function updateAdminContentAction(
           const stored = await saveUploadedFile(file, metadata.folder || "media");
           await prisma.mediaAsset.update({
             where: { id },
-            data: {
-              ...stored,
-              ...metadata,
-              uploadedById: user.id
-            }
+            data: { ...stored, ...metadata, uploadedById: user.id }
           });
           await deleteStoredUpload(current.storageKey);
         } else {
@@ -544,27 +542,30 @@ export async function updateAdminContentAction(
         break;
       }
     }
-
-    await logAdminAction(user, "UPDATE", typedModule(formData), id);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Eroare necunoscută.";
     return { error: message };
   }
 
-  redirectTo(typedModule(formData));
+  await logAdminAction(user, "UPDATE", type, id);
+  redirectTo(type);
   return null;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// DELETE
+// ─────────────────────────────────────────────────────────────────────────────
 export async function deleteAdminContentAction(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  try {
-    const type = typedModule(formData);
-    const user = await requireAccess(type);
-    const id = str(formData, "id");
-    if (!id) throw new Error("Element lipsă.");
+  // Auth check OUTSIDE try/catch so redirect() propagates correctly
+  const type = typedModule(formData);
+  const user = await requireAccess(type);
+  const id = str(formData, "id");
+  if (!id) return { error: "Element lipsă." };
 
+  try {
     switch (type) {
       case "programe":
         await prisma.program.delete({ where: { id } });
@@ -595,13 +596,12 @@ export async function deleteAdminContentAction(
         await prisma.user.delete({ where: { id } });
         break;
     }
-
-    await logAdminAction(user, "DELETE", type, id);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Eroare necunoscută.";
     return { error: message };
   }
 
-  redirectTo(typedModule(formData));
+  await logAdminAction(user, "DELETE", type, id);
+  redirectTo(type);
   return null;
 }

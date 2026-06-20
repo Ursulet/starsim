@@ -43,8 +43,6 @@ function normalizeKey(input: string) {
 }
 
 async function parsePageForm(formData: FormData) {
-  await requireRole(["ADMIN", "EDITOR"]);
-
   const raw = {
     id: String(formData.get("id") || "") || undefined,
     key: String(formData.get("key") || ""),
@@ -83,6 +81,7 @@ export async function createPageAction(
   _prevState: PageActionState,
   formData: FormData
 ): Promise<PageActionState> {
+  await requireRole(["ADMIN", "EDITOR"]);
   let page: { id: string; slug: string } | undefined;
 
   try {
@@ -118,6 +117,7 @@ export async function updatePageAction(
   _prevState: PageActionState,
   formData: FormData
 ): Promise<PageActionState> {
+  await requireRole(["ADMIN", "EDITOR"]);
   let page: { id: string; slug: string } | undefined;
 
   try {
@@ -154,11 +154,10 @@ export async function deletePageAction(
   _prevState: PageActionState,
   formData: FormData
 ): Promise<PageActionState> {
+  await requireRole(["ADMIN", "EDITOR"]);
   let page: { id: string; slug: string } | undefined;
 
   try {
-    await requireRole(["ADMIN", "EDITOR"]);
-
     const id = String(formData.get("id") || "").trim();
     if (!id) throw new Error("Pagina lipsește.");
 

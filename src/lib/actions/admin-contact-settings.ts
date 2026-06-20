@@ -44,9 +44,10 @@ export async function updateContactSettingsAction(
   _prevState: ContactActionState,
   formData: FormData
 ): Promise<ContactActionState> {
-  try {
-    await requireRole(["ADMIN"]);
+  // Auth check OUTSIDE try/catch so redirect() propagates correctly
+  await requireRole(["ADMIN"]);
 
+  try {
     const parsed = contactSettingsSchema.parse({
       email: String(formData.get("email") || ""),
       phone: String(formData.get("phone") || ""),
@@ -66,15 +67,8 @@ export async function updateContactSettingsAction(
 
     await prisma.contactSettings.upsert({
       where: { id: "default" },
-      update: {
-        ...parsed,
-        email: parsed.email || null
-      },
-      create: {
-        id: "default",
-        ...parsed,
-        email: parsed.email || null
-      }
+      update: { ...parsed, email: parsed.email || null },
+      create: { id: "default", ...parsed, email: parsed.email || null }
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Eroare necunoscută.";

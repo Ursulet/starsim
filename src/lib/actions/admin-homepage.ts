@@ -24,9 +24,10 @@ export async function updateHomepageSettingsAction(
   _prevState: HomepageActionState,
   formData: FormData
 ): Promise<HomepageActionState> {
-  try {
-    const user = await requireRole(["ADMIN"]);
+  // Auth check OUTSIDE try/catch so redirect() propagates correctly
+  const user = await requireRole(["ADMIN"]);
 
+  try {
     const current = normalizeHomepageSettings(
       (
         await prisma.siteSettings.findUnique({
