@@ -1,12 +1,13 @@
 import { DonationSettingsForm } from "@/components/admin/DonationSettingsForm";
 import { getDonationSettings } from "@/lib/queries/settings";
+import { requireRole } from "@/server/auth/session";
 
 export default async function Page({
   searchParams
 }: {
   searchParams?: Promise<{ updated?: string }>;
 }) {
-  const [settings, params] = await Promise.all([getDonationSettings(), searchParams]);
+  const [, settings, params] = await Promise.all([requireRole(["ADMIN"]), getDonationSettings(), searchParams]);
 
   return (
     <section>

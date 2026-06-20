@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
-import { requireAdminUser } from "@/server/auth/session";
+import { requireRole } from "@/server/auth/session";
 
 const pageSchema = z.object({
   id: z.string().optional(),
@@ -41,7 +41,7 @@ function normalizeKey(input: string) {
 }
 
 async function parsePageForm(formData: FormData) {
-  await requireAdminUser();
+  await requireRole(["ADMIN", "EDITOR"]);
 
   const raw = {
     id: String(formData.get("id") || "") || undefined,
@@ -70,6 +70,13 @@ async function parsePageForm(formData: FormData) {
   };
 }
 
+async function logPageAction(action: string, entityId?: string) {
+  try {
+    const user = await requireRole(["ADMIN", "EDITOR"]);
+    await prisma.auditLog.create({ data: { actorId: user.id, action, entity: "pagini", entityId } });
+  } catch {}
+}
+
 export async function createPageAction(formData: FormData) {
   const data = await parsePageForm(formData);
 
@@ -91,6 +98,7 @@ export async function createPageAction(formData: FormData) {
   revalidatePath("/");
   revalidatePath(`/${page.slug}`);
   revalidatePath("/admin/pagini");
+  await logPageAction("CREATE", page.id);
   redirect(`/admin/pagini/${page.id}/edit`);
 }
 
@@ -116,5 +124,21 @@ export async function updatePageAction(formData: FormData) {
   revalidatePath("/");
   revalidatePath(`/${page.slug}`);
   revalidatePath("/admin/pagini");
+  await logPageAction("UPDATE", page.id);
+  redirect("/admin/pagini");
+}
+
+export async function deletePageAction(formData: FormData) {
+  await requireRole(["ADMIN", "EDITOR"]);
+
+  const id = String(formData.get("id") || "").trim();
+  if (!id) throw new Error("Pagina lipsește.");
+
+  const page = await prisma.page.delete({ where: { id } });
+
+  revalidatePath("/");
+  revalidatePath(`/${page.slug}`);
+  revalidatePath("/admin/pagini");
+  await logPageAction("DELETE", page.id);
   redirect("/admin/pagini");
 }

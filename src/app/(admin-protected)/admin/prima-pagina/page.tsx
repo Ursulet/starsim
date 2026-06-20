@@ -1,12 +1,13 @@
 import { HomepageSettingsForm } from "@/components/admin/HomepageSettingsForm";
 import { getHomepageSettings } from "@/lib/queries/home";
+import { requireRole } from "@/server/auth/session";
 
 export default async function AdminHomepagePage({
   searchParams
 }: {
   searchParams?: Promise<{ updated?: string }>;
 }) {
-  const [settings, params] = await Promise.all([getHomepageSettings(), searchParams]);
+  const [, settings, params] = await Promise.all([requireRole(["ADMIN"]), getHomepageSettings(), searchParams]);
 
   return (
     <section>

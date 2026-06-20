@@ -8,6 +8,7 @@ const envSchema = z.object({
   SEED_ADMIN_EMAIL: z.string().email().default("admin@starsim.ro"),
   SEED_ADMIN_PASSWORD: z.string().min(12).default("replace-with-a-strong-admin-password"),
   SEED_ADMIN_NAME: z.string().min(2).default("Star Sim Admin"),
+  UPLOAD_DIR: z.string().min(1).optional(),
   MAX_UPLOAD_MB: z.coerce.number().min(1).max(50).default(10)
 });
 

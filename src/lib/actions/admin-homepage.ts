@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { defaultHomepageSettings, normalizeHomepageSettings, type HomepageSettings } from "@/lib/homepage-settings";
 import { prisma } from "@/lib/prisma";
-import { requireAdminUser } from "@/server/auth/session";
+import { createMediaAssetFromUpload, uploadedFileFromForm } from "@/lib/uploads";
+import { requireRole } from "@/server/auth/session";
 
 function text(formData: FormData, key: string, fallback: string) {
   return String(formData.get(key) || "").trim() || fallback;
@@ -18,7 +19,7 @@ function cleanHref(value: string, fallback: string) {
 }
 
 export async function updateHomepageSettingsAction(formData: FormData) {
-  await requireAdminUser();
+  const user = await requireRole(["ADMIN"]);
 
   const current = normalizeHomepageSettings(
     (
@@ -29,9 +30,28 @@ export async function updateHomepageSettingsAction(formData: FormData) {
     )?.value
   );
 
+  let heroImageUrl = current.heroImageUrl;
+  const heroUpload = uploadedFileFromForm(formData, "heroImageUpload");
+  const heroImageId = String(formData.get("heroImageId") || "").trim();
+
+  if (heroUpload) {
+    const asset = await createMediaAssetFromUpload({
+      file: heroUpload,
+      folder: "homepage",
+      uploadedById: user.id,
+      alt: text(formData, "heroImageAlt", "Imagine hero Star Sim")
+    });
+    heroImageUrl = asset.url;
+  } else if (heroImageId) {
+    const asset = await prisma.mediaAsset.findUnique({ where: { id: heroImageId }, select: { url: true } });
+    if (asset) heroImageUrl = asset.url;
+  } else {
+    heroImageUrl = cleanHref(text(formData, "currentHeroImageUrl", current.heroImageUrl), defaultHomepageSettings.heroImageUrl);
+  }
+
   const data: HomepageSettings = {
     heroIntro: text(formData, "heroIntro", current.heroIntro),
-    heroImageUrl: cleanHref(text(formData, "heroImageUrl", current.heroImageUrl), defaultHomepageSettings.heroImageUrl),
+    heroImageUrl,
     heroPrimaryLabel: text(formData, "heroPrimaryLabel", current.heroPrimaryLabel),
     heroPrimaryHref: cleanHref(text(formData, "heroPrimaryHref", current.heroPrimaryHref), current.heroPrimaryHref),
     heroSecondaryLabel: text(formData, "heroSecondaryLabel", current.heroSecondaryLabel),

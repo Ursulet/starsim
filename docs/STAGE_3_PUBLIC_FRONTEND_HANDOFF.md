@@ -36,7 +36,8 @@ Public pages read from Prisma and use development fallbacks when PostgreSQL is u
 - `AUTH_SECRET`
 - `NEXT_PUBLIC_SITE_URL`
 - seed admin variables
+- `UPLOAD_DIR` for persistent admin uploads
 
 ## Deployment notes
 
-Run migrations, seed the first admin, configure a persistent upload volume, and keep `.env` out of git.
+Run migrations, seed the first admin, configure a persistent upload volume such as `/app/uploads`, and keep `.env` out of git.

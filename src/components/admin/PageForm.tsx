@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ArrowLeft, ExternalLink, Save } from "lucide-react";
+import { PageDeleteButton } from "@/components/admin/PageDeleteButton";
 import { createPageAction, updatePageAction } from "@/lib/actions/admin-pages";
 import { extractPlainTextFromTiptapJson } from "@/lib/rich-text/extract-text";
 
@@ -74,10 +76,22 @@ export function PageForm({ page }: PageFormProps) {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">{page ? "Salvează pagina" : "Creează pagina"}</button>
-        <Link href="/admin/pagini" className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">Înapoi</Link>
-        {page?.status === "PUBLISHED" ? <Link href={`/${page.slug}`} className="rounded-xl border border-starsim-gold px-5 py-3 text-center text-sm font-bold text-starsim-navy">Vezi public</Link> : null}
+      <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:flex-wrap">
+        <button className="focus-ring inline-flex items-center justify-center gap-2 rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">
+          <Save className="h-4 w-4" />
+          {page ? "Salvează pagina" : "Creează pagina"}
+        </button>
+        <Link href="/admin/pagini" className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">
+          <ArrowLeft className="h-4 w-4" />
+          Înapoi
+        </Link>
+        {page?.status === "PUBLISHED" ? (
+          <Link href={`/${page.slug}`} className="inline-flex items-center justify-center gap-2 rounded-xl border border-starsim-gold px-5 py-3 text-center text-sm font-bold text-starsim-navy">
+            <ExternalLink className="h-4 w-4" />
+            Vezi public
+          </Link>
+        ) : null}
+        {page ? <PageDeleteButton id={page.id} inForm /> : null}
       </div>
     </form>
   );

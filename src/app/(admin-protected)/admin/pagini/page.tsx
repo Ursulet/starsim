@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
+import { PageDeleteButton } from "@/components/admin/PageDeleteButton";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/server/auth/session";
 
 async function getPages() {
   try {
@@ -21,6 +24,7 @@ async function getPages() {
 }
 
 export default async function AdminPagesPage() {
+  await requireRole(["ADMIN", "EDITOR"]);
   const pages = await getPages();
 
   return (
@@ -32,14 +36,15 @@ export default async function AdminPagesPage() {
             Editează paginile statice și legale: politica de confidențialitate, cookies, termeni și condiții.
           </p>
         </div>
-        <Link href="/admin/pagini/new" className="rounded-xl bg-starsim-navy px-4 py-3 text-sm font-bold text-white">
-          Adaugă pagina
+        <Link href="/admin/pagini/new" className="inline-flex items-center justify-center gap-2 rounded-xl bg-starsim-navy px-4 py-3 text-sm font-bold text-white">
+          <Plus className="h-4 w-4" />
+          Adaugă pagină
         </Link>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="mt-8 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
         {pages.length ? (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
               <tr>
                 <th className="px-4 py-3">Titlu</th>
@@ -60,9 +65,10 @@ export default async function AdminPagesPage() {
                   <td className="px-4 py-3"><StatusBadge status={page.status} /></td>
                   <td className="px-4 py-3 text-slate-500">{new Intl.DateTimeFormat("ro-RO", { dateStyle: "medium" }).format(page.updatedAt)}</td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <Link href={`/admin/pagini/${page.id}/edit`} className="font-semibold text-starsim-navy hover:text-starsim-gold">Editează</Link>
                       {page.status === "PUBLISHED" ? <Link href={`/${page.slug}`} className="font-semibold text-starsim-gold hover:text-starsim-navy">Vezi</Link> : null}
+                      <PageDeleteButton id={page.id} label="Șterge" />
                     </div>
                   </td>
                 </tr>

@@ -2,12 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { Prisma } from "@prisma/client";
+import type { Session } from "next-auth";
 import type { AdminContentType } from "@/lib/admin/content";
 import { adminContentModules } from "@/lib/admin/content";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
+import { createMediaAssetFromUpload, deleteStoredUpload, saveUploadedFile, uploadedFileFromForm } from "@/lib/uploads";
 import { hashPassword } from "@/server/auth/password";
-import { requireAdminUser, requireRole } from "@/server/auth/session";
+import { requireRole } from "@/server/auth/session";
+
+type AdminUser = Session["user"];
 
 function str(formData: FormData, key: string) {
   return String(formData.get(key) || "").trim();
@@ -72,12 +77,22 @@ function contentSlug(formData: FormData, fallback: string) {
 }
 
 async function requireAccess(type: AdminContentType) {
-  if (type === "utilizatori") {
-    await requireRole(["ADMIN"]);
-    return;
-  }
+  if (type === "utilizatori") return requireRole(["ADMIN"]);
+  return requireRole(["ADMIN", "EDITOR"]);
+}
 
-  await requireAdminUser();
+async function logAdminAction(user: AdminUser, action: string, entity: string, entityId?: string, metadata?: Prisma.InputJsonObject) {
+  try {
+    await prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action,
+        entity,
+        entityId,
+        metadata
+      }
+    });
+  } catch {}
 }
 
 function redirectTo(type: AdminContentType) {
@@ -88,18 +103,62 @@ function redirectTo(type: AdminContentType) {
   redirect(config.basePath);
 }
 
+async function mediaIdFromForm(formData: FormData, fieldName: string, folder: AdminContentType, user: AdminUser, fallbackAlt: string) {
+  const file = uploadedFileFromForm(formData, `${fieldName}Upload`);
+  if (file) {
+    const asset = await createMediaAssetFromUpload({
+      file,
+      folder,
+      uploadedById: user.id,
+      alt: str(formData, `${fieldName}Alt`) || fallbackAlt
+    });
+    return asset.id;
+  }
+
+  return nullable(formData, fieldName);
+}
+
+async function assertSafeUserUpdate(id: string, user: AdminUser, nextRole: string, nextStatus: string) {
+  const current = await prisma.user.findUnique({ where: { id }, select: { role: true, status: true } });
+  if (!current) throw new Error("Utilizatorul lipsește.");
+
+  if (id === user.id && (nextRole !== "ADMIN" || nextStatus !== "ACTIVE")) {
+    throw new Error("Nu îți poți elimina propriul acces de administrator.");
+  }
+
+  if (current.role === "ADMIN" && current.status === "ACTIVE" && (nextRole !== "ADMIN" || nextStatus !== "ACTIVE")) {
+    const activeAdmins = await prisma.user.count({ where: { role: "ADMIN", status: "ACTIVE" } });
+    if (activeAdmins <= 1) throw new Error("Nu poți dezactiva ultimul administrator activ.");
+  }
+}
+
+async function assertSafeUserDelete(id: string, user: AdminUser) {
+  if (id === user.id) throw new Error("Nu îți poți șterge propriul cont.");
+
+  const target = await prisma.user.findUnique({ where: { id }, select: { role: true, status: true } });
+  if (!target) throw new Error("Utilizatorul lipsește.");
+
+  if (target.role === "ADMIN" && target.status === "ACTIVE") {
+    const activeAdmins = await prisma.user.count({ where: { role: "ADMIN", status: "ACTIVE" } });
+    if (activeAdmins <= 1) throw new Error("Nu poți șterge ultimul administrator activ.");
+  }
+}
+
 export async function createAdminContentAction(formData: FormData) {
   const type = typedModule(formData);
-  await requireAccess(type);
+  const user = await requireAccess(type);
+  let entityId: string | undefined;
 
   switch (type) {
     case "programe": {
       const status = str(formData, "status") || "DRAFT";
-      await prisma.program.create({
+      const title = str(formData, "title");
+      const item = await prisma.program.create({
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           excerpt: str(formData, "excerpt"),
+          heroImageId: await mediaIdFromForm(formData, "heroImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           category: nullable(formData, "category"),
           icon: nullable(formData, "icon"),
@@ -113,15 +172,18 @@ export async function createAdminContentAction(formData: FormData) {
           metaDescription: nullable(formData, "metaDescription")
         }
       });
+      entityId = item.id;
       break;
     }
     case "evenimente": {
       const status = str(formData, "status") || "DRAFT";
-      await prisma.event.create({
+      const title = str(formData, "title");
+      const item = await prisma.event.create({
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           excerpt: str(formData, "excerpt"),
+          heroImageId: await mediaIdFromForm(formData, "heroImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           startsAt: dateValue(formData, "startsAt", new Date()) || new Date(),
           endsAt: dateValue(formData, "endsAt"),
@@ -140,15 +202,18 @@ export async function createAdminContentAction(formData: FormData) {
           metaDescription: nullable(formData, "metaDescription")
         }
       });
+      entityId = item.id;
       break;
     }
     case "galerie": {
       const status = str(formData, "status") || "DRAFT";
-      await prisma.galleryAlbum.create({
+      const title = str(formData, "title");
+      const item = await prisma.galleryAlbum.create({
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           description: nullable(formData, "description"),
+          coverImageId: await mediaIdFromForm(formData, "coverImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           status: status as any,
           featuredOnHome: boolValue(formData, "featuredOnHome"),
@@ -158,15 +223,18 @@ export async function createAdminContentAction(formData: FormData) {
           metaDescription: nullable(formData, "metaDescription")
         }
       });
+      entityId = item.id;
       break;
     }
     case "articole": {
       const status = str(formData, "status") || "DRAFT";
-      await prisma.article.create({
+      const title = str(formData, "title");
+      const item = await prisma.article.create({
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           excerpt: str(formData, "excerpt"),
+          heroImageId: await mediaIdFromForm(formData, "heroImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           authorName: nullable(formData, "authorName"),
           category: nullable(formData, "category"),
@@ -179,14 +247,17 @@ export async function createAdminContentAction(formData: FormData) {
           metaDescription: nullable(formData, "metaDescription")
         }
       });
+      entityId = item.id;
       break;
     }
     case "parteneri": {
-      await prisma.partner.create({
+      const name = str(formData, "name");
+      const item = await prisma.partner.create({
         data: {
-          name: str(formData, "name"),
-          slug: contentSlug(formData, str(formData, "name")),
+          name,
+          slug: contentSlug(formData, name),
           description: nullable(formData, "description"),
+          logoId: await mediaIdFromForm(formData, "logoId", type, user, name),
           website: nullable(formData, "website"),
           type: nullable(formData, "type"),
           status: (str(formData, "status") || "DRAFT") as any,
@@ -194,13 +265,16 @@ export async function createAdminContentAction(formData: FormData) {
           sortOrder: intValue(formData, "sortOrder")
         }
       });
+      entityId = item.id;
       break;
     }
     case "testimoniale": {
-      await prisma.testimonial.create({
+      const authorName = str(formData, "authorName");
+      const item = await prisma.testimonial.create({
         data: {
           quote: str(formData, "quote"),
-          authorName: str(formData, "authorName"),
+          authorName,
+          imageId: await mediaIdFromForm(formData, "imageId", type, user, authorName),
           authorRole: nullable(formData, "authorRole"),
           organization: nullable(formData, "organization"),
           status: (str(formData, "status") || "DRAFT") as any,
@@ -208,30 +282,27 @@ export async function createAdminContentAction(formData: FormData) {
           sortOrder: intValue(formData, "sortOrder")
         }
       });
+      entityId = item.id;
       break;
     }
     case "media": {
-      await prisma.mediaAsset.create({
-        data: {
-          filename: str(formData, "filename"),
-          url: str(formData, "url"),
-          mimeType: str(formData, "mimeType") || "image/jpeg",
-          type: (str(formData, "type") || "IMAGE") as any,
-          alt: nullable(formData, "alt"),
-          caption: nullable(formData, "caption"),
-          credit: nullable(formData, "credit"),
-          folder: nullable(formData, "folder"),
-          size: intValue(formData, "size"),
-          width: optionalInt(formData, "width"),
-          height: optionalInt(formData, "height")
-        }
+      const file = uploadedFileFromForm(formData, "file");
+      if (!file) throw new Error("Alege un fișier pentru upload.");
+      const asset = await createMediaAssetFromUpload({
+        file,
+        folder: nullable(formData, "folder") || "media",
+        uploadedById: user.id,
+        alt: nullable(formData, "alt"),
+        caption: nullable(formData, "caption"),
+        credit: nullable(formData, "credit")
       });
+      entityId = asset.id;
       break;
     }
     case "utilizatori": {
       const password = str(formData, "password");
-      if (password.length < 8) throw new Error("Parola trebuie să aibă minim 8 caractere.");
-      await prisma.user.create({
+      if (password.length < 12) throw new Error("Parola trebuie să aibă minim 12 caractere.");
+      const item = await prisma.user.create({
         data: {
           name: str(formData, "name"),
           email: str(formData, "email").toLowerCase(),
@@ -240,28 +311,32 @@ export async function createAdminContentAction(formData: FormData) {
           status: (str(formData, "status") || "ACTIVE") as any
         }
       });
+      entityId = item.id;
       break;
     }
   }
 
+  await logAdminAction(user, "CREATE", type, entityId);
   redirectTo(type);
 }
 
 export async function updateAdminContentAction(formData: FormData) {
   const type = typedModule(formData);
-  await requireAccess(type);
+  const user = await requireAccess(type);
   const id = str(formData, "id");
   if (!id) throw new Error("Element lipsă.");
 
   switch (type) {
     case "programe": {
       const status = str(formData, "status") || "DRAFT";
+      const title = str(formData, "title");
       await prisma.program.update({
         where: { id },
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           excerpt: str(formData, "excerpt"),
+          heroImageId: await mediaIdFromForm(formData, "heroImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           category: nullable(formData, "category"),
           icon: nullable(formData, "icon"),
@@ -279,12 +354,14 @@ export async function updateAdminContentAction(formData: FormData) {
     }
     case "evenimente": {
       const status = str(formData, "status") || "DRAFT";
+      const title = str(formData, "title");
       await prisma.event.update({
         where: { id },
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           excerpt: str(formData, "excerpt"),
+          heroImageId: await mediaIdFromForm(formData, "heroImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           startsAt: dateValue(formData, "startsAt", new Date()) || new Date(),
           endsAt: dateValue(formData, "endsAt"),
@@ -307,12 +384,14 @@ export async function updateAdminContentAction(formData: FormData) {
     }
     case "galerie": {
       const status = str(formData, "status") || "DRAFT";
+      const title = str(formData, "title");
       await prisma.galleryAlbum.update({
         where: { id },
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           description: nullable(formData, "description"),
+          coverImageId: await mediaIdFromForm(formData, "coverImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           status: status as any,
           featuredOnHome: boolValue(formData, "featuredOnHome"),
@@ -326,12 +405,14 @@ export async function updateAdminContentAction(formData: FormData) {
     }
     case "articole": {
       const status = str(formData, "status") || "DRAFT";
+      const title = str(formData, "title");
       await prisma.article.update({
         where: { id },
         data: {
-          title: str(formData, "title"),
-          slug: contentSlug(formData, str(formData, "title")),
+          title,
+          slug: contentSlug(formData, title),
           excerpt: str(formData, "excerpt"),
+          heroImageId: await mediaIdFromForm(formData, "heroImageId", type, user, title),
           content: textToTiptap(str(formData, "body")),
           authorName: nullable(formData, "authorName"),
           category: nullable(formData, "category"),
@@ -347,12 +428,14 @@ export async function updateAdminContentAction(formData: FormData) {
       break;
     }
     case "parteneri": {
+      const name = str(formData, "name");
       await prisma.partner.update({
         where: { id },
         data: {
-          name: str(formData, "name"),
-          slug: contentSlug(formData, str(formData, "name")),
+          name,
+          slug: contentSlug(formData, name),
           description: nullable(formData, "description"),
+          logoId: await mediaIdFromForm(formData, "logoId", type, user, name),
           website: nullable(formData, "website"),
           type: nullable(formData, "type"),
           status: (str(formData, "status") || "DRAFT") as any,
@@ -363,11 +446,13 @@ export async function updateAdminContentAction(formData: FormData) {
       break;
     }
     case "testimoniale": {
+      const authorName = str(formData, "authorName");
       await prisma.testimonial.update({
         where: { id },
         data: {
           quote: str(formData, "quote"),
-          authorName: str(formData, "authorName"),
+          authorName,
+          imageId: await mediaIdFromForm(formData, "imageId", type, user, authorName),
           authorRole: nullable(formData, "authorRole"),
           organization: nullable(formData, "organization"),
           status: (str(formData, "status") || "DRAFT") as any,
@@ -378,39 +463,95 @@ export async function updateAdminContentAction(formData: FormData) {
       break;
     }
     case "media": {
-      await prisma.mediaAsset.update({
-        where: { id },
-        data: {
-          filename: str(formData, "filename"),
-          url: str(formData, "url"),
-          mimeType: str(formData, "mimeType") || "image/jpeg",
-          type: (str(formData, "type") || "IMAGE") as any,
-          alt: nullable(formData, "alt"),
-          caption: nullable(formData, "caption"),
-          credit: nullable(formData, "credit"),
-          folder: nullable(formData, "folder"),
-          size: intValue(formData, "size"),
-          width: optionalInt(formData, "width"),
-          height: optionalInt(formData, "height")
-        }
-      });
+      const current = await prisma.mediaAsset.findUnique({ where: { id } });
+      if (!current) throw new Error("Fișierul media lipsește.");
+
+      const file = uploadedFileFromForm(formData, "file");
+      const metadata = {
+        alt: nullable(formData, "alt"),
+        caption: nullable(formData, "caption"),
+        credit: nullable(formData, "credit"),
+        folder: nullable(formData, "folder") || current.folder
+      };
+
+      if (file) {
+        const stored = await saveUploadedFile(file, metadata.folder || "media");
+        await prisma.mediaAsset.update({
+          where: { id },
+          data: {
+            ...stored,
+            ...metadata,
+            uploadedById: user.id
+          }
+        });
+        await deleteStoredUpload(current.storageKey);
+      } else {
+        await prisma.mediaAsset.update({ where: { id }, data: metadata });
+      }
       break;
     }
     case "utilizatori": {
       const password = str(formData, "password");
+      const role = str(formData, "role") || "EDITOR";
+      const status = str(formData, "status") || "ACTIVE";
+
+      await assertSafeUserUpdate(id, user, role, status);
+
       await prisma.user.update({
         where: { id },
         data: {
           name: str(formData, "name"),
           email: str(formData, "email").toLowerCase(),
           ...(password ? { passwordHash: await hashPassword(password) } : {}),
-          role: (str(formData, "role") || "EDITOR") as any,
-          status: (str(formData, "status") || "ACTIVE") as any
+          role: role as any,
+          status: status as any
         }
       });
       break;
     }
   }
 
+  await logAdminAction(user, "UPDATE", type, id);
+  redirectTo(type);
+}
+
+export async function deleteAdminContentAction(formData: FormData) {
+  const type = typedModule(formData);
+  const user = await requireAccess(type);
+  const id = str(formData, "id");
+  if (!id) throw new Error("Element lipsă.");
+
+  switch (type) {
+    case "programe":
+      await prisma.program.delete({ where: { id } });
+      break;
+    case "evenimente":
+      await prisma.event.delete({ where: { id } });
+      break;
+    case "galerie":
+      await prisma.galleryAlbum.delete({ where: { id } });
+      break;
+    case "articole":
+      await prisma.article.delete({ where: { id } });
+      break;
+    case "parteneri":
+      await prisma.partner.delete({ where: { id } });
+      break;
+    case "testimoniale":
+      await prisma.testimonial.delete({ where: { id } });
+      break;
+    case "media": {
+      const current = await prisma.mediaAsset.findUnique({ where: { id }, select: { storageKey: true } });
+      await prisma.mediaAsset.delete({ where: { id } });
+      await deleteStoredUpload(current?.storageKey);
+      break;
+    }
+    case "utilizatori":
+      await assertSafeUserDelete(id, user);
+      await prisma.user.delete({ where: { id } });
+      break;
+  }
+
+  await logAdminAction(user, "DELETE", type, id);
   redirectTo(type);
 }

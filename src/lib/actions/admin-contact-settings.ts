@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireAdminUser } from "@/server/auth/session";
+import { requireRole } from "@/server/auth/session";
 
 const optionalText = (max: number) =>
   z
@@ -39,7 +39,7 @@ const contactSettingsSchema = z.object({
 });
 
 export async function updateContactSettingsAction(formData: FormData) {
-  await requireAdminUser();
+  await requireRole(["ADMIN"]);
 
   const parsed = contactSettingsSchema.parse({
     email: String(formData.get("email") || ""),

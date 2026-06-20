@@ -1,5 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
+import { UploadCloud } from "lucide-react";
 import { updateHomepageSettingsAction } from "@/lib/actions/admin-homepage";
+import { getAdminMediaOptions } from "@/lib/admin/content-data";
 import type { HomepageSettings } from "@/lib/homepage-settings";
 
 function TextInput({
@@ -40,12 +43,43 @@ function TextArea({ label, name, value, rows = 3 }: { label: string; name: strin
   );
 }
 
-export function HomepageSettingsForm({ settings }: { settings: HomepageSettings }) {
+export async function HomepageSettingsForm({ settings }: { settings: HomepageSettings }) {
+  const mediaOptions = await getAdminMediaOptions();
+  const selectedHero = mediaOptions.find((media) => media.url === settings.heroImageUrl);
+
   return (
-    <form action={updateHomepageSettingsAction} className="max-w-[1100px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <form action={updateHomepageSettingsAction} encType="multipart/form-data" className="max-w-[1100px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <input type="hidden" name="currentHeroImageUrl" value={settings.heroImageUrl} />
       <div className="grid gap-5 md:grid-cols-2">
         <TextArea label="Text hero" name="heroIntro" value={settings.heroIntro} rows={5} />
-        <TextInput label="Imagine hero" name="heroImageUrl" value={settings.heroImageUrl} placeholder="/images/mockup-site-asociatie.png" />
+        <div className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <p className="text-sm font-semibold text-starsim-navy">Imagine hero</p>
+          <Image src={settings.heroImageUrl} alt="Imagine hero Star Sim" width={760} height={420} unoptimized className="h-44 w-full rounded-xl border border-slate-200 object-cover" />
+          <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
+            <select
+              name="heroImageId"
+              defaultValue={selectedHero?.id || ""}
+              className="focus-ring min-w-0 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-800"
+            >
+              <option value="">Păstrează imaginea actuală</option>
+              {mediaOptions.map((media) => (
+                <option key={media.id} value={media.id}>
+                  {media.alt || media.filename}
+                </option>
+              ))}
+            </select>
+            <label className="focus-ring inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-starsim-navy px-4 py-2 text-sm font-bold text-white hover:bg-starsim-blue">
+              <UploadCloud className="h-4 w-4" />
+              Încarcă
+              <input name="heroImageUpload" type="file" accept="image/*" className="sr-only" />
+            </label>
+          </div>
+          <input
+            name="heroImageAlt"
+            defaultValue="Copii privind cerul înstelat prin telescop"
+            className="focus-ring rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800"
+          />
+        </div>
         <TextInput label="Buton principal" name="heroPrimaryLabel" value={settings.heroPrimaryLabel} />
         <TextInput label="Link buton principal" name="heroPrimaryHref" value={settings.heroPrimaryHref} />
         <TextInput label="Buton secundar" name="heroSecondaryLabel" value={settings.heroSecondaryLabel} />

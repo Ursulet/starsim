@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { ContactSettingsForm } from "@/components/admin/ContactSettingsForm";
 import { getContactSettings } from "@/lib/queries/settings";
+import { requireRole } from "@/server/auth/session";
 
 export default async function AdminContactPage({
   searchParams
 }: {
   searchParams?: Promise<{ updated?: string }>;
 }) {
-  const settings = await getContactSettings();
-  const params = await searchParams;
+  const [, settings, params] = await Promise.all([requireRole(["ADMIN"]), getContactSettings(), searchParams]);
 
   return (
     <section>

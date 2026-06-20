@@ -24,6 +24,20 @@ Minimum production variables:
 - `SEED_ADMIN_EMAIL`
 - `SEED_ADMIN_PASSWORD`
 - `SEED_ADMIN_NAME`
+- `UPLOAD_DIR=/app/uploads`
+- `MAX_UPLOAD_MB=10`
+
+## Persistent uploads
+
+Adminul salvează fișierele încărcate în `UPLOAD_DIR` și le servește public prin `/uploads/...`.
+
+În Coolify, adaugă un volum persistent pentru:
+
+```bash
+/app/uploads
+```
+
+Fără volum persistent, imaginile încărcate din admin pot dispărea la redeploy.
 
 ## Build
 
@@ -65,5 +79,5 @@ SEED_ADMIN_FORCE_PASSWORD_UPDATE=true
 - Use a strong `AUTH_SECRET`.
 - Use PostgreSQL backups in Coolify.
 - Never expose `DATABASE_URL` publicly.
-- Map `/public/uploads` to a persistent volume before enabling real uploads.
+- Map `/app/uploads` to a persistent volume before enabling real uploads.
 - The repository intentionally excludes prompt/work files and keeps only deployable app assets.

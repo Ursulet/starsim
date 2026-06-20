@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { requireAdminUser } from "@/server/auth/session";
+import { requireRole } from "@/server/auth/session";
 
 function text(formData: FormData, key: string) {
   return String(formData.get(key) || "").trim();
@@ -20,7 +20,7 @@ function amountRows(formData: FormData) {
 }
 
 export async function updateDonationSettingsAction(formData: FormData) {
-  await requireAdminUser();
+  await requireRole(["ADMIN"]);
 
   await prisma.donationSettings.upsert({
     where: { id: "default" },

@@ -37,9 +37,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
+ENV UPLOAD_DIR=/app/uploads
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates openssl \
+  && mkdir -p /app/uploads \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/package.json ./package.json

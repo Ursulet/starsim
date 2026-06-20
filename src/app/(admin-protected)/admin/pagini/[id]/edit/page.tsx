@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
 import { PageForm } from "@/components/admin/PageForm";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/server/auth/session";
 
 export default async function EditPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireRole(["ADMIN", "EDITOR"]);
+
   const { id } = await params;
   const page = await prisma.page.findUnique({ where: { id } });
   if (!page) notFound();
