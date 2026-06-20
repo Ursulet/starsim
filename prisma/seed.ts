@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/server/auth/password";
 import { legalBodyToTiptap, legalPageDefaults } from "../src/lib/legal-pages";
 import { defaultHomepageSettings } from "../src/lib/homepage-settings";
+import { applyRomanianDiacritics, applyRomanianDiacriticsDeep } from "../src/lib/romanian-diacritics";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,89 @@ const doc = (text: string) => ({
   type: "doc",
   content: [{ type: "paragraph", content: [{ type: "text", text }] }]
 });
+
+function normalizeNullableJson(value: Prisma.JsonValue) {
+  if (value === null) return Prisma.JsonNull;
+
+  return applyRomanianDiacriticsDeep(value) as Prisma.InputJsonValue;
+}
+
+async function normalizeExistingRomanianCopy() {
+  const programs = await prisma.program.findMany({ select: { id: true, title: true, excerpt: true, content: true } });
+  for (const item of programs) {
+    await prisma.program.update({
+      where: { id: item.id },
+      data: {
+        title: applyRomanianDiacritics(item.title),
+        excerpt: applyRomanianDiacritics(item.excerpt),
+        content: normalizeNullableJson(item.content)
+      }
+    });
+  }
+
+  const events = await prisma.event.findMany({ select: { id: true, title: true, excerpt: true, content: true, locationName: true, address: true, city: true } });
+  for (const item of events) {
+    await prisma.event.update({
+      where: { id: item.id },
+      data: {
+        title: applyRomanianDiacritics(item.title),
+        excerpt: applyRomanianDiacritics(item.excerpt),
+        content: normalizeNullableJson(item.content),
+        locationName: applyRomanianDiacritics(item.locationName),
+        address: item.address ? applyRomanianDiacritics(item.address) : null,
+        city: item.city ? applyRomanianDiacritics(item.city) : null
+      }
+    });
+  }
+
+  const pages = await prisma.page.findMany({ select: { id: true, title: true, excerpt: true, content: true, metaTitle: true, metaDescription: true } });
+  for (const item of pages) {
+    await prisma.page.update({
+      where: { id: item.id },
+      data: {
+        title: applyRomanianDiacritics(item.title),
+        excerpt: item.excerpt ? applyRomanianDiacritics(item.excerpt) : null,
+        content: normalizeNullableJson(item.content),
+        metaTitle: item.metaTitle ? applyRomanianDiacritics(item.metaTitle) : null,
+        metaDescription: item.metaDescription ? applyRomanianDiacritics(item.metaDescription) : null
+      }
+    });
+  }
+
+  const donation = await prisma.donationSettings.findUnique({ where: { id: "default" } });
+  if (donation) {
+    await prisma.donationSettings.update({
+      where: { id: "default" },
+      data: {
+        title: applyRomanianDiacritics(donation.title),
+        description: donation.description ? applyRomanianDiacritics(donation.description) : null,
+        recommendedAmounts: normalizeNullableJson(donation.recommendedAmounts)
+      }
+    });
+  }
+
+  const contact = await prisma.contactSettings.findUnique({ where: { id: "default" } });
+  if (contact) {
+    await prisma.contactSettings.update({
+      where: { id: "default" },
+      data: {
+        address: contact.address ? applyRomanianDiacritics(contact.address) : null,
+        city: contact.city ? applyRomanianDiacritics(contact.city) : null,
+        introText: contact.introText ? applyRomanianDiacritics(contact.introText) : null,
+        footerDescription: contact.footerDescription ? applyRomanianDiacritics(contact.footerDescription) : null,
+        footerCopyright: contact.footerCopyright ? applyRomanianDiacritics(contact.footerCopyright) : null
+      }
+    });
+  }
+
+  const homepage = await prisma.siteSettings.findUnique({ where: { key: "homepage" } });
+  if (homepage) {
+    await prisma.siteSettings.update({
+      where: { key: "homepage" },
+      data: { value: normalizeNullableJson(homepage.value) }
+    });
+  }
+}
 
 function cleanEnvValue(value: string) {
   const trimmed = value.trim();
@@ -169,6 +253,8 @@ async function main() {
       value: defaultHomepageSettings
     }
   });
+
+  await normalizeExistingRomanianCopy();
 
   await prisma.auditLog.create({
     data: { actorId: admin.id, action: "SEED", entity: "System", metadata: { message: "Seed initial Star Sim" } }
