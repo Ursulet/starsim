@@ -23,7 +23,7 @@ Minimum production variables:
 
 `pnpm install --frozen-lockfile && pnpm build`
 
-The repository also includes `nixpacks.toml`, which pins the deployment runtime to Node 20 and installs pnpm 10.18.3 with npm to avoid Corepack signature issues.
+The repository also includes `nixpacks.toml`, which pins the deployment runtime to Node 20 and runs pnpm 10.18.3 through `npx` to avoid Corepack and PATH issues in Nixpacks layers.
 
 ## Start command
 

@@ -2,13 +2,10 @@
 nixPkgs = ["nodejs_20", "openssl"]
 
 [phases.install]
-cmds = [
-  "npm install -g pnpm@10.18.3",
-  "pnpm install --frozen-lockfile"
-]
+cmds = ["npx pnpm@10.18.3 install --frozen-lockfile"]
 
 [phases.build]
-cmds = ["pnpm build"]
+cmds = ["npx pnpm@10.18.3 build"]
 
 [start]
-cmd = "pnpm start"
+cmd = "npx pnpm@10.18.3 start"

@@ -39,6 +39,8 @@ Start command:
 pnpm start
 ```
 
+The included `nixpacks.toml` uses `npx pnpm@10.18.3` during deploy so Coolify does not depend on Corepack.
+
 Migration command:
 
 ```bash
