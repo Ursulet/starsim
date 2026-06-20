@@ -23,6 +23,8 @@ Minimum production variables:
 
 `pnpm install --frozen-lockfile && pnpm build`
 
+The repository also includes `nixpacks.toml`, which pins the deployment runtime to Node 20 and pnpm 10.18.3 to avoid Corepack/pnpm issues on Node 22.
+
 ## Start command
 
 `pnpm start`

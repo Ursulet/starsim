@@ -21,6 +21,12 @@ pnpm db:seed
 
 Use the settings in [docs/coolify-deployment.md](docs/coolify-deployment.md).
 
+Runtime:
+
+- Node 20 LTS
+- pnpm 10.18.3
+- PostgreSQL 16 recommended
+
 Build command:
 
 ```bash

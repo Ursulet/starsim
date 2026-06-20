@@ -2,9 +2,9 @@
   "name": "starsim-cms",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@11.6.0",
+  "packageManager": "pnpm@10.18.3",
   "engines": {
-    "node": ">=20.11.0"
+    "node": ">=20.11.0 <22"
   },
   "scripts": {
     "dev": "next dev",
