@@ -358,29 +358,31 @@ model DonationSettings {
 }
 
 model ContactSettings {
-  id              String   @id @default("default")
-  email           String?
-  phone           String?
-  address         String?
-  city            String?
-  schedule        String?
-  mapUrl          String?
-  introText       String?
-  facebookUrl     String?
-  instagramUrl    String?
-  youtubeUrl      String?
-  tiktokUrl       String?
-  linkedinUrl     String?
-  metaTitle       String?
-  metaDescription String?
-  ogTitle         String?
-  ogDescription   String?
-  ogImageId       String?
-  canonicalUrl    String?
-  robotsIndex     Boolean  @default(true)
-  robotsFollow    Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                String   @id @default("default")
+  email             String?
+  phone             String?
+  address           String?
+  city              String?
+  schedule          String?
+  mapUrl            String?
+  introText         String?
+  footerDescription String?
+  footerCopyright   String?
+  facebookUrl       String?
+  instagramUrl      String?
+  youtubeUrl        String?
+  tiktokUrl         String?
+  linkedinUrl       String?
+  metaTitle         String?
+  metaDescription   String?
+  ogTitle           String?
+  ogDescription     String?
+  ogImageId         String?
+  canonicalUrl      String?
+  robotsIndex       Boolean  @default(true)
+  robotsFollow      Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model ContactMessage {

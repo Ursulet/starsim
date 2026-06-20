@@ -135,7 +135,9 @@ async function main() {
       address: "Bucuresti, Romania",
       city: "Bucuresti",
       schedule: "Luni - Vineri, 10:00 - 18:00",
-      introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate."
+      introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate.",
+      footerDescription: "Asociatie dedicata promovarii astronomiei, educatiei stiintifice si inspirarii copiilor sa viseze mai departe.",
+      footerCopyright: "De la o stea, la un vis. Toate drepturile rezervate."
     }
   });
 

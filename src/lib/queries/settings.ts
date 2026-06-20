@@ -11,6 +11,8 @@ export async function getContactSettings() {
       city: "Bucuresti",
       introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate.",
       schedule: "Luni - Vineri, 10:00 - 18:00",
+      footerDescription: "Asociatie dedicata promovarii astronomiei, educatiei stiintifice si inspirarii copiilor sa viseze mai departe.",
+      footerCopyright: "De la o stea, la un vis. Toate drepturile rezervate.",
       mapUrl: null,
       facebookUrl: null,
       instagramUrl: null,
