@@ -8,11 +8,24 @@ const doc = (text: string) => ({
   content: [{ type: "paragraph", content: [{ type: "text", text }] }]
 });
 
+function cleanEnvValue(value: string) {
+  const trimmed = value.trim();
+
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+
+  return trimmed;
+}
+
 async function main() {
   const isProduction = process.env.NODE_ENV === "production" || process.argv.includes("--production");
-  const email = (process.env.SEED_ADMIN_EMAIL || "").toLowerCase();
-  const password = process.env.SEED_ADMIN_PASSWORD || "";
-  const name = process.env.SEED_ADMIN_NAME || "";
+  const email = cleanEnvValue(process.env.SEED_ADMIN_EMAIL || "").toLowerCase();
+  const password = cleanEnvValue(process.env.SEED_ADMIN_PASSWORD || "");
+  const name = cleanEnvValue(process.env.SEED_ADMIN_NAME || "");
 
   if (isProduction && (!email || !password || !name)) {
     throw new Error("Missing SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD or SEED_ADMIN_NAME in production.");
