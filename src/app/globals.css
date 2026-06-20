@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --starsim-navy: #061b3d;
+  --starsim-navy-2: #082756;
+  --starsim-blue: #0b356d;
+  --starsim-gold: #d89b32;
+  --starsim-gold-soft: #f2c46d;
+  --starsim-ivory: #fbf8f1;
+  --starsim-ink: #10213f;
+  --starsim-muted: #5c6b82;
+  --starsim-bg: #f8fafc;
+  --starsim-border: #e7e0d2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #fff;
+  color: var(--starsim-ink);
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--starsim-gold);
+  color: var(--starsim-navy);
+}
+
+@layer components {
+  .section-padding {
+    @apply py-16 md:py-20;
+  }
+
+  .premium-card {
+    @apply rounded-2xl border border-starsim-border bg-white shadow-soft;
+  }
+
+  .gold-gradient {
+    background: linear-gradient(135deg, #f2c46d, #d89b32);
+  }
+
+  .navy-gradient {
+    background: radial-gradient(circle at top right, rgba(242, 196, 109, 0.22), transparent 35%),
+      linear-gradient(135deg, #061b3d, #082756);
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-starsim-gold focus-visible:ring-offset-2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

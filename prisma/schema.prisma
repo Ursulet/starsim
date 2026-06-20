@@ -1,0 +1,473 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VOLUNTEER
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum ContactMessageStatus {
+  NEW
+  READ
+  IN_PROGRESS
+  RESOLVED
+  SPAM
+}
+
+enum ContactMessageType {
+  GENERAL
+  EVENT
+  VOLUNTEERING
+  PARTNERSHIP
+  DONATION
+  SCHOOL
+}
+
+enum NewsletterStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+}
+
+enum RedirectStatusCode {
+  MOVED_PERMANENTLY
+  FOUND
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
+  passwordHash String
+  role         Role       @default(EDITOR)
+  status       UserStatus @default(ACTIVE)
+  image        String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  uploadedMedia MediaAsset[]
+  auditLogs     AuditLog[]
+
+  @@index([role])
+  @@index([status])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+model MediaAsset {
+  id           String    @id @default(cuid())
+  type         MediaType @default(IMAGE)
+  url          String
+  storageKey   String?
+  filename     String
+  originalName String?
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  alt          String?
+  caption      String?
+  credit       String?
+  folder       String?
+  uploadedById String?
+  uploadedBy   User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  programsHero      Program[]      @relation("ProgramHeroImage")
+  eventsHero        Event[]        @relation("EventHeroImage")
+  articlesHero      Article[]      @relation("ArticleHeroImage")
+  albumsCover       GalleryAlbum[] @relation("GalleryAlbumCover")
+  albumItems        GalleryImage[]
+  partnersLogo      Partner[]      @relation("PartnerLogo")
+  testimonialsImage Testimonial[]  @relation("TestimonialImage")
+
+  @@index([type])
+  @@index([mimeType])
+  @@index([createdAt])
+}
+
+model Program {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  excerpt         String
+  content         Json?
+  icon            String?
+  category        String?
+  ctaLabel        String?
+  ctaHref         String?
+  heroImageId     String?
+  heroImage       MediaAsset?   @relation("ProgramHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  status          PublishStatus @default(DRAFT)
+  featuredOnHome  Boolean       @default(false)
+  sortOrder       Int           @default(0)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImageId       String?
+  canonicalUrl    String?
+  robotsIndex     Boolean       @default(true)
+  robotsFollow    Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  events        Event[]
+  galleryAlbums GalleryAlbum[]
+
+  @@index([status, featuredOnHome, sortOrder])
+  @@index([publishedAt])
+}
+
+model Event {
+  id                  String      @id @default(cuid())
+  title               String
+  slug                String      @unique
+  excerpt             String
+  content             Json?
+  startsAt            DateTime
+  endsAt              DateTime?
+  timezone            String      @default("Europe/Bucharest")
+  locationName        String
+  address             String?
+  city                String?
+  county              String?
+  country             String?     @default("Romania")
+  mapUrl              String?
+  maxParticipants     Int?
+  registrationUrl     String?
+  registrationEnabled Boolean     @default(false)
+  heroImageId         String?
+  heroImage           MediaAsset? @relation("EventHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  programId           String?
+  program             Program?    @relation(fields: [programId], references: [id], onDelete: SetNull)
+  status              EventStatus @default(DRAFT)
+  featuredOnHome      Boolean     @default(false)
+  sortOrder           Int         @default(0)
+  publishedAt         DateTime?
+  metaTitle           String?
+  metaDescription     String?
+  ogTitle             String?
+  ogDescription       String?
+  ogImageId           String?
+  canonicalUrl        String?
+  robotsIndex         Boolean     @default(true)
+  robotsFollow        Boolean     @default(true)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  registrations EventRegistration[]
+  galleryAlbums GalleryAlbum[]
+
+  @@index([status, startsAt])
+  @@index([status, featuredOnHome, startsAt])
+  @@index([programId])
+}
+
+model EventRegistration {
+  id                String   @id @default(cuid())
+  eventId           String
+  event             Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name              String
+  email             String
+  phone             String?
+  participantsCount Int      @default(1)
+  childAge          String?
+  notes             String?
+  consent           Boolean  @default(false)
+  status            String   @default("NEW")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([email])
+  @@index([createdAt])
+}
+
+model GalleryAlbum {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  description     String?
+  content         Json?
+  coverImageId    String?
+  coverImage      MediaAsset?   @relation("GalleryAlbumCover", fields: [coverImageId], references: [id], onDelete: SetNull)
+  programId       String?
+  program         Program?      @relation(fields: [programId], references: [id], onDelete: SetNull)
+  eventId         String?
+  event           Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  status          PublishStatus @default(DRAFT)
+  featuredOnHome  Boolean       @default(false)
+  sortOrder       Int           @default(0)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImageId       String?
+  canonicalUrl    String?
+  robotsIndex     Boolean       @default(true)
+  robotsFollow    Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  images GalleryImage[]
+
+  @@index([status, featuredOnHome, sortOrder])
+}
+
+model GalleryImage {
+  id        String       @id @default(cuid())
+  albumId   String
+  album     GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  mediaId   String
+  media     MediaAsset   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  alt       String?
+  caption   String?
+  sortOrder Int          @default(0)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([albumId, mediaId])
+  @@index([albumId, sortOrder])
+}
+
+model Article {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  excerpt         String
+  content         Json
+  authorName      String?
+  category        String?
+  tags            String[]      @default([])
+  heroImageId     String?
+  heroImage       MediaAsset?   @relation("ArticleHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  status          PublishStatus @default(DRAFT)
+  featuredOnHome  Boolean       @default(false)
+  publishedAt     DateTime?
+  focusKeyword    String?
+  metaTitle       String?
+  metaDescription String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImageId       String?
+  canonicalUrl    String?
+  robotsIndex     Boolean       @default(true)
+  robotsFollow    Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([category])
+}
+
+model Page {
+  id              String        @id @default(cuid())
+  key             String        @unique
+  title           String
+  slug            String        @unique
+  excerpt         String?
+  content         Json?
+  template        String?
+  status          PublishStatus @default(DRAFT)
+  metaTitle       String?
+  metaDescription String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImageId       String?
+  canonicalUrl    String?
+  robotsIndex     Boolean       @default(true)
+  robotsFollow    Boolean       @default(true)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+}
+
+model DonationSettings {
+  id                 String   @id @default("default")
+  title              String   @default("Sustine Star Sim")
+  description        String?
+  bankAccount        String?
+  bankName           String?
+  beneficiaryName    String?
+  fiscalCode         String?
+  recommendedAmounts Json?
+  content            Json?
+  metaTitle          String?
+  metaDescription    String?
+  ogTitle            String?
+  ogDescription      String?
+  ogImageId          String?
+  canonicalUrl       String?
+  robotsIndex        Boolean  @default(true)
+  robotsFollow       Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model ContactSettings {
+  id              String   @id @default("default")
+  email           String?
+  phone           String?
+  address         String?
+  city            String?
+  schedule        String?
+  mapUrl          String?
+  introText       String?
+  facebookUrl     String?
+  instagramUrl    String?
+  youtubeUrl      String?
+  tiktokUrl       String?
+  linkedinUrl     String?
+  metaTitle       String?
+  metaDescription String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImageId       String?
+  canonicalUrl    String?
+  robotsIndex     Boolean  @default(true)
+  robotsFollow    Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ContactMessage {
+  id           String               @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  type         ContactMessageType   @default(GENERAL)
+  subject      String?
+  message      String
+  status       ContactMessageStatus @default(NEW)
+  internalNote String?
+  ipAddress    String?
+  userAgent    String?
+  consent      Boolean              @default(false)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([status, createdAt])
+  @@index([type])
+}
+
+model NewsletterSubscriber {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  name           String?
+  status         NewsletterStatus @default(ACTIVE)
+  source         String?
+  consent        Boolean          @default(false)
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+  updatedAt      DateTime         @updatedAt
+
+  @@index([status])
+}
+
+model Partner {
+  id             String        @id @default(cuid())
+  name           String
+  slug           String        @unique
+  description    String?
+  website        String?
+  type           String?
+  status         PublishStatus @default(DRAFT)
+  featuredOnHome Boolean       @default(false)
+  sortOrder      Int           @default(0)
+  logoId         String?
+  logo           MediaAsset?   @relation("PartnerLogo", fields: [logoId], references: [id], onDelete: SetNull)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+  @@index([featuredOnHome, sortOrder])
+}
+
+model Testimonial {
+  id             String        @id @default(cuid())
+  quote          String
+  authorName     String
+  authorRole     String?
+  organization   String?
+  status         PublishStatus @default(DRAFT)
+  featuredOnHome Boolean       @default(false)
+  sortOrder      Int           @default(0)
+  imageId        String?
+  image          MediaAsset?   @relation("TestimonialImage", fields: [imageId], references: [id], onDelete: SetNull)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+  @@index([featuredOnHome, sortOrder])
+}
+
+model Redirect {
+  id         String             @id @default(cuid())
+  sourcePath String             @unique
+  targetPath String
+  statusCode RedirectStatusCode @default(MOVED_PERMANENTLY)
+  active     Boolean            @default(true)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
