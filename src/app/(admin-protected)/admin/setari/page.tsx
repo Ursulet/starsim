@@ -2,11 +2,11 @@ import Link from "next/link";
 import { requireRole } from "@/server/auth/session";
 
 const settingsLinks = [
-  { title: "Prima pagina", description: "Hero, misiune, sectiuni si zona de contributii.", href: "/admin/prima-pagina" },
-  { title: "Contact si footer", description: "Email, telefon, adresa, social links, WhatsApp si textele din footer.", href: "/admin/contact" },
-  { title: "Doneaza", description: "Date bancare, sume recomandate si textul paginii de donatii.", href: "/admin/doneaza" },
-  { title: "Pagini statice", description: "Politica de confidentialitate, cookies, termeni si alte pagini editoriale.", href: "/admin/pagini" },
-  { title: "Utilizatori", description: "Conturi admin/editor si roluri.", href: "/admin/utilizatori" },
+  { title: "Prima pagină", description: "Hero, misiune, secțiuni și zona de contribuții.", href: "/admin/prima-pagina" },
+  { title: "Contact și footer", description: "Email, telefon, adresă, social links, WhatsApp și textele din footer.", href: "/admin/contact" },
+  { title: "Donează", description: "Date bancare, sume recomandate și textul paginii de donații.", href: "/admin/doneaza" },
+  { title: "Pagini statice", description: "Politica de confidențialitate, cookies, termeni și alte pagini editoriale.", href: "/admin/pagini" },
+  { title: "Utilizatori", description: "Conturi admin/editor și roluri.", href: "/admin/utilizatori" },
   { title: "SEO Center", description: "Raport rapid pentru metadate lipsa.", href: "/admin/seo" }
 ];
 
@@ -16,7 +16,7 @@ export default async function Page() {
   return (
     <section>
       <div>
-        <h1 className="text-3xl font-bold text-starsim-navy">Setari site</h1>
+        <h1 className="text-3xl font-bold text-starsim-navy">Setări site</h1>
         <p className="mt-2 max-w-3xl text-slate-500">Acceseaza rapid zonele configurabile ale site-ului Star Sim.</p>
       </div>
       <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">

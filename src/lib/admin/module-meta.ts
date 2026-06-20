@@ -1,107 +1,107 @@
 export const adminModules = {
   programe: {
     title: "Programe",
-    description: "Administreaza programele Star Sim afisate pe site: ateliere, caravane, observatii astronomice si educatie STEM.",
-    primaryActionLabel: "Adauga program",
+    description: "Administrează programele Star Sim afișate pe site: ateliere, caravane, observații astronomice și educație STEM.",
+    primaryActionLabel: "Adaugă program",
     primaryActionHref: "/admin/programe/new",
-    items: ["titlu, slug si descriere scurta", "continut editorial", "imagine principala si icon", "afisare pe homepage", "SEO per program"]
+    items: ["titlu, slug și descriere scurtă", "conținut editorial", "imagine principală și icon", "afișare pe homepage", "SEO per program"]
   },
   evenimente: {
     title: "Evenimente",
-    description: "Creeaza si publica evenimente, date, locatii, inscrieri si detalii pentru participanti.",
-    primaryActionLabel: "Adauga eveniment",
+    description: "Creează și publică evenimente, date, locații, înscrieri și detalii pentru participanți.",
+    primaryActionLabel: "Adaugă eveniment",
     primaryActionHref: "/admin/evenimente/new",
-    items: ["data, ora, locatie", "status si publicare", "inscrieri participanti", "afisare pe homepage", "Schema Event pentru SEO"]
+    items: ["dată, oră, locație", "status și publicare", "înscrieri participanți", "afișare pe homepage", "Schema Event pentru SEO"]
   },
   galerie: {
     title: "Galerie",
-    description: "Organizeaza fotografiile in albume, cu cover, descriere si alt text pentru imagini.",
-    primaryActionLabel: "Adauga album",
+    description: "Organizează fotografiile în albume, cu cover, descriere și alt text pentru imagini.",
+    primaryActionLabel: "Adaugă album",
     primaryActionHref: "/admin/galerie/new",
     items: ["albume foto", "imagini multiple", "alt text obligatoriu", "asociere cu evenimente/programe", "SEO pentru albume"]
   },
   articole: {
     title: "Articole",
-    description: "Publica articole educationale si noutati cu editor WYSIWYG si SEO avansat.",
-    primaryActionLabel: "Adauga articol",
+    description: "Publică articole educaționale și noutăți cu editor WYSIWYG și SEO avansat.",
+    primaryActionLabel: "Adaugă articol",
     primaryActionHref: "/admin/articole/new",
-    items: ["titlu, slug, excerpt", "WYSIWYG/Tiptap JSON", "categorii si tag-uri", "focus keyword", "FAQ si articole similare"]
+    items: ["titlu, slug, excerpt", "WYSIWYG/Tiptap JSON", "categorii și tag-uri", "focus keyword", "FAQ și articole similare"]
   },
   pagini: {
     title: "Pagini",
-    description: "Editeaza paginile statice si semi-structurate: Despre, Implica-te, Parteneriate, Politici si Termeni.",
-    primaryActionLabel: "Adauga pagina",
+    description: "Editează paginile statice și semi-structurate: Despre, Implică-te, Parteneriate, Politici și Termeni.",
+    primaryActionLabel: "Adaugă pagina",
     primaryActionHref: "/admin/pagini/new",
-    items: ["continut editorial", "template per pagina", "status publicare", "SEO per pagina"]
+    items: ["conținut editorial", "template per pagină", "status publicare", "SEO per pagina"]
   },
   doneaza: {
-    title: "Doneaza",
-    description: "Administreaza continutul paginii de donatii, datele bancare, sumele recomandate si mesajele de impact.",
-    primaryActionLabel: "Editeaza pagina Doneaza",
+    title: "Donează",
+    description: "Administrează conținutul paginii de donații, datele bancare, sumele recomandate și mesajele de impact.",
+    primaryActionLabel: "Editează pagina Donează",
     primaryActionHref: "/admin/doneaza",
-    items: ["IBAN, banca, titular, CUI", "sume recomandate", "mesaje de impact", "FAQ donatii", "SEO donatii"]
+    items: ["IBAN, bancă, titular, CUI", "sume recomandate", "mesaje de impact", "FAQ donații", "SEO donații"]
   },
   contact: {
     title: "Contact",
-    description: "Gestioneaza datele publice de contact si mesajele primite prin formular.",
+    description: "Gestionează datele publice de contact și mesajele primite prin formular.",
     primaryActionLabel: "Vezi mesajele",
     primaryActionHref: "/admin/contact/messages",
-    items: ["email, telefon, adresa", "link harta", "social links", "mesaje si status intern", "note interne"]
+    items: ["email, telefon, adresă", "link hartă", "social links", "mesaje și status intern", "note interne"]
   },
   newsletter: {
     title: "Newsletter",
-    description: "Administreaza abonatii si sursele de inscriere la newsletter.",
-    primaryActionLabel: "Vezi abonatii",
+    description: "Administrează abonații și sursele de înscriere la newsletter.",
+    primaryActionLabel: "Vezi abonații",
     primaryActionHref: "/admin/newsletter",
-    items: ["abonati activi", "dezabonati", "sursa abonare", "export viitor"]
+    items: ["abonați activi", "dezabonați", "sursă abonare", "export viitor"]
   },
   parteneri: {
     title: "Parteneri",
-    description: "Gestioneaza logo-uri, descrieri si linkuri pentru partenerii Star Sim.",
-    primaryActionLabel: "Adauga partener",
+    description: "Gestionează logo-uri, descrieri și linkuri pentru partenerii Star Sim.",
+    primaryActionLabel: "Adaugă partener",
     primaryActionHref: "/admin/parteneri/new",
-    items: ["logo partener", "website", "tip parteneriat", "afisare pe homepage", "ordine afisare"]
+    items: ["logo partener", "website", "tip parteneriat", "afișare pe homepage", "ordine afișare"]
   },
   testimoniale: {
     title: "Testimoniale",
-    description: "Publica citate si recomandari de la profesori, parinti, parteneri si participanti.",
-    primaryActionLabel: "Adauga testimonial",
+    description: "Publică citate și recomandări de la profesori, părinți, parteneri și participanți.",
+    primaryActionLabel: "Adaugă testimonial",
     primaryActionHref: "/admin/testimoniale/new",
-    items: ["citat", "autor", "rol/organizatie", "imagine optionala", "afisare pe homepage"]
+    items: ["citat", "autor", "rol/organizație", "imagine opțională", "afișare pe homepage"]
   },
   media: {
     title: "Media Library",
-    description: "Biblioteca centrala pentru imagini folosite in programe, evenimente, articole si galerie.",
+    description: "Biblioteca centrală pentru imagini folosite în programe, evenimente, articole și galerie.",
     primaryActionLabel: "Incarca media",
     primaryActionHref: "/admin/media",
-    items: ["imagini", "alt text", "caption", "foldere", "reutilizare in continut"]
+    items: ["imagini", "alt text", "caption", "foldere", "reutilizare în conținut"]
   },
   seo: {
     title: "SEO Center",
-    description: "Monitorizeaza si optimizeaza metadatele, imaginile, slug-urile si indexarea continutului.",
+    description: "Monitorizează și optimizează metadatele, imaginile, slug-urile și indexarea conținutului.",
     primaryActionLabel: "Analizeaza SEO",
     primaryActionHref: "/admin/seo",
-    items: ["meta title lipsa", "descrieri lipsa", "imagini fara alt", "redirect-uri 301", "preview Google/Open Graph"]
+    items: ["meta title lipsă", "descrieri lipsă", "imagini fără alt", "redirect-uri 301", "preview Google/Open Graph"]
   },
   utilizatori: {
     title: "Utilizatori",
-    description: "Gestioneaza utilizatorii admin, editorii si rolurile interne.",
-    primaryActionLabel: "Adauga utilizator",
+    description: "Gestionează utilizatorii admin, editorii și rolurile interne.",
+    primaryActionLabel: "Adaugă utilizator",
     primaryActionHref: "/admin/utilizatori/new",
-    items: ["roluri ADMIN/EDITOR/VOLUNTEER", "status activ/dezactivat", "securitate cont", "audit actiuni"]
+    items: ["roluri ADMIN/EDITOR/VOLUNTEER", "status activ/dezactivat", "securitate cont", "audit acțiuni"]
   },
   setari: {
-    title: "Setari site",
-    description: "Configureaza identitatea site-ului, navigatia, datele generale si integrarile viitoare.",
-    primaryActionLabel: "Editeaza setarile",
+    title: "Setări site",
+    description: "Configurează identitatea site-ului, navigația, datele generale și integrările viitoare.",
+    primaryActionLabel: "Editează setarile",
     primaryActionHref: "/admin/setari",
     items: ["identitate Star Sim", "social links", "navigatie", "setari SEO globale", "integrari viitoare"]
   },
   "audit-log": {
     title: "Audit Log",
-    description: "Urmareste actiunile importante din admin pentru trasabilitate si securitate.",
+    description: "Urmărește acțiunile importante din admin pentru trasabilitate și securitate.",
     primaryActionLabel: "Vezi loguri",
     primaryActionHref: "/admin/audit-log",
-    items: ["actiuni utilizatori", "entitate modificata", "data si autor", "metadata tehnica"]
+    items: ["acțiuni utilizatori", "entitate modificată", "dată și autor", "metadata tehnică"]
   }
 } as const;

@@ -39,7 +39,7 @@ export function PublicHeader() {
             className="focus-ring inline-flex items-center gap-2 rounded-xl bg-starsim-navy px-4 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-starsim-blue"
           >
             <Heart className="h-4 w-4 text-starsim-gold" />
-            <span className="hidden sm:inline">Doneaza</span>
+            <span className="hidden sm:inline">Donează</span>
           </Link>
           <button className="focus-ring rounded-xl border border-starsim-border p-3 lg:hidden" onClick={() => setOpen(true)} aria-label="Deschide meniul">
             <Menu className="h-5 w-5" />

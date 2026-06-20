@@ -20,13 +20,13 @@ export type AdminField = {
 };
 
 const publishStatusOptions = [
-  { label: "Ciorna", value: "DRAFT" },
+  { label: "Ciornă", value: "DRAFT" },
   { label: "Publicat", value: "PUBLISHED" },
   { label: "Arhivat", value: "ARCHIVED" }
 ];
 
 const eventStatusOptions = [
-  { label: "Ciorna", value: "DRAFT" },
+  { label: "Ciornă", value: "DRAFT" },
   { label: "Publicat", value: "PUBLISHED" },
   { label: "Anulat", value: "CANCELLED" },
   { label: "Finalizat", value: "COMPLETED" }
@@ -45,21 +45,21 @@ export const adminContentModules: Record<
 > = {
   programe: {
     title: "Programe",
-    description: "Creeaza si editeaza programele publice afisate pe site si pe prima pagina.",
+    description: "Creează și editează programele publice afișate pe site și pe prima pagină.",
     basePath: "/admin/programe",
     publicBasePath: "/programe",
-    newLabel: "Adauga program",
+    newLabel: "Adaugă program",
     fields: [
       { name: "title", label: "Titlu", type: "text", required: true },
-      { name: "slug", label: "Slug", type: "text", placeholder: "se genereaza din titlu daca il lasi gol" },
-      { name: "excerpt", label: "Descriere scurta", type: "textarea", required: true, rows: 3 },
-      { name: "body", label: "Continut", type: "textarea", rows: 8 },
+      { name: "slug", label: "Slug", type: "text", placeholder: "se generează din titlu dacă îl lași gol" },
+      { name: "excerpt", label: "Descriere scurtă", type: "textarea", required: true, rows: 3 },
+      { name: "body", label: "Conținut", type: "textarea", rows: 8 },
       { name: "category", label: "Categorie", type: "text" },
       { name: "icon", label: "Icon", type: "text", placeholder: "graduation, telescope, bus, atom" },
       { name: "ctaLabel", label: "Text buton", type: "text" },
       { name: "ctaHref", label: "Link buton", type: "text" },
       { name: "status", label: "Status", type: "select", options: publishStatusOptions },
-      { name: "featuredOnHome", label: "Afiseaza pe prima pagina", type: "checkbox" },
+      { name: "featuredOnHome", label: "Afișează pe prima pagina", type: "checkbox" },
       { name: "sortOrder", label: "Ordine", type: "number" },
       { name: "metaTitle", label: "Meta title", type: "text" },
       { name: "metaDescription", label: "Meta description", type: "textarea", rows: 3 }
@@ -67,26 +67,26 @@ export const adminContentModules: Record<
   },
   evenimente: {
     title: "Evenimente",
-    description: "Creeaza evenimente, date, locatii si linkuri de inscriere.",
+    description: "Creează evenimente, date, locații și linkuri de înscriere.",
     basePath: "/admin/evenimente",
     publicBasePath: "/evenimente",
-    newLabel: "Adauga eveniment",
+    newLabel: "Adaugă eveniment",
     fields: [
       { name: "title", label: "Titlu", type: "text", required: true },
       { name: "slug", label: "Slug", type: "text" },
-      { name: "excerpt", label: "Descriere scurta", type: "textarea", required: true, rows: 3 },
-      { name: "body", label: "Continut", type: "textarea", rows: 8 },
+      { name: "excerpt", label: "Descriere scurtă", type: "textarea", required: true, rows: 3 },
+      { name: "body", label: "Conținut", type: "textarea", rows: 8 },
       { name: "startsAt", label: "Incepe la", type: "datetime", required: true },
       { name: "endsAt", label: "Se termina la", type: "datetime" },
-      { name: "locationName", label: "Locatie", type: "text", required: true },
-      { name: "address", label: "Adresa", type: "text" },
-      { name: "city", label: "Oras", type: "text" },
+      { name: "locationName", label: "Locație", type: "text", required: true },
+      { name: "address", label: "Adresă", type: "text" },
+      { name: "city", label: "Oraș", type: "text" },
       { name: "mapUrl", label: "Link harta", type: "text" },
-      { name: "maxParticipants", label: "Numar maxim participanti", type: "number" },
-      { name: "registrationEnabled", label: "Inscrieri active", type: "checkbox" },
-      { name: "registrationUrl", label: "Link inscriere", type: "text" },
+      { name: "maxParticipants", label: "Număr maxim participanți", type: "number" },
+      { name: "registrationEnabled", label: "Înscrieri active", type: "checkbox" },
+      { name: "registrationUrl", label: "Link înscriere", type: "text" },
       { name: "status", label: "Status", type: "select", options: eventStatusOptions },
-      { name: "featuredOnHome", label: "Afiseaza pe prima pagina", type: "checkbox" },
+      { name: "featuredOnHome", label: "Afișează pe prima pagina", type: "checkbox" },
       { name: "sortOrder", label: "Ordine", type: "number" },
       { name: "metaTitle", label: "Meta title", type: "text" },
       { name: "metaDescription", label: "Meta description", type: "textarea", rows: 3 }
@@ -94,17 +94,17 @@ export const adminContentModules: Record<
   },
   galerie: {
     title: "Galerie",
-    description: "Creeaza albume foto publice. Imaginile pot fi atasate ulterior din media library.",
+    description: "Creează albume foto publice. Imaginile pot fi atașate ulterior din media library.",
     basePath: "/admin/galerie",
     publicBasePath: "/galerie",
-    newLabel: "Adauga album",
+    newLabel: "Adaugă album",
     fields: [
       { name: "title", label: "Titlu", type: "text", required: true },
       { name: "slug", label: "Slug", type: "text" },
       { name: "description", label: "Descriere", type: "textarea", rows: 4 },
-      { name: "body", label: "Continut", type: "textarea", rows: 8 },
+      { name: "body", label: "Conținut", type: "textarea", rows: 8 },
       { name: "status", label: "Status", type: "select", options: publishStatusOptions },
-      { name: "featuredOnHome", label: "Afiseaza pe prima pagina", type: "checkbox" },
+      { name: "featuredOnHome", label: "Afișează pe prima pagina", type: "checkbox" },
       { name: "sortOrder", label: "Ordine", type: "number" },
       { name: "metaTitle", label: "Meta title", type: "text" },
       { name: "metaDescription", label: "Meta description", type: "textarea", rows: 3 }
@@ -112,20 +112,20 @@ export const adminContentModules: Record<
   },
   articole: {
     title: "Articole",
-    description: "Publica articole si noutati educationale.",
+    description: "Publică articole și noutăți educaționale.",
     basePath: "/admin/articole",
     publicBasePath: "/articole",
-    newLabel: "Adauga articol",
+    newLabel: "Adaugă articol",
     fields: [
       { name: "title", label: "Titlu", type: "text", required: true },
       { name: "slug", label: "Slug", type: "text" },
-      { name: "excerpt", label: "Descriere scurta", type: "textarea", required: true, rows: 3 },
-      { name: "body", label: "Continut", type: "textarea", rows: 10 },
+      { name: "excerpt", label: "Descriere scurtă", type: "textarea", required: true, rows: 3 },
+      { name: "body", label: "Conținut", type: "textarea", rows: 10 },
       { name: "authorName", label: "Autor", type: "text" },
       { name: "category", label: "Categorie", type: "text" },
-      { name: "tags", label: "Tag-uri", type: "text", placeholder: "astronomie, copii, educatie" },
+      { name: "tags", label: "Tag-uri", type: "text", placeholder: "astronomie, copii, educație" },
       { name: "status", label: "Status", type: "select", options: publishStatusOptions },
-      { name: "featuredOnHome", label: "Afiseaza pe prima pagina", type: "checkbox" },
+      { name: "featuredOnHome", label: "Afișează pe prima pagina", type: "checkbox" },
       { name: "focusKeyword", label: "Focus keyword", type: "text" },
       { name: "metaTitle", label: "Meta title", type: "text" },
       { name: "metaDescription", label: "Meta description", type: "textarea", rows: 3 }
@@ -133,9 +133,9 @@ export const adminContentModules: Record<
   },
   parteneri: {
     title: "Parteneri",
-    description: "Gestioneaza partenerii si sponsorii Star Sim.",
+    description: "Gestionează partenerii și sponsorii Star Sim.",
     basePath: "/admin/parteneri",
-    newLabel: "Adauga partener",
+    newLabel: "Adaugă partener",
     fields: [
       { name: "name", label: "Nume", type: "text", required: true },
       { name: "slug", label: "Slug", type: "text" },
@@ -143,32 +143,32 @@ export const adminContentModules: Record<
       { name: "website", label: "Website", type: "text" },
       { name: "type", label: "Tip parteneriat", type: "text" },
       { name: "status", label: "Status", type: "select", options: publishStatusOptions },
-      { name: "featuredOnHome", label: "Afiseaza pe prima pagina", type: "checkbox" },
+      { name: "featuredOnHome", label: "Afișează pe prima pagina", type: "checkbox" },
       { name: "sortOrder", label: "Ordine", type: "number" }
     ]
   },
   testimoniale: {
     title: "Testimoniale",
-    description: "Publica recomandari de la profesori, parinti, parteneri sau participanti.",
+    description: "Publică recomandări de la profesori, părinți, parteneri sau participanți.",
     basePath: "/admin/testimoniale",
-    newLabel: "Adauga testimonial",
+    newLabel: "Adaugă testimonial",
     fields: [
       { name: "quote", label: "Citat", type: "textarea", required: true, rows: 5 },
       { name: "authorName", label: "Autor", type: "text", required: true },
       { name: "authorRole", label: "Rol autor", type: "text" },
       { name: "organization", label: "Organizatie", type: "text" },
       { name: "status", label: "Status", type: "select", options: publishStatusOptions },
-      { name: "featuredOnHome", label: "Afiseaza pe prima pagina", type: "checkbox" },
+      { name: "featuredOnHome", label: "Afișează pe prima pagina", type: "checkbox" },
       { name: "sortOrder", label: "Ordine", type: "number" }
     ]
   },
   media: {
     title: "Media Library",
-    description: "Adauga manual asset-uri media prin URL. Upload-ul fizic poate fi conectat ulterior la volum persistent.",
+    description: "Adaugă manual asset-uri media prin URL. Upload-ul fizic poate fi conectat ulterior la volum persistent.",
     basePath: "/admin/media",
-    newLabel: "Adauga media",
+    newLabel: "Adaugă media",
     fields: [
-      { name: "filename", label: "Nume fisier", type: "text", required: true },
+      { name: "filename", label: "Nume fișier", type: "text", required: true },
       { name: "url", label: "URL", type: "text", required: true },
       { name: "mimeType", label: "MIME type", type: "text", required: true, placeholder: "image/jpeg" },
       { name: "type", label: "Tip", type: "select", options: [{ label: "Imagine", value: "IMAGE" }, { label: "Video", value: "VIDEO" }, { label: "Document", value: "DOCUMENT" }] },
@@ -177,19 +177,19 @@ export const adminContentModules: Record<
       { name: "credit", label: "Credit", type: "text" },
       { name: "folder", label: "Folder", type: "text" },
       { name: "size", label: "Dimensiune bytes", type: "number" },
-      { name: "width", label: "Latime", type: "number" },
-      { name: "height", label: "Inaltime", type: "number" }
+      { name: "width", label: "Lățime", type: "number" },
+      { name: "height", label: "Înălțime", type: "number" }
     ]
   },
   utilizatori: {
     title: "Utilizatori",
-    description: "Gestioneaza conturile care pot intra in admin.",
+    description: "Gestionează conturile care pot intra în admin.",
     basePath: "/admin/utilizatori",
-    newLabel: "Adauga utilizator",
+    newLabel: "Adaugă utilizator",
     fields: [
       { name: "name", label: "Nume", type: "text", required: true },
       { name: "email", label: "Email", type: "text", required: true },
-      { name: "password", label: "Parola", type: "password", help: "La editare, lasa gol daca nu vrei sa schimbi parola." },
+      { name: "password", label: "Parolă", type: "password", help: "La editare, lasă gol dacă nu vrei să schimbi parola." },
       { name: "role", label: "Rol", type: "select", options: [{ label: "Admin", value: "ADMIN" }, { label: "Editor", value: "EDITOR" }, { label: "Voluntar", value: "VOLUNTEER" }] },
       { name: "status", label: "Status", type: "select", options: [{ label: "Activ", value: "ACTIVE" }, { label: "Dezactivat", value: "DISABLED" }] }
     ]

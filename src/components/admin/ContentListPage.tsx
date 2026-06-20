@@ -28,7 +28,7 @@ export async function ContentListPage({ type }: { type: AdminContentType }) {
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Homepage</th>
                 <th className="px-4 py-3">Actualizat</th>
-                <th className="px-4 py-3">Actiuni</th>
+                <th className="px-4 py-3">Acțiuni</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -46,7 +46,7 @@ export async function ContentListPage({ type }: { type: AdminContentType }) {
                   <td className="px-4 py-3">
                     <div className="flex gap-3">
                       <Link href={`${config.basePath}/${item.id}/edit`} className="font-semibold text-starsim-navy hover:text-starsim-gold">
-                        Editeaza
+                        Editează
                       </Link>
                       {config.publicBasePath && item.slug ? (
                         <Link href={`${config.publicBasePath}/${item.slug}`} className="font-semibold text-starsim-gold hover:text-starsim-navy">
@@ -61,8 +61,8 @@ export async function ContentListPage({ type }: { type: AdminContentType }) {
           </table>
         ) : (
           <div className="p-8 text-center">
-            <h2 className="font-semibold text-starsim-navy">Nu exista elemente inca</h2>
-            <p className="mt-2 text-sm text-slate-500">Creeaza primul element pentru acest modul.</p>
+            <h2 className="font-semibold text-starsim-navy">Nu există elemente încă</h2>
+            <p className="mt-2 text-sm text-slate-500">Creează primul element pentru acest modul.</p>
             <Link href={`${config.basePath}/new`} className="mt-5 inline-flex rounded-xl bg-starsim-navy px-4 py-3 text-sm font-bold text-white">
               {config.newLabel}
             </Link>

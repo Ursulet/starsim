@@ -55,8 +55,8 @@ export function HomepageSettingsForm({ settings }: { settings: HomepageSettings 
       <div className="mt-6 rounded-2xl bg-slate-50 p-5">
         <h2 className="font-semibold text-starsim-navy">Misiune</h2>
         <div className="mt-4 grid gap-5 md:grid-cols-2">
-          <TextInput label="Titlu sectiune" name="missionTitle" value={settings.missionTitle} />
-          <TextInput label="Subtitlu sectiune" name="missionSubtitle" value={settings.missionSubtitle} />
+          <TextInput label="Titlu secțiune" name="missionTitle" value={settings.missionTitle} />
+          <TextInput label="Subtitlu secțiune" name="missionSubtitle" value={settings.missionSubtitle} />
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {settings.missionCards.map((card, index) => (
@@ -85,8 +85,8 @@ export function HomepageSettingsForm({ settings }: { settings: HomepageSettings 
       <div className="mt-6 rounded-2xl bg-slate-50 p-5">
         <h2 className="font-semibold text-starsim-navy">Contributii</h2>
         <div className="mt-4 grid gap-5 md:grid-cols-2">
-          <TextInput label="Titlu sectiune" name="contributionTitle" value={settings.contributionTitle} />
-          <TextInput label="Subtitlu sectiune" name="contributionSubtitle" value={settings.contributionSubtitle} />
+          <TextInput label="Titlu secțiune" name="contributionTitle" value={settings.contributionTitle} />
+          <TextInput label="Subtitlu secțiune" name="contributionSubtitle" value={settings.contributionSubtitle} />
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {settings.contributionCards.map((card, index) => (
@@ -105,7 +105,7 @@ export function HomepageSettingsForm({ settings }: { settings: HomepageSettings 
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">Salveaza prima pagina</button>
+        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">Salvează prima pagina</button>
         <Link href="/" className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">
           Vezi site-ul
         </Link>

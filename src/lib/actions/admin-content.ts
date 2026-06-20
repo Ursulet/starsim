@@ -125,7 +125,7 @@ export async function createAdminContentAction(formData: FormData) {
           content: textToTiptap(str(formData, "body")),
           startsAt: dateValue(formData, "startsAt", new Date()) || new Date(),
           endsAt: dateValue(formData, "endsAt"),
-          locationName: str(formData, "locationName") || "Locatie Star Sim",
+          locationName: str(formData, "locationName") || "Locație Star Sim",
           address: nullable(formData, "address"),
           city: nullable(formData, "city"),
           mapUrl: nullable(formData, "mapUrl"),
@@ -230,7 +230,7 @@ export async function createAdminContentAction(formData: FormData) {
     }
     case "utilizatori": {
       const password = str(formData, "password");
-      if (password.length < 8) throw new Error("Parola trebuie sa aiba minim 8 caractere.");
+      if (password.length < 8) throw new Error("Parola trebuie să aibă minim 8 caractere.");
       await prisma.user.create({
         data: {
           name: str(formData, "name"),
@@ -251,7 +251,7 @@ export async function updateAdminContentAction(formData: FormData) {
   const type = typedModule(formData);
   await requireAccess(type);
   const id = str(formData, "id");
-  if (!id) throw new Error("Element lipsa.");
+  if (!id) throw new Error("Element lipsă.");
 
   switch (type) {
     case "programe": {
@@ -288,7 +288,7 @@ export async function updateAdminContentAction(formData: FormData) {
           content: textToTiptap(str(formData, "body")),
           startsAt: dateValue(formData, "startsAt", new Date()) || new Date(),
           endsAt: dateValue(formData, "endsAt"),
-          locationName: str(formData, "locationName") || "Locatie Star Sim",
+          locationName: str(formData, "locationName") || "Locație Star Sim",
           address: nullable(formData, "address"),
           city: nullable(formData, "city"),
           mapUrl: nullable(formData, "mapUrl"),

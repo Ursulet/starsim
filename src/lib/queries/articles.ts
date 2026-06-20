@@ -6,12 +6,12 @@ export const fallbackArticles = [
     id: "a1",
     title: "Cum aprindem curiozitatea pentru astronomie",
     slug: "cum-aprindem-curiozitatea-pentru-astronomie",
-    excerpt: "Idei simple pentru parinti si profesori care vor sa aduca stelele mai aproape de copii.",
-    category: "Educatie",
+    excerpt: "Idei simple pentru părinți și profesori care vor să aducă stelele mai aproape de copii.",
+    category: "Educație",
     authorName: "Star Sim",
     publishedAt: new Date(),
     heroImage: null,
-    content: { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "Astronomia incepe cu o intrebare buna si cu rabdarea de a privi cerul." }] }] }
+    content: { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "Astronomia începe cu o întrebare bună și cu răbdarea de a privi cerul." }] }] }
   }
 ];
 

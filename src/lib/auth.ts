@@ -16,7 +16,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Parola", type: "password" }
+        password: { label: "Parolă", type: "password" }
       },
       authorize: async (credentials) => {
         const parsed = loginSchema.safeParse(credentials);

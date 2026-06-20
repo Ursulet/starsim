@@ -34,60 +34,60 @@ export type HomepageSettings = {
 };
 
 export const defaultHomepageSettings: HomepageSettings = {
-  heroIntro: "Aducem astronomia mai aproape de copii si comunitati, pentru a transforma curiozitatea de azi in visurile de maine.",
+  heroIntro: "Aducem astronomia mai aproape de copii și comunități, pentru a transforma curiozitatea de azi în visurile de mâine.",
   heroImageUrl: "/images/mockup-site-asociatie.png",
-  heroPrimaryLabel: "Descopera programele",
+  heroPrimaryLabel: "Descoperă programele",
   heroPrimaryHref: "/programe",
-  heroSecondaryLabel: "Sustine asociatia",
+  heroSecondaryLabel: "Susține asociația",
   heroSecondaryHref: "/doneaza",
-  missionTitle: "Misiunea noastra",
-  missionSubtitle: "Inspiram curiozitatea. Impartasim cunoasterea. Construim visuri.",
+  missionTitle: "Misiunea noastră",
+  missionSubtitle: "Inspirăm curiozitatea. Împărtășim cunoașterea. Construim visuri.",
   missionCards: [
     {
       icon: "education",
-      title: "Educatie",
-      text: "Ateliere si activitati interactive care aduc stiinta mai aproape de copii si tineri."
+      title: "Educație",
+      text: "Ateliere și activități interactive care aduc știința mai aproape de copii și tineri."
     },
     {
       icon: "telescope",
-      title: "Nopti de observatii",
-      text: "Privim cerul impreuna si descoperim minunile Universului prin lentile si povesti."
+      title: "Nopți de observații",
+      text: "Privim cerul împreună și descoperim minunile Universului prin lentile și povești."
     },
     {
       icon: "community",
       title: "Comunitate",
-      text: "Construim o comunitate unita in jurul pasiunii pentru astronomie si educatie."
+      text: "Construim o comunitate unită în jurul pasiunii pentru astronomie și educație."
     }
   ],
-  programsTitle: "Programele si proiectele noastre",
-  eventsTitle: "Urmatoarele evenimente",
-  eventsEmptyTitle: "Pregatim urmatoarele evenimente sub cerul instelat.",
-  eventsEmptyDescription: "Urmareste-ne pentru noutati si inscrieri.",
+  programsTitle: "Programele și proiectele noastre",
+  eventsTitle: "Următoarele evenimente",
+  eventsEmptyTitle: "Pregătim următoarele evenimente sub cerul înstelat.",
+  eventsEmptyDescription: "Urmărește-ne pentru noutăți și înscrieri.",
   eventsCtaLabel: "Vezi toate evenimentele",
   eventsCtaHref: "/evenimente",
-  contributionTitle: "Fiecare gest conteaza",
-  contributionSubtitle: "Impreuna putem duce astronomia mai departe.",
+  contributionTitle: "Fiecare gest contează",
+  contributionSubtitle: "Împreună putem duce astronomia mai departe.",
   contributionCards: [
     {
       icon: "donation",
-      title: "Sustine-ne",
-      text: "Donatia ta ajuta la finantarea programelor noastre educationale.",
+      title: "Susține-ne",
+      text: "Donația ta ajută la finanțarea programelor noastre educaționale.",
       href: "/doneaza",
-      action: "Doneaza acum"
+      action: "Donează acum"
     },
     {
       icon: "volunteer",
       title: "Fii voluntar",
-      text: "Alatura-te echipei noastre si inspira generatiile viitoare.",
+      text: "Alătură-te echipei noastre și inspiră generațiile viitoare.",
       href: "/implica-te",
-      action: "Afla cum te poti implica"
+      action: "Află cum te poți implica"
     },
     {
       icon: "partnership",
       title: "Parteneriate",
-      text: "Impreuna cu partenerii nostri, construim proiecte de impact.",
+      text: "Împreună cu partenerii noștri, construim proiecte de impact.",
       href: "/parteneriate",
-      action: "Colaboreaza cu noi"
+      action: "Colaborează cu noi"
     }
   ]
 };

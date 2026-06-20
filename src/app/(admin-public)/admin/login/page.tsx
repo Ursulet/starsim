@@ -22,7 +22,7 @@ export default function LoginPage() {
       redirect: false
     });
     setLoading(false);
-    if (result?.error) setError("Email sau parola incorecta.");
+    if (result?.error) setError("Email sau parolă incorectă.");
     else router.push("/admin");
   }
 
@@ -34,11 +34,11 @@ export default function LoginPage() {
         <p className="mt-2 text-center text-sm text-slate-500">Autentificare pentru echipa Star Sim</p>
         {error ? <p className="mt-5 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
         <label className="mt-6 grid gap-2 text-sm font-semibold">Email<input name="email" type="email" required className="focus-ring rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
-        <label className="mt-4 grid gap-2 text-sm font-semibold">Parola<input name="password" type="password" required className="focus-ring rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
+        <label className="mt-4 grid gap-2 text-sm font-semibold">Parolă<input name="password" type="password" required className="focus-ring rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
         <button disabled={loading} className="focus-ring mt-6 w-full rounded-xl bg-starsim-navy px-5 py-3 font-bold text-white hover:bg-starsim-blue disabled:opacity-60">
-          {loading ? "Se verifica..." : "Intra in admin"}
+          {loading ? "Se verifică..." : "Intră în admin"}
         </button>
-        <Link href="/" className="mt-5 block text-center text-sm font-semibold text-starsim-gold">Inapoi la site</Link>
+        <Link href="/" className="mt-5 block text-center text-sm font-semibold text-starsim-gold">Înapoi la site</Link>
       </form>
     </main>
   );

@@ -19,7 +19,7 @@ export default async function Page() {
     <section>
       <div>
         <h1 className="text-3xl font-bold text-starsim-navy">Newsletter</h1>
-        <p className="mt-2 max-w-3xl text-slate-500">Vezi abonatii veniti din formularul public de newsletter.</p>
+        <p className="mt-2 max-w-3xl text-slate-500">Vezi abonații veniti din formularul public de newsletter.</p>
       </div>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -48,7 +48,7 @@ export default async function Page() {
           </table>
         ) : (
           <div className="p-8 text-center">
-            <h2 className="font-semibold text-starsim-navy">Nu exista abonati inca</h2>
+            <h2 className="font-semibold text-starsim-navy">Nu există abonați încă</h2>
             <p className="mt-2 text-sm text-slate-500">Abonatii apar aici dupa completarea formularului din footer.</p>
           </div>
         )}

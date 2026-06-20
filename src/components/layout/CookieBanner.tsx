@@ -25,7 +25,7 @@ export function CookieBanner() {
           <div>
             <h2 className="font-serif text-lg font-semibold text-starsim-navy">Folosim cookies esentiale</h2>
             <p className="mt-1 max-w-3xl text-sm leading-6 text-starsim-muted">
-              Le folosim pentru functionarea site-ului si pentru a retine preferinta ta. Detalii gasesti in{" "}
+              Le folosim pentru funcționarea site-ului și pentru a reține preferința ta. Detalii găsești în{" "}
               <Link href="/cookies" className="font-semibold text-starsim-gold hover:text-starsim-navy">
                 politica de cookies
               </Link>
@@ -40,7 +40,7 @@ export function CookieBanner() {
             setVisible(false);
           }}
         >
-          Am inteles
+          Am înțeles
         </button>
       </div>
     </div>

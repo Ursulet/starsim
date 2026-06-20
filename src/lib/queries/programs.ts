@@ -18,5 +18,5 @@ export async function getProgramBySlug(slug: string) {
   } catch {}
   const fallback = fallbackPrograms.find((item) => item.slug === slug);
   if (!fallback) notFound();
-  return { ...fallback, content: null, ctaLabel: "Contacteaza-ne", ctaHref: "/contact", events: [] };
+  return { ...fallback, content: null, ctaLabel: "Contactează-ne", ctaHref: "/contact", events: [] };
 }

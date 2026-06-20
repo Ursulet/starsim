@@ -5,6 +5,6 @@ export const publicNavigation = [
   { label: "Evenimente", href: "/evenimente" },
   { label: "Galerie", href: "/galerie" },
   { label: "Articole", href: "/articole" },
-  { label: "Implica-te", href: "/implica-te" },
+  { label: "Implică-te", href: "/implica-te" },
   { label: "Contact", href: "/contact" }
 ];

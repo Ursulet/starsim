@@ -28,7 +28,7 @@ export default async function Page() {
     <section>
       <div>
         <h1 className="text-3xl font-bold text-starsim-navy">SEO Center</h1>
-        <p className="mt-2 max-w-3xl text-slate-500">Raport rapid pentru pagini si continut cu meta title sau meta description lipsa.</p>
+        <p className="mt-2 max-w-3xl text-slate-500">Raport rapid pentru pagini și conținut cu meta title sau meta description lipsă.</p>
       </div>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -39,7 +39,7 @@ export default async function Page() {
                 <th className="px-4 py-3">Element</th>
                 <th className="px-4 py-3">Tip</th>
                 <th className="px-4 py-3">Lipseste</th>
-                <th className="px-4 py-3">Actiuni</th>
+                <th className="px-4 py-3">Acțiuni</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -54,7 +54,7 @@ export default async function Page() {
                     {[!item.metaTitle ? "meta title" : null, !item.metaDescription ? "meta description" : null].filter(Boolean).join(", ")}
                   </td>
                   <td className="px-4 py-3">
-                    <Link href={item.editHref} className="font-semibold text-starsim-navy hover:text-starsim-gold">Editeaza</Link>
+                    <Link href={item.editHref} className="font-semibold text-starsim-navy hover:text-starsim-gold">Editează</Link>
                   </td>
                 </tr>
               ))}
@@ -62,8 +62,8 @@ export default async function Page() {
           </table>
         ) : (
           <div className="p-8 text-center">
-            <h2 className="font-semibold text-starsim-navy">Nu exista probleme SEO evidente</h2>
-            <p className="mt-2 text-sm text-slate-500">Elementele verificate au meta title si meta description completate.</p>
+            <h2 className="font-semibold text-starsim-navy">Nu există probleme SEO evidente</h2>
+            <p className="mt-2 text-sm text-slate-500">Elementele verificate au meta title și meta description completate.</p>
           </div>
         )}
       </div>

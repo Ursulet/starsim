@@ -96,7 +96,7 @@ export async function createPageAction(formData: FormData) {
 
 export async function updatePageAction(formData: FormData) {
   const data = await parsePageForm(formData);
-  if (!data.id) throw new Error("Pagina lipseste.");
+  if (!data.id) throw new Error("Pagina lipsește.");
 
   const page = await prisma.page.update({
     where: { id: data.id },

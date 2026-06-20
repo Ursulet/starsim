@@ -32,7 +32,7 @@ export function PageForm({ page }: PageFormProps) {
         <label className="grid gap-2 text-sm font-semibold text-starsim-navy">
           Status
           <select name="status" defaultValue={page?.status || "DRAFT"} className="focus-ring rounded-xl border border-slate-200 px-3 py-2 font-normal">
-            <option value="DRAFT">Ciorna</option>
+            <option value="DRAFT">Ciornă</option>
             <option value="PUBLISHED">Publicat</option>
             <option value="ARCHIVED">Arhivat</option>
           </select>
@@ -51,12 +51,12 @@ export function PageForm({ page }: PageFormProps) {
       </div>
 
       <label className="mt-5 grid gap-2 text-sm font-semibold text-starsim-navy">
-        Descriere scurta
+        Descriere scurtă
         <textarea name="excerpt" defaultValue={page?.excerpt || ""} className="focus-ring min-h-24 rounded-xl border border-slate-200 px-3 py-2 font-normal" />
       </label>
 
       <label className="mt-5 grid gap-2 text-sm font-semibold text-starsim-navy">
-        Continut
+        Conținut
         <textarea name="body" defaultValue={body} className="focus-ring min-h-72 rounded-xl border border-slate-200 px-3 py-2 font-normal leading-7" />
       </label>
 
@@ -75,8 +75,8 @@ export function PageForm({ page }: PageFormProps) {
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">{page ? "Salveaza pagina" : "Creeaza pagina"}</button>
-        <Link href="/admin/pagini" className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">Inapoi</Link>
+        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">{page ? "Salvează pagina" : "Creează pagina"}</button>
+        <Link href="/admin/pagini" className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">Înapoi</Link>
         {page?.status === "PUBLISHED" ? <Link href={`/${page.slug}`} className="rounded-xl border border-starsim-gold px-5 py-3 text-center text-sm font-bold text-starsim-navy">Vezi public</Link> : null}
       </div>
     </form>

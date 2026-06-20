@@ -17,7 +17,7 @@ export function NewsletterForm() {
           type="email"
           required
           className="min-w-0 flex-1 rounded-lg px-3 text-sm text-starsim-ink outline-none"
-          placeholder="Adresa ta de email"
+          placeholder="Adresă ta de email"
           aria-label="Email newsletter"
         />
         <button disabled={pending} className="rounded-lg bg-starsim-gold p-3 text-starsim-navy disabled:opacity-60" aria-label="Abonare newsletter">

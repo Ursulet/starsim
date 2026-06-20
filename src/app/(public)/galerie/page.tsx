@@ -8,7 +8,7 @@ export default async function GalleryPage() {
   const albums = await getPublishedAlbums();
   return (
     <>
-      <PageHero title="Momente sub acelasi cer" eyebrow="Galerie" intro="Fragmente din ateliere, caravane si seri in care cerul a devenit sala de clasa." />
+      <PageHero title="Momente sub același cer" eyebrow="Galerie" intro="Fragmente din ateliere, caravane și seri în care cerul a devenit sală de clasă." />
       <section className="section-padding"><Container className="grid gap-6 md:grid-cols-3">
         {albums.map((album: any) => (
           <Link key={album.id} href={`/galerie/${album.slug}`} className="premium-card overflow-hidden transition hover:-translate-y-1 hover:shadow-premium">

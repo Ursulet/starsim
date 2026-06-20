@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPublishedPageBySlug("termeni-si-conditii");
   return buildMetadata({
-    title: page?.metaTitle || page?.title || "Termeni si conditii",
+    title: page?.metaTitle || page?.title || "Termeni și condiții",
     description: page?.metaDescription || page?.excerpt,
     path: "/termeni-si-conditii",
     robotsIndex: page?.robotsIndex,

@@ -7,7 +7,7 @@ import { publicNavigation } from "@/lib/navigation";
 import { getContactSettings } from "@/lib/queries/settings";
 
 const fallbackFooterDescription =
-  "Asociatie dedicata promovarii astronomiei, educatiei stiintifice si inspirarii copiilor sa viseze mai departe.";
+  "Asociație dedicată promovării astronomiei, educației științifice și inspirării copiilor să viseze mai departe.";
 const fallbackFooterCopyright = "De la o stea, la un vis. Toate drepturile rezervate.";
 
 export async function PublicFooter() {
@@ -44,7 +44,7 @@ export async function PublicFooter() {
             </p>
             <p className="flex gap-3">
               <MapPin className="h-4 w-4 shrink-0 text-starsim-gold" />
-              {contact?.address || "Bucuresti, Romania"}
+              {contact?.address || "București, România"}
             </p>
             {contact?.schedule ? (
               <p className="flex gap-3">
@@ -69,7 +69,7 @@ export async function PublicFooter() {
         <div>
           {socialLinks.length ? (
             <>
-              <h3 className="font-semibold">Urmareste-ne</h3>
+              <h3 className="font-semibold">Urmărește-ne</h3>
               <div className="mt-4 flex flex-wrap gap-3">
                 {socialLinks.map(({ href, label, Icon }) => (
                   <a
@@ -95,9 +95,9 @@ export async function PublicFooter() {
         <Container className="flex flex-col gap-3 py-4 text-xs text-white/65 md:flex-row md:items-center md:justify-between">
           <p>&copy; {year} Star Sim - {footerCopyright}</p>
           <div className="flex flex-wrap gap-5">
-            <Link href="/politica-de-confidentialitate">Politica de confidentialitate</Link>
+            <Link href="/politica-de-confidentialitate">Politica de confidențialitate</Link>
             <Link href="/cookies">Cookies</Link>
-            <Link href="/termeni-si-conditii">Termeni si conditii</Link>
+            <Link href="/termeni-si-conditii">Termeni și condiții</Link>
           </div>
         </Container>
       </div>

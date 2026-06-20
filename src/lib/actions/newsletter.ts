@@ -15,11 +15,11 @@ export async function subscribeNewsletter(_: unknown, formData: FormData) {
   const parsed = newsletterSchema.safeParse(raw);
 
   if (!parsed.success) {
-    return { ok: false, message: "Te rugam sa introduci o adresa de email valida." };
+    return { ok: false, message: "Te rugăm să introduci o adresă de email validă." };
   }
 
   if (parsed.data.website) {
-    return { ok: true, message: "Multumim pentru abonare." };
+    return { ok: true, message: "Mulțumim pentru abonare." };
   }
 
   try {
@@ -39,8 +39,8 @@ export async function subscribeNewsletter(_: unknown, formData: FormData) {
       }
     });
 
-    return { ok: true, message: "Multumim pentru abonare." };
+    return { ok: true, message: "Mulțumim pentru abonare." };
   } catch {
-    return { ok: false, message: "Abonarea nu a putut fi salvata momentan." };
+    return { ok: false, message: "Abonarea nu a putut fi salvată momentan." };
   }
 }

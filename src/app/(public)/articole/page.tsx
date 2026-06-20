@@ -8,7 +8,7 @@ export default async function ArticlesPage() {
   const articles = await getPublishedArticles();
   return (
     <>
-      <PageHero title="Articole si resurse" eyebrow="Blog Star Sim" intro="Povesti, ghiduri si resurse despre astronomie, educatie STEM si curiozitatea care aprinde visuri." />
+      <PageHero title="Articole și resurse" eyebrow="Blog Star Sim" intro="Povești, ghiduri și resurse despre astronomie, educație STEM și curiozitatea care aprinde visuri." />
       <section className="section-padding">
         <Container className="grid gap-6 md:grid-cols-3">
           {articles.map((article: any) => (

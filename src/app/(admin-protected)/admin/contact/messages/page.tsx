@@ -48,8 +48,8 @@ export default async function ContactMessagesPage() {
           </table>
         ) : (
           <div className="p-8 text-center">
-            <h2 className="font-semibold text-starsim-navy">Nu exista mesaje inca</h2>
-            <p className="mt-2 text-sm text-slate-500">Cand formularul public primeste mesaje, ele vor aparea aici.</p>
+            <h2 className="font-semibold text-starsim-navy">Nu există mesaje încă</h2>
+            <p className="mt-2 text-sm text-slate-500">Când formularul public primește mesaje, ele vor apărea aici.</p>
           </div>
         )}
       </div>

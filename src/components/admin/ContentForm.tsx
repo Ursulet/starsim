@@ -80,10 +80,10 @@ export function ContentForm({ type, item }: { type: AdminContentType; item?: any
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">
-          {item ? "Salveaza modificarile" : config.newLabel}
+          {item ? "Salvează modificările" : config.newLabel}
         </button>
         <Link href={config.basePath} className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">
-          Inapoi la lista
+          Înapoi la lista
         </Link>
         {item && config.publicBasePath && item.slug ? (
           <Link href={`${config.publicBasePath}/${item.slug}`} className="rounded-xl border border-starsim-gold px-5 py-3 text-center text-sm font-bold text-starsim-navy">

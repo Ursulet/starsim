@@ -24,7 +24,7 @@ export function ContactForm() {
       </label>
       <label className="grid gap-2 text-sm font-semibold">Subiect<input name="subject" className="focus-ring rounded-xl border border-starsim-border px-4 py-3 font-normal" /></label>
       <label className="grid gap-2 text-sm font-semibold">Mesaj<textarea name="message" required minLength={10} className="focus-ring min-h-36 rounded-xl border border-starsim-border px-4 py-3 font-normal" /></label>
-      <label className="flex gap-3 text-sm text-starsim-muted"><input name="consent" type="checkbox" required /> Sunt de acord sa fiu contactat pentru aceasta solicitare.</label>
+      <label className="flex gap-3 text-sm text-starsim-muted"><input name="consent" type="checkbox" required /> Sunt de acord să fiu contactat pentru această solicitare.</label>
       <button disabled={pending} className="focus-ring rounded-full bg-starsim-navy px-6 py-3 font-bold text-white hover:bg-starsim-blue disabled:opacity-60">
         {pending ? "Se trimite..." : "Trimite mesajul"}
       </button>

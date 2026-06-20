@@ -2,37 +2,37 @@ export const legalPageDefaults = [
   {
     key: "privacy-policy",
     slug: "politica-de-confidentialitate",
-    title: "Politica de confidentialitate",
-    excerpt: "Informatii despre modul in care Star Sim colecteaza, foloseste si protejeaza datele personale.",
+    title: "Politica de confidențialitate",
+    excerpt: "Informații despre modul în care Star Sim colectează, folosește și protejează datele personale.",
     body: [
-      "Star Sim respecta confidentialitatea vizitatorilor, participantilor si partenerilor sai. Colectam doar datele necesare pentru a raspunde solicitarilor, pentru inscrieri la activitati si pentru comunicari legate de programele asociatiei.",
-      "Datele transmise prin formularele site-ului pot include nume, adresa de email, telefon, tipul solicitarii si mesajul trimis. Aceste date sunt folosite exclusiv pentru comunicarea cu persoana care ne-a contactat si pentru administrarea activitatilor Star Sim.",
-      "Nu vindem si nu inchiriem date personale. Accesul la date este limitat la persoanele autorizate din echipa Star Sim si la furnizorii tehnici necesari functionarii site-ului.",
-      "Pentru solicitari privind datele personale, ne poti contacta la adresa publicata pe pagina de contact."
+      "Star Sim respectă confidențialitatea vizitatorilor, participanților și partenerilor săi. Colectăm doar datele necesare pentru a răspunde solicitărilor, pentru înscrieri la activități și pentru comunicări legate de programele asociației.",
+      "Datele transmise prin formularele site-ului pot include nume, adresă de email, telefon, tipul solicitării și mesajul trimis. Aceste date sunt folosite exclusiv pentru comunicarea cu persoana care ne-a contactat și pentru administrarea activităților Star Sim.",
+      "Nu vindem și nu închiriem date personale. Accesul la date este limitat la persoanele autorizate din echipa Star Sim și la furnizorii tehnici necesari funcționării site-ului.",
+      "Pentru solicitări privind datele personale, ne poți contacta la adresa publicată pe pagina de contact."
     ]
   },
   {
     key: "cookies-policy",
     slug: "cookies",
     title: "Politica de cookies",
-    excerpt: "Explicam ce sunt cookie-urile si cum sunt folosite pe site-ul Star Sim.",
+    excerpt: "Explicăm ce sunt cookie-urile și cum sunt folosite pe site-ul Star Sim.",
     body: [
-      "Cookie-urile sunt fisiere mici salvate in browser pentru a ajuta site-ul sa functioneze corect si pentru a retine anumite preferinte.",
-      "Site-ul Star Sim foloseste cookie-uri necesare pentru functionalitati de baza, precum pastrarea preferintelor privind consimtamantul pentru cookies.",
-      "Daca in viitor vor fi adaugate instrumente de analiza sau marketing, acestea vor fi folosite doar cu informare clara si, unde este necesar, cu acordul vizitatorului.",
-      "Poti sterge sau bloca cookie-urile din setarile browserului tau."
+      "Cookie-urile sunt fișiere mici salvate în browser pentru a ajuta site-ul să funcționeze corect și pentru a reține anumite preferințe.",
+      "Site-ul Star Sim folosește cookie-uri necesare pentru funcționalități de bază, precum păstrarea preferințelor privind consimțământul pentru cookies.",
+      "Dacă în viitor vor fi adăugate instrumente de analiză sau marketing, acestea vor fi folosite doar cu informare clară și, unde este necesar, cu acordul vizitatorului.",
+      "Poți șterge sau bloca cookie-urile din setările browserului tău."
     ]
   },
   {
     key: "terms",
     slug: "termeni-si-conditii",
-    title: "Termeni si conditii",
-    excerpt: "Reguli generale pentru folosirea site-ului Star Sim si a continutului publicat.",
+    title: "Termeni și condiții",
+    excerpt: "Reguli generale pentru folosirea site-ului Star Sim și a conținutului publicat.",
     body: [
-      "Prin utilizarea acestui site, accepti sa folosesti continutul Star Sim intr-un mod responsabil si legal.",
-      "Informatiile publicate pe site au scop educational si informativ. Ne straduim sa pastram continutul actualizat, dar pot exista modificari ale programelor, evenimentelor sau datelor de contact.",
-      "Textele, imaginile, identitatea vizuala si materialele publicate apartin Star Sim sau partenerilor sai si nu pot fi reutilizate fara acord, cu exceptia cazurilor permise de lege.",
-      "Star Sim isi rezerva dreptul de a actualiza acesti termeni atunci cand site-ul sau activitatile se modifica."
+      "Prin utilizarea acestui site, accepți să folosești conținutul Star Sim într-un mod responsabil și legal.",
+      "Informațiile publicate pe site au scop educațional și informativ. Ne străduim să păstrăm conținutul actualizat, dar pot exista modificări ale programelor, evenimentelor sau datelor de contact.",
+      "Textele, imaginile, identitatea vizuală și materialele publicate aparțin Star Sim sau partenerilor săi și nu pot fi reutilizate fără acord, cu excepția cazurilor permise de lege.",
+      "Star Sim își rezervă dreptul de a actualiza acești termeni atunci când site-ul sau activitățile se modifică."
     ]
   }
 ] as const;

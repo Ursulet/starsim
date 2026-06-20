@@ -14,9 +14,9 @@ export default async function AdminContactPage({
     <section>
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
-          <h1 className="text-3xl font-bold text-starsim-navy">Contact si footer</h1>
+          <h1 className="text-3xl font-bold text-starsim-navy">Contact și footer</h1>
           <p className="mt-2 max-w-3xl text-slate-500">
-            Editeaza datele publice afisate in footer, pe pagina de contact si in butonul WhatsApp.
+            Editează datele publice afișate în footer, pe pagina de contact și în butonul WhatsApp.
           </p>
         </div>
         <Link href="/admin/contact/messages" className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-starsim-navy">

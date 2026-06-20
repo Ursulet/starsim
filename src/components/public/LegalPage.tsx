@@ -10,7 +10,7 @@ export async function LegalPage({ slug }: { slug: string }) {
 
   return (
     <>
-      <PageHero title={page.title} eyebrow="Informatii legale" intro={page.excerpt || undefined} />
+      <PageHero title={page.title} eyebrow="Informații legale" intro={page.excerpt || undefined} />
       <section className="section-padding">
         <Container>
           <article className="mx-auto max-w-[820px] rounded-2xl border border-starsim-border bg-white p-6 shadow-soft md:p-10">

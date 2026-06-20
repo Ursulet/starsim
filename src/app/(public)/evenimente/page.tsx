@@ -7,7 +7,7 @@ export default async function EventsPage() {
   const events = await getPublishedEvents();
   return (
     <>
-      <PageHero title="Evenimente" eyebrow="Calendar Star Sim" intro="Urmatoarele ateliere, caravane si nopti de observatii astronomice pentru copii, familii si comunitati." />
+      <PageHero title="Evenimente" eyebrow="Calendar Star Sim" intro="Următoarele ateliere, caravane și nopți de observații astronomice pentru copii, familii și comunități." />
       <section className="section-padding">
         <Container>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

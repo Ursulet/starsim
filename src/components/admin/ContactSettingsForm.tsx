@@ -80,12 +80,12 @@ export function ContactSettingsForm({ settings }: ContactSettingsFormProps) {
       <div className="grid gap-5 md:grid-cols-2">
         <TextInput label="Email public" name="email" type="email" value={settings?.email} placeholder="contact@starsim.ro" />
         <TextInput label="Telefon public / WhatsApp" name="phone" value={settings?.phone} placeholder="+40 723 123 456" />
-        <TextInput label="Oras" name="city" value={settings?.city} placeholder="Bucuresti" />
+        <TextInput label="Oraș" name="city" value={settings?.city} placeholder="București" />
         <TextInput label="Program" name="schedule" value={settings?.schedule} placeholder="Luni - Vineri, 10:00 - 18:00" />
       </div>
 
       <div className="mt-5 grid gap-5 md:grid-cols-2">
-        <TextArea label="Adresa" name="address" value={settings?.address} placeholder="Bucuresti, Romania" />
+        <TextArea label="Adresă" name="address" value={settings?.address} placeholder="București, România" />
         <TextArea label="Intro pagina Contact" name="introText" value={settings?.introText} placeholder="Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate." />
       </div>
 
@@ -93,7 +93,7 @@ export function ContactSettingsForm({ settings }: ContactSettingsFormProps) {
         <h2 className="font-semibold text-starsim-navy">Footer</h2>
         <div className="mt-4 grid gap-5 md:grid-cols-2">
           <TextArea
-            label="Descriere scurta footer"
+            label="Descriere scurtă footer"
             name="footerDescription"
             value={settings?.footerDescription}
             placeholder="Asociatie dedicata promovarii astronomiei..."
@@ -109,7 +109,7 @@ export function ContactSettingsForm({ settings }: ContactSettingsFormProps) {
       </div>
 
       <div className="mt-6 rounded-2xl bg-slate-50 p-5">
-        <h2 className="font-semibold text-starsim-navy">Linkuri sociale si harta</h2>
+        <h2 className="font-semibold text-starsim-navy">Linkuri sociale și hartă</h2>
         <div className="mt-4 grid gap-5 md:grid-cols-2">
           <TextInput label="Facebook" name="facebookUrl" value={settings?.facebookUrl} placeholder="https://facebook.com/..." />
           <TextInput label="Instagram" name="instagramUrl" value={settings?.instagramUrl} placeholder="https://instagram.com/..." />
@@ -121,7 +121,7 @@ export function ContactSettingsForm({ settings }: ContactSettingsFormProps) {
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">Salveaza datele</button>
+        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">Salvează datele</button>
         <Link href="/contact" className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">
           Vezi pagina contact
         </Link>

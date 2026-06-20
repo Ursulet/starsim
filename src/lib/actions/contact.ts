@@ -17,12 +17,12 @@ const schema = z.object({
 export async function submitContactForm(_: unknown, formData: FormData) {
   const raw = Object.fromEntries(formData.entries());
   const parsed = schema.safeParse(raw);
-  if (!parsed.success) return { ok: false, message: "Verifica datele introduse." };
-  if (parsed.data.website) return { ok: true, message: "Multumim. Mesajul tau a ajuns la noi." };
+  if (!parsed.success) return { ok: false, message: "Verifică datele introduse." };
+  if (parsed.data.website) return { ok: true, message: "Mulțumim. Mesajul tău a ajuns la noi." };
   try {
     await prisma.contactMessage.create({ data: parsed.data });
-    return { ok: true, message: "Multumim. Mesajul tau a ajuns la noi." };
+    return { ok: true, message: "Mulțumim. Mesajul tău a ajuns la noi." };
   } catch {
-    return { ok: false, message: "Mesajul nu a putut fi trimis momentan. Te rugam sa incerci din nou." };
+    return { ok: false, message: "Mesajul nu a putut fi trimis momentan. Te rugăm să încerci din nou." };
   }
 }

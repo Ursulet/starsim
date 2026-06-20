@@ -20,7 +20,7 @@ export function ProgramCard({ program, index = 0 }: { program: any; index?: numb
         <h3 className="font-serif text-xl font-semibold text-starsim-navy">{program.title}</h3>
         <p className="mt-2 min-h-16 text-sm leading-6 text-starsim-muted">{program.excerpt}</p>
         <Link href={`/programe/${program.slug}`} className="mt-4 inline-flex text-sm font-bold text-starsim-gold hover:text-starsim-navy">
-          Afla mai multe →
+          Află mai multe →
         </Link>
       </div>
     </article>

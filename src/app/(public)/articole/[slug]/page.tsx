@@ -22,9 +22,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
         <article className="mx-auto max-w-[760px]"><RichTextRenderer content={article.content} /></article>
         <div className="mx-auto mt-12 max-w-[760px] rounded-2xl bg-starsim-navy p-8 text-white">
-          <h2 className="font-serif text-2xl">Sustine educatia prin astronomie</h2>
-          <p className="mt-2 text-white/75">Ajuta-ne sa ducem mai multe experiente Star Sim catre copii si comunitati.</p>
-          <PublicButton href="/doneaza" variant="gold" className="mt-5">Doneaza</PublicButton>
+          <h2 className="font-serif text-2xl">Susține educația prin astronomie</h2>
+          <p className="mt-2 text-white/75">Ajută-ne să ducem mai multe experiențe Star Sim către copii și comunități.</p>
+          <PublicButton href="/doneaza" variant="gold" className="mt-5">Donează</PublicButton>
         </div>
       </Container>
     </>

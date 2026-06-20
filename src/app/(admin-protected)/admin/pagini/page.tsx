@@ -29,11 +29,11 @@ export default async function AdminPagesPage() {
         <div>
           <h1 className="text-3xl font-bold text-starsim-navy">Pagini</h1>
           <p className="mt-2 max-w-3xl text-slate-500">
-            Editeaza paginile statice si legale: politica de confidentialitate, cookies, termeni si conditii.
+            Editează paginile statice și legale: politica de confidențialitate, cookies, termeni și condiții.
           </p>
         </div>
         <Link href="/admin/pagini/new" className="rounded-xl bg-starsim-navy px-4 py-3 text-sm font-bold text-white">
-          Adauga pagina
+          Adaugă pagina
         </Link>
       </div>
 
@@ -46,7 +46,7 @@ export default async function AdminPagesPage() {
                 <th className="px-4 py-3">Cheie</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Actualizat</th>
-                <th className="px-4 py-3">Actiuni</th>
+                <th className="px-4 py-3">Acțiuni</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -61,7 +61,7 @@ export default async function AdminPagesPage() {
                   <td className="px-4 py-3 text-slate-500">{new Intl.DateTimeFormat("ro-RO", { dateStyle: "medium" }).format(page.updatedAt)}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-3">
-                      <Link href={`/admin/pagini/${page.id}/edit`} className="font-semibold text-starsim-navy hover:text-starsim-gold">Editeaza</Link>
+                      <Link href={`/admin/pagini/${page.id}/edit`} className="font-semibold text-starsim-navy hover:text-starsim-gold">Editează</Link>
                       {page.status === "PUBLISHED" ? <Link href={`/${page.slug}`} className="font-semibold text-starsim-gold hover:text-starsim-navy">Vezi</Link> : null}
                     </div>
                   </td>
@@ -71,8 +71,8 @@ export default async function AdminPagesPage() {
           </table>
         ) : (
           <div className="p-8 text-center">
-            <h2 className="font-semibold text-starsim-navy">Nu exista pagini inca</h2>
-            <p className="mt-2 text-sm text-slate-500">Ruleaza seed-ul sau creeaza prima pagina.</p>
+            <h2 className="font-semibold text-starsim-navy">Nu există pagini încă</h2>
+            <p className="mt-2 text-sm text-slate-500">Rulează seed-ul sau creează prima pagină.</p>
           </div>
         )}
       </div>

@@ -20,20 +20,20 @@ export default function NotFound() {
 
           <p className="mt-8 font-serif text-[clamp(6rem,18vw,11rem)] font-semibold leading-[0.78] text-white">404</p>
           <h1 className="mt-6 max-w-2xl font-serif text-4xl font-semibold leading-tight md:text-5xl">
-            Pagina cautata a iesit de pe orbita.
+            Pagina căutată a ieșit de pe orbită.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-white/72">
-            Am verificat harta cerului, calendarul evenimentelor si programele Star Sim, dar adresa aceasta nu mai duce catre o pagina activa.
+            Am verificat harta cerului, calendarul evenimentelor și programele Star Sim, dar adresa aceasta nu mai duce către o pagină activă.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href="/" className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-starsim-gold px-6 py-3 font-bold text-starsim-navy shadow-soft transition hover:bg-starsim-softGold">
               <Home className="h-5 w-5" />
-              Inapoi la pagina principala
+              Înapoi la pagina principală
             </Link>
             <Link href="/programe" className="focus-ring inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/8 px-6 py-3 font-bold text-white backdrop-blur transition hover:border-starsim-gold">
               <Search className="h-5 w-5" />
-              Descopera programele
+              Descoperă programele
             </Link>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function NotFound() {
           <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-starsim-navy/70 p-5 text-center text-sm leading-6 text-white/70">
             <strong className="text-white">Raport de bord:</strong>
             <br />
-            link ratacit, pagina mutata sau o stea prea curioasa a schimbat traseul.
+            link rătăcit, pagină mutată sau o stea prea curioasă a schimbat traseul.
           </div>
         </div>
       </section>

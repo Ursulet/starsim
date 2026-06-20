@@ -8,7 +8,7 @@ export function ModulePlaceholder({ title, description, primaryActionLabel, prim
         <Link href={primaryActionHref} className="rounded-xl bg-starsim-navy px-4 py-3 text-sm font-bold text-white">{primaryActionLabel}</Link>
       </div>
       <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="font-semibold text-starsim-navy">Acest modul gestioneaza</h2>
+        <h2 className="font-semibold text-starsim-navy">Acest modul gestionează</h2>
         <ul className="mt-4 grid gap-3 md:grid-cols-2">
           {items.map((item) => <li key={item} className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600">{item}</li>)}
         </ul>

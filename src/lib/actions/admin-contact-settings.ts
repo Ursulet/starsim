@@ -19,7 +19,7 @@ const optionalUrl = z
   .trim()
   .optional()
   .transform((value) => value || null)
-  .refine((value) => !value || /^https?:\/\//.test(value), "Linkul trebuie sa inceapa cu http:// sau https://");
+  .refine((value) => !value || /^https?:\/\//.test(value), "Linkul trebuie să înceapă cu http:// sau https://");
 
 const contactSettingsSchema = z.object({
   email: z.string().trim().email("Email invalid").optional().or(z.literal("")),

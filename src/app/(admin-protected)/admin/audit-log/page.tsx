@@ -21,7 +21,7 @@ export default async function Page() {
     <section>
       <div>
         <h1 className="text-3xl font-bold text-starsim-navy">Audit Log</h1>
-        <p className="mt-2 max-w-3xl text-slate-500">Urmareste actiunile importante inregistrate de sistem.</p>
+        <p className="mt-2 max-w-3xl text-slate-500">Urmărește acțiunile importante înregistrate de sistem.</p>
       </div>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -49,7 +49,7 @@ export default async function Page() {
         ) : (
           <div className="p-8 text-center">
             <h2 className="font-semibold text-starsim-navy">Nu exista loguri inca</h2>
-            <p className="mt-2 text-sm text-slate-500">Logurile vor aparea dupa actiuni importante in admin.</p>
+            <p className="mt-2 text-sm text-slate-500">Logurile vor apărea după acțiuni importante în admin.</p>
           </div>
         )}
       </div>

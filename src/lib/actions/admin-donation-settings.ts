@@ -25,7 +25,7 @@ export async function updateDonationSettingsAction(formData: FormData) {
   await prisma.donationSettings.upsert({
     where: { id: "default" },
     update: {
-      title: text(formData, "title") || "Sustine educatia prin astronomie",
+      title: text(formData, "title") || "Susține educația prin astronomie",
       description: text(formData, "description") || null,
       bankAccount: text(formData, "bankAccount") || null,
       bankName: text(formData, "bankName") || null,
@@ -37,7 +37,7 @@ export async function updateDonationSettingsAction(formData: FormData) {
     },
     create: {
       id: "default",
-      title: text(formData, "title") || "Sustine educatia prin astronomie",
+      title: text(formData, "title") || "Susține educația prin astronomie",
       description: text(formData, "description") || null,
       bankAccount: text(formData, "bankAccount") || null,
       bankName: text(formData, "bankName") || null,

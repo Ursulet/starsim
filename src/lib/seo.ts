@@ -6,7 +6,7 @@ export const siteSeoDefaults = {
   titleTemplate: "%s | Star Sim",
   defaultTitle: "Star Sim - De la o stea, la un vis",
   defaultDescription:
-    "Star Sim aduce astronomia mai aproape de copii si comunitati prin ateliere, observatii astronomice si programe educationale STEM.",
+    "Star Sim aduce astronomia mai aproape de copii și comunități prin ateliere, observații astronomice și programe educaționale STEM.",
   locale: "ro_RO"
 };
 

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
 const fallbackAlbums = [
-  { id: "g1", title: "Momente sub acelasi cer", slug: "momente-sub-acelasi-cer", description: "Fotografii din ateliere si seri de observatii.", coverImage: null, images: [] }
+  { id: "g1", title: "Momente sub același cer", slug: "momente-sub-acelasi-cer", description: "Fotografii din ateliere și seri de observații.", coverImage: null, images: [] }
 ];
 
 export async function getPublishedAlbums() {

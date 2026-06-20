@@ -27,7 +27,7 @@ export async function ContentEditPage({ type, id }: { type: AdminContentType; id
   return (
     <section>
       <div>
-        <h1 className="text-3xl font-bold text-starsim-navy">Editeaza {config.title.toLowerCase()}</h1>
+        <h1 className="text-3xl font-bold text-starsim-navy">Editează {config.title.toLowerCase()}</h1>
         <p className="mt-2 max-w-3xl text-slate-500">{config.description}</p>
       </div>
       <div className="mt-8">

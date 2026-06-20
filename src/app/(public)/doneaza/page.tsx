@@ -9,7 +9,7 @@ export default async function DonatePage() {
   const amounts = Array.isArray(settings?.recommendedAmounts) ? settings.recommendedAmounts : [];
   return (
     <>
-      <PageHero title={settings?.title || "Sustine educatia prin astronomie"} eyebrow="Doneaza" intro={settings?.description || "Fiecare contributie ajuta la organizarea programelor educationale Star Sim."} />
+      <PageHero title={settings?.title || "Susține educația prin astronomie"} eyebrow="Donează" intro={settings?.description || "Fiecare contribuție ajută la organizarea programelor educaționale Star Sim."} />
       <section className="section-padding"><Container>
         <div className="grid gap-6 md:grid-cols-3">
           {amounts.map((item: any) => (
@@ -17,7 +17,7 @@ export default async function DonatePage() {
           ))}
         </div>
         <div className="premium-card mt-10 grid gap-8 p-8 md:grid-cols-[1fr_1.2fr]">
-          <div><HandHeart className="h-12 w-12 text-starsim-gold" /><h2 className="mt-4 font-serif text-3xl text-starsim-navy">Doneaza prin transfer bancar</h2><p className="mt-3 text-starsim-muted">Momentan nu simulam plata online. Foloseste datele bancare de mai jos.</p></div>
+          <div><HandHeart className="h-12 w-12 text-starsim-gold" /><h2 className="mt-4 font-serif text-3xl text-starsim-navy">Donează prin transfer bancar</h2><p className="mt-3 text-starsim-muted">Momentan nu simulăm plata online. Folosește datele bancare de mai jos.</p></div>
           <dl className="grid gap-3 text-sm">
             <div><dt className="font-bold text-starsim-muted">Beneficiar</dt><dd className="text-lg font-semibold">{settings?.beneficiaryName}</dd></div>
             <div><dt className="font-bold text-starsim-muted">IBAN</dt><dd className="break-all text-lg font-semibold">{settings?.bankAccount}</dd></div>
@@ -25,7 +25,7 @@ export default async function DonatePage() {
             <div><dt className="font-bold text-starsim-muted">CUI</dt><dd>{settings?.fiscalCode}</dd></div>
           </dl>
         </div>
-        <div className="mt-8 text-center"><PublicButton href="/contact?type=PARTNERSHIP">Vreau sa discut despre sponsorizare</PublicButton></div>
+        <div className="mt-8 text-center"><PublicButton href="/contact?type=PARTNERSHIP">Vreau să discut despre sponsorizare</PublicButton></div>
       </Container></section>
     </>
   );

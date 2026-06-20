@@ -21,7 +21,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             <p className="mt-5 flex gap-2 text-starsim-muted"><CalendarClock className="h-5 w-5 text-starsim-gold" /> {formatRomanianDateTime(new Date(event.startsAt))}</p>
             <p className="mt-3 flex gap-2 text-starsim-muted"><MapPin className="h-5 w-5 text-starsim-gold" /> {event.locationName}</p>
             <p className="mt-5 text-lg leading-8 text-starsim-muted">{event.excerpt}</p>
-            <div className="mt-7"><PublicButton href={(event as any).registrationUrl || "/contact"}>{(event as any).registrationEnabled ? "Inscrie-te la eveniment" : "Contacteaza-ne pentru detalii"}</PublicButton></div>
+            <div className="mt-7"><PublicButton href={(event as any).registrationUrl || "/contact"}>{(event as any).registrationEnabled ? "Inscrie-te la eveniment" : "Contactează-ne pentru detalii"}</PublicButton></div>
           </div>
           <div className="relative h-80 overflow-hidden rounded-2xl shadow-premium">
             <Image src={(event as any).heroImage?.url || "/images/mockup-site-asociatie.png"} alt={(event as any).heroImage?.alt || event.title} fill className="object-cover" />
