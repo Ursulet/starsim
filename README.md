@@ -32,7 +32,7 @@ Runtime:
 The Dockerfile builds the app, prunes dev dependencies, then starts with:
 
 ```bash
-npm run start:prod
+npm run start
 ```
 
 Production start applies migrations, seeds the first admin, and starts Next.js.

@@ -36,16 +36,18 @@ No custom build command is required when using the Dockerfile builder.
 The Dockerfile starts the app with:
 
 ```bash
-npm run start:prod
+npm run start
 ```
 
-`start:prod` runs:
+`start` runs:
 
 1. `prisma migrate deploy`
 2. `tsx prisma/seed.ts --production`
 3. `next start`
 
 The startup script retries migrations/seed while PostgreSQL is still becoming available.
+
+If Coolify has a custom Start Command, leave it empty or set it to `npm run start`. Do not use `next start` directly, because that skips migrations and the admin tables will not be created.
 
 ## First Admin
 
