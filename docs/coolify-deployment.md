@@ -5,7 +5,13 @@
 - Next.js app
 - PostgreSQL database
 
-## Required environment variables
+## Recommended Builder
+
+Use **Dockerfile** in Coolify.
+
+The repository includes a production `Dockerfile` based on Node 20. It avoids the Nixpacks/Corepack/pnpm issues seen during earlier deploy attempts.
+
+## Required Environment Variables
 
 Copy values from `.env.example` and replace with production secrets.
 
@@ -19,39 +25,41 @@ Minimum production variables:
 - `SEED_ADMIN_PASSWORD`
 - `SEED_ADMIN_NAME`
 
-## Build command
+## Build
 
-`pnpm install --frozen-lockfile && pnpm build`
+Coolify should build from the repository `Dockerfile`.
 
-The repository includes `nixpacks.toml`, which Coolify/Nixpacks should use automatically:
+No custom build command is required when using the Dockerfile builder.
 
-- Node 20
-- install: `npx -y pnpm@10.18.3 install --frozen-lockfile --prod=false`
-- build: `npm run build`
-- start: `npm run start:prod`
+## Start
 
-This avoids Corepack and pnpm PATH issues in Nixpacks layers.
+The Dockerfile starts the app with:
 
-## Start command
+```bash
+npm run start:prod
+```
 
-`npm run start:prod`
+`start:prod` runs:
 
-## Production migration command
+1. `prisma migrate deploy`
+2. `tsx prisma/seed.ts --production`
+3. `next start`
 
-`pnpm prisma:deploy`
+The startup script retries migrations/seed while PostgreSQL is still becoming available.
 
-`start:prod` already runs migrations before starting the app. You can still run this as a one-off command if needed.
+## First Admin
 
-## First admin
+Set `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME`.
 
-Set `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME`. Production start runs the seed automatically.
+The seed creates the admin if missing. It does not reset the password on every restart unless:
 
-Manual seed command, if needed:
-
-`pnpm db:seed`
+```env
+SEED_ADMIN_FORCE_PASSWORD_UPDATE=true
+```
 
 ## Notes
 
+- Use PostgreSQL 16.
 - Use a strong `AUTH_SECRET`.
 - Use PostgreSQL backups in Coolify.
 - Never expose `DATABASE_URL` publicly.

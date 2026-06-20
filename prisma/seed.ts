@@ -26,12 +26,28 @@ async function main() {
   const adminPassword = password || "change-this-password";
   const adminName = name || "Star Sim Admin";
   const adminPasswordHash = await hashPassword(adminPassword);
+  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
+  const forcePasswordUpdate = process.env.SEED_ADMIN_FORCE_PASSWORD_UPDATE === "true";
 
-  const admin = await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: { name: adminName, passwordHash: adminPasswordHash, role: "ADMIN", status: "ACTIVE" },
-    create: { email: adminEmail, name: adminName, passwordHash: adminPasswordHash, role: "ADMIN", status: "ACTIVE" }
-  });
+  const admin = existingAdmin
+    ? await prisma.user.update({
+        where: { email: adminEmail },
+        data: {
+          name: adminName,
+          role: "ADMIN",
+          status: "ACTIVE",
+          ...(forcePasswordUpdate ? { passwordHash: adminPasswordHash } : {})
+        }
+      })
+    : await prisma.user.create({
+        data: {
+          email: adminEmail,
+          name: adminName,
+          passwordHash: adminPasswordHash,
+          role: "ADMIN",
+          status: "ACTIVE"
+        }
+      });
 
   const programs = [
     ["Ateliere pentru copii", "ateliere-pentru-copii", "Invatam prin joc, experimente si povesti despre stele.", "graduation"],

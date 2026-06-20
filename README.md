@@ -21,36 +21,18 @@ pnpm db:seed
 
 Use the settings in [docs/coolify-deployment.md](docs/coolify-deployment.md).
 
+Recommended builder: **Dockerfile**.
+
 Runtime:
 
 - Node 20 LTS
-- pnpm 10.18.3
+- pnpm 10.18.3 during image build
 - PostgreSQL 16 recommended
 
-Nixpacks install/build/start are configured in `nixpacks.toml`.
-
-Build command:
+The Dockerfile builds the app, prunes dev dependencies, then starts with:
 
 ```bash
-pnpm install --frozen-lockfile && pnpm build
+npm run start:prod
 ```
 
-Start command:
-
-```bash
-pnpm start
-```
-
-The included `nixpacks.toml` uses `npx -y pnpm@10.18.3` only for install, then `npm run build` and `npm run start:prod`.
-
-Production start applies migrations and seeds the first admin before starting Next.js:
-
-```bash
-prisma migrate deploy && tsx prisma/seed.ts && next start
-```
-
-Migration command:
-
-```bash
-pnpm prisma:deploy
-```
+Production start applies migrations, seeds the first admin, and starts Next.js.
