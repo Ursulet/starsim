@@ -5,7 +5,21 @@ import { absoluteUrl } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["/", "/despre", "/programe", "/evenimente", "/galerie", "/articole", "/doneaza", "/contact", "/implica-te", "/parteneriate"].map((path) => ({
+  const staticRoutes = [
+    "/",
+    "/despre",
+    "/programe",
+    "/evenimente",
+    "/galerie",
+    "/articole",
+    "/doneaza",
+    "/contact",
+    "/implica-te",
+    "/parteneriate",
+    "/politica-de-confidentialitate",
+    "/cookies",
+    "/termeni-si-conditii"
+  ].map((path) => ({
     url: absoluteUrl(path),
     lastModified: new Date(),
     changeFrequency: "weekly" as const,

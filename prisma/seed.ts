@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/server/auth/password";
+import { legalBodyToTiptap, legalPageDefaults } from "../src/lib/legal-pages";
 
 const prisma = new PrismaClient();
 
@@ -137,6 +138,25 @@ async function main() {
       introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate."
     }
   });
+
+  for (const page of legalPageDefaults) {
+    await prisma.page.upsert({
+      where: { key: page.key },
+      update: {},
+      create: {
+        key: page.key,
+        title: page.title,
+        slug: page.slug,
+        excerpt: page.excerpt,
+        content: legalBodyToTiptap(page.body),
+        template: "legal",
+        status: "PUBLISHED",
+        publishedAt: new Date(),
+        metaTitle: page.title,
+        metaDescription: page.excerpt
+      }
+    });
+  }
 
   await prisma.auditLog.create({
     data: { actorId: admin.id, action: "SEED", entity: "System", metadata: { message: "Seed initial Star Sim" } }

@@ -53,6 +53,7 @@ export async function PublicFooter() {
           <p>© {year} Star Sim - De la o stea, la un vis. Toate drepturile rezervate.</p>
           <div className="flex gap-5">
             <Link href="/politica-de-confidentialitate">Politica de confidentialitate</Link>
+            <Link href="/cookies">Cookies</Link>
             <Link href="/termeni-si-conditii">Termeni si conditii</Link>
           </div>
         </Container>
