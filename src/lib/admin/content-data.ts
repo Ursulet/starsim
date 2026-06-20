@@ -83,7 +83,16 @@ export async function getAdminContentItem(type: AdminContentType, id: string) {
     case "evenimente":
       return prisma.event.findUnique({ where: { id }, include: { heroImage: true } });
     case "galerie":
-      return prisma.galleryAlbum.findUnique({ where: { id }, include: { coverImage: true } });
+      return prisma.galleryAlbum.findUnique({
+        where: { id },
+        include: {
+          coverImage: true,
+          images: {
+            include: { media: true },
+            orderBy: { sortOrder: "asc" }
+          }
+        }
+      });
     case "articole":
       return prisma.article.findUnique({ where: { id }, include: { heroImage: true } });
     case "parteneri":

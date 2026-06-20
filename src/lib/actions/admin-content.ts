@@ -152,6 +152,18 @@ async function assertSafeUserDelete(id: string, user: AdminUser) {
   }
 }
 
+async function syncGalleryImages(albumId: string, mediaIds: string[]) {
+  await prisma.galleryImage.deleteMany({ where: { albumId } });
+  if (mediaIds.length) {
+    const data = mediaIds.map((mediaId, index) => ({
+      albumId,
+      mediaId,
+      sortOrder: index
+    }));
+    await prisma.galleryImage.createMany({ data });
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CREATE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -241,6 +253,21 @@ export async function createAdminContentAction(
           }
         });
         entityId = item.id;
+
+        const selectedMediaIds = formData.getAll("selectedMediaIds") as string[];
+        const uploadedFiles = formData.getAll("galleryUploads") as File[];
+        for (const file of uploadedFiles) {
+          if (file && file.size > 0) {
+            const asset = await createMediaAssetFromUpload({
+              file,
+              folder: "galerie",
+              uploadedById: user.id,
+              alt: `${title} - imagine`
+            });
+            selectedMediaIds.push(asset.id);
+          }
+        }
+        await syncGalleryImages(item.id, selectedMediaIds);
         break;
       }
       case "articole": {
@@ -434,6 +461,21 @@ export async function updateAdminContentAction(
             metaDescription: nullable(formData, "metaDescription")
           }
         });
+
+        const selectedMediaIds = formData.getAll("selectedMediaIds") as string[];
+        const uploadedFiles = formData.getAll("galleryUploads") as File[];
+        for (const file of uploadedFiles) {
+          if (file && file.size > 0) {
+            const asset = await createMediaAssetFromUpload({
+              file,
+              folder: "galerie",
+              uploadedById: user.id,
+              alt: `${title} - imagine`
+            });
+            selectedMediaIds.push(asset.id);
+          }
+        }
+        await syncGalleryImages(id, selectedMediaIds);
         break;
       }
       case "articole": {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { AlertCircle, Loader2, UploadCloud } from "lucide-react";
 import { updateHomepageSettingsAction, type HomepageActionState } from "@/lib/actions/admin-homepage";
 import type { AdminMediaOption } from "@/lib/admin/content-data";
@@ -58,6 +58,31 @@ export function HomepageSettingsForm({
     null
   );
   const selectedHero = mediaOptions.find((media) => media.url === settings.heroImageUrl);
+  const [selectedHeroId, setSelectedHeroId] = useState<string>(selectedHero?.id || "");
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedHeroId(e.target.value);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLocalPreview(URL.createObjectURL(file));
+    } else {
+      setLocalPreview(null);
+    }
+  };
+
+  let previewUrl = settings.heroImageUrl;
+  let isLocal = false;
+  if (localPreview) {
+    previewUrl = localPreview;
+    isLocal = true;
+  } else if (selectedHeroId) {
+    const asset = mediaOptions.find((media) => media.id === selectedHeroId);
+    if (asset) previewUrl = asset.url;
+  }
 
   return (
     <form
@@ -78,18 +103,26 @@ export function HomepageSettingsForm({
         <TextArea label="Text hero" name="heroIntro" value={settings.heroIntro} rows={5} />
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4">
           <p className="text-sm font-semibold text-starsim-navy">Imagine hero</p>
-          <Image
-            src={settings.heroImageUrl}
-            alt="Imagine hero Star Sim"
-            width={760}
-            height={420}
-            unoptimized
-            className="h-44 w-full rounded-xl border border-slate-200 object-cover"
-          />
+          <div className="relative">
+            <Image
+              src={previewUrl}
+              alt="Imagine hero Star Sim"
+              width={760}
+              height={420}
+              unoptimized
+              className="h-44 w-full rounded-xl border border-slate-200 object-cover"
+            />
+            {isLocal && (
+              <span className="absolute top-2 right-2 rounded bg-starsim-gold px-2 py-0.5 text-[10px] font-bold text-starsim-navy shadow-sm animate-pulse">
+                Fișier nou
+              </span>
+            )}
+          </div>
           <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
             <select
               name="heroImageId"
-              defaultValue={selectedHero?.id || ""}
+              value={selectedHeroId}
+              onChange={handleSelectChange}
               className="focus-ring min-w-0 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-800"
             >
               <option value="">Păstrează imaginea actuală</option>
@@ -102,7 +135,13 @@ export function HomepageSettingsForm({
             <label className="focus-ring inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-starsim-navy px-4 py-2 text-sm font-bold text-white hover:bg-starsim-blue">
               <UploadCloud className="h-4 w-4" />
               Încarcă
-              <input name="heroImageUpload" type="file" accept="image/*" className="sr-only" />
+              <input
+                name="heroImageUpload"
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={handleFileChange}
+              />
             </label>
           </div>
           <input
