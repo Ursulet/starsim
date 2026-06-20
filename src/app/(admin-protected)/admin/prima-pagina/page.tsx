@@ -1,4 +1,5 @@
 import { HomepageSettingsForm } from "@/components/admin/HomepageSettingsForm";
+import { getAdminMediaOptions } from "@/lib/admin/content-data";
 import { getHomepageSettings } from "@/lib/queries/home";
 import { requireRole } from "@/server/auth/session";
 
@@ -7,7 +8,12 @@ export default async function AdminHomepagePage({
 }: {
   searchParams?: Promise<{ updated?: string }>;
 }) {
-  const [, settings, params] = await Promise.all([requireRole(["ADMIN"]), getHomepageSettings(), searchParams]);
+  const [, settings, params, mediaOptions] = await Promise.all([
+    requireRole(["ADMIN"]),
+    getHomepageSettings(),
+    searchParams,
+    getAdminMediaOptions()
+  ]);
 
   return (
     <section>
@@ -27,7 +33,7 @@ export default async function AdminHomepagePage({
       ) : null}
 
       <div className="mt-8">
-        <HomepageSettingsForm settings={settings} />
+        <HomepageSettingsForm settings={settings} mediaOptions={mediaOptions} />
       </div>
     </section>
   );

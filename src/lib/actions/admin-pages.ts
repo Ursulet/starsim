@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 import { requireRole } from "@/server/auth/session";
 
+export type PageActionState = { error: string } | null;
+
 const pageSchema = z.object({
   id: z.string().optional(),
   key: z.string().min(2).max(80),
@@ -77,23 +79,33 @@ async function logPageAction(action: string, entityId?: string) {
   } catch {}
 }
 
-export async function createPageAction(formData: FormData) {
-  const data = await parsePageForm(formData);
+export async function createPageAction(
+  _prevState: PageActionState,
+  formData: FormData
+): Promise<PageActionState> {
+  let page: { id: string; slug: string } | undefined;
 
-  const page = await prisma.page.create({
-    data: {
-      key: data.key,
-      title: data.title,
-      slug: data.slug,
-      excerpt: data.excerpt,
-      content: data.content,
-      template: "legal",
-      status: data.status,
-      publishedAt: data.publishedAt,
-      metaTitle: data.metaTitle,
-      metaDescription: data.metaDescription
-    }
-  });
+  try {
+    const data = await parsePageForm(formData);
+
+    page = await prisma.page.create({
+      data: {
+        key: data.key,
+        title: data.title,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        content: data.content,
+        template: "legal",
+        status: data.status,
+        publishedAt: data.publishedAt,
+        metaTitle: data.metaTitle,
+        metaDescription: data.metaDescription
+      }
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Eroare necunoscută.";
+    return { error: message };
+  }
 
   revalidatePath("/");
   revalidatePath(`/${page.slug}`);
@@ -102,24 +114,34 @@ export async function createPageAction(formData: FormData) {
   redirect(`/admin/pagini/${page.id}/edit`);
 }
 
-export async function updatePageAction(formData: FormData) {
-  const data = await parsePageForm(formData);
-  if (!data.id) throw new Error("Pagina lipsește.");
+export async function updatePageAction(
+  _prevState: PageActionState,
+  formData: FormData
+): Promise<PageActionState> {
+  let page: { id: string; slug: string } | undefined;
 
-  const page = await prisma.page.update({
-    where: { id: data.id },
-    data: {
-      key: data.key,
-      title: data.title,
-      slug: data.slug,
-      excerpt: data.excerpt,
-      content: data.content,
-      status: data.status,
-      publishedAt: data.status === "PUBLISHED" ? new Date() : null,
-      metaTitle: data.metaTitle,
-      metaDescription: data.metaDescription
-    }
-  });
+  try {
+    const data = await parsePageForm(formData);
+    if (!data.id) throw new Error("Pagina lipsește.");
+
+    page = await prisma.page.update({
+      where: { id: data.id },
+      data: {
+        key: data.key,
+        title: data.title,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        content: data.content,
+        status: data.status,
+        publishedAt: data.status === "PUBLISHED" ? new Date() : null,
+        metaTitle: data.metaTitle,
+        metaDescription: data.metaDescription
+      }
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Eroare necunoscută.";
+    return { error: message };
+  }
 
   revalidatePath("/");
   revalidatePath(`/${page.slug}`);
@@ -128,13 +150,23 @@ export async function updatePageAction(formData: FormData) {
   redirect("/admin/pagini");
 }
 
-export async function deletePageAction(formData: FormData) {
-  await requireRole(["ADMIN", "EDITOR"]);
+export async function deletePageAction(
+  _prevState: PageActionState,
+  formData: FormData
+): Promise<PageActionState> {
+  let page: { id: string; slug: string } | undefined;
 
-  const id = String(formData.get("id") || "").trim();
-  if (!id) throw new Error("Pagina lipsește.");
+  try {
+    await requireRole(["ADMIN", "EDITOR"]);
 
-  const page = await prisma.page.delete({ where: { id } });
+    const id = String(formData.get("id") || "").trim();
+    if (!id) throw new Error("Pagina lipsește.");
+
+    page = await prisma.page.delete({ where: { id } });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Eroare necunoscută.";
+    return { error: message };
+  }
 
   revalidatePath("/");
   revalidatePath(`/${page.slug}`);

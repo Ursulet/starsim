@@ -1,9 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ExternalLink, Save, UploadCloud } from "lucide-react";
-import { createAdminContentAction, updateAdminContentAction } from "@/lib/actions/admin-content";
+import { useActionState } from "react";
+import { AlertCircle, ArrowLeft, ExternalLink, Loader2, Save, UploadCloud } from "lucide-react";
+import {
+  createAdminContentAction,
+  updateAdminContentAction,
+  type ActionState
+} from "@/lib/actions/admin-content";
 import { adminContentModules, type AdminContentType, type AdminField } from "@/lib/admin/content";
-import { getAdminMediaOptions, type AdminMediaOption } from "@/lib/admin/content-data";
+import type { AdminMediaOption } from "@/lib/admin/content-data";
 import { extractPlainTextFromTiptapJson } from "@/lib/rich-text/extract-text";
 import { DeleteConfirmButton } from "./DeleteConfirmButton";
 
@@ -16,7 +23,8 @@ function dateInputValue(value: unknown) {
 
 function fieldValue(item: any, field: AdminField) {
   if (!item) return "";
-  if (field.name === "body") return item.content ? extractPlainTextFromTiptapJson(item.content).replace(/\. /g, ".\n\n") : "";
+  if (field.name === "body")
+    return item.content ? extractPlainTextFromTiptapJson(item.content).replace(/\. /g, ".\n\n") : "";
   if (field.name === "tags" && Array.isArray(item.tags)) return item.tags.join(", ");
   const value = item[field.name];
   if (field.type === "datetime") return dateInputValue(value);
@@ -110,12 +118,19 @@ function renderFileField(field: AdminField, item: any) {
         <p className="text-sm font-semibold text-starsim-navy">{field.label}</p>
         {item?.url ? (
           <p className="mt-1 text-xs text-slate-500">
-            {item.originalName || item.filename} {formatBytes(item.size) ? `/${formatBytes(item.size)}` : ""}
+            {item.originalName || item.filename} {formatBytes(item.size) ? `/ ${formatBytes(item.size)}` : ""}
           </p>
         ) : null}
       </div>
       {item?.type === "IMAGE" && item.url ? (
-        <Image src={item.url} alt={item.alt || item.originalName || item.filename} width={760} height={420} unoptimized className="h-48 w-full rounded-xl border border-slate-200 object-cover" />
+        <Image
+          src={item.url}
+          alt={item.alt || item.originalName || item.filename}
+          width={760}
+          height={420}
+          unoptimized
+          className="h-48 w-full rounded-xl border border-slate-200 object-cover"
+        />
       ) : item?.url ? (
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">{item.mimeType}</div>
       ) : null}
@@ -172,36 +187,71 @@ function renderField(field: AdminField, item: any, mediaOptions: AdminMediaOptio
   );
 }
 
-export async function ContentForm({ type, item }: { type: AdminContentType; item?: any }) {
+export function ContentForm({
+  type,
+  item,
+  mediaOptions
+}: {
+  type: AdminContentType;
+  item?: any;
+  mediaOptions: AdminMediaOption[];
+}) {
   const config = adminContentModules[type];
-  const action = item ? updateAdminContentAction : createAdminContentAction;
-  const needsMedia = config.fields.some((field) => field.type === "media");
-  const mediaOptions = needsMedia ? await getAdminMediaOptions() : [];
+  const baseAction = item ? updateAdminContentAction : createAdminContentAction;
+  const [state, formAction, isPending] = useActionState<ActionState, FormData>(baseAction, null);
 
   return (
-    <form action={action} encType="multipart/form-data" className="max-w-[1100px] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+    <form
+      action={formAction}
+      encType="multipart/form-data"
+      className="max-w-[1100px] rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+    >
       <input type="hidden" name="type" value={type} />
       {item ? <input type="hidden" name="id" value={item.id} /> : null}
 
+      {/* Error banner */}
+      {state?.error ? (
+        <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>{state.error}</span>
+        </div>
+      ) : null}
+
       <div className="grid gap-5 md:grid-cols-2">
         {config.fields.map((field) => (
-          <div key={field.name} className={field.type === "textarea" || field.name === "body" || field.type === "media" || field.type === "file" ? "md:col-span-2" : undefined}>
+          <div
+            key={field.name}
+            className={
+              field.type === "textarea" || field.name === "body" || field.type === "media" || field.type === "file"
+                ? "md:col-span-2"
+                : undefined
+            }
+          >
             {renderField(field, item, mediaOptions)}
           </div>
         ))}
       </div>
 
       <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:flex-wrap">
-        <button className="focus-ring inline-flex items-center justify-center gap-2 rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white hover:bg-starsim-blue">
-          <Save className="h-4 w-4" />
-          {item ? "Salvează modificările" : config.newLabel}
+        <button
+          disabled={isPending}
+          className="focus-ring inline-flex items-center justify-center gap-2 rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white hover:bg-starsim-blue disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {isPending ? "Se salvează..." : item ? "Salvează modificările" : config.newLabel}
         </button>
-        <Link href={config.basePath} className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">
+        <Link
+          href={config.basePath}
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy"
+        >
           <ArrowLeft className="h-4 w-4" />
           Înapoi la listă
         </Link>
         {item && config.publicBasePath && item.slug ? (
-          <Link href={`${config.publicBasePath}/${item.slug}`} className="inline-flex items-center justify-center gap-2 rounded-xl border border-starsim-gold px-5 py-3 text-center text-sm font-bold text-starsim-navy">
+          <Link
+            href={`${config.publicBasePath}/${item.slug}`}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-starsim-gold px-5 py-3 text-center text-sm font-bold text-starsim-navy"
+          >
             <ExternalLink className="h-4 w-4" />
             Vezi public
           </Link>

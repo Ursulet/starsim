@@ -6,6 +6,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/server/auth/session";
 
+export type ContactActionState = { error: string } | null;
+
 const optionalText = (max: number) =>
   z
     .string()
@@ -38,38 +40,46 @@ const contactSettingsSchema = z.object({
   linkedinUrl: optionalUrl
 });
 
-export async function updateContactSettingsAction(formData: FormData) {
-  await requireRole(["ADMIN"]);
+export async function updateContactSettingsAction(
+  _prevState: ContactActionState,
+  formData: FormData
+): Promise<ContactActionState> {
+  try {
+    await requireRole(["ADMIN"]);
 
-  const parsed = contactSettingsSchema.parse({
-    email: String(formData.get("email") || ""),
-    phone: String(formData.get("phone") || ""),
-    address: String(formData.get("address") || ""),
-    city: String(formData.get("city") || ""),
-    schedule: String(formData.get("schedule") || ""),
-    mapUrl: String(formData.get("mapUrl") || ""),
-    introText: String(formData.get("introText") || ""),
-    footerDescription: String(formData.get("footerDescription") || ""),
-    footerCopyright: String(formData.get("footerCopyright") || ""),
-    facebookUrl: String(formData.get("facebookUrl") || ""),
-    instagramUrl: String(formData.get("instagramUrl") || ""),
-    youtubeUrl: String(formData.get("youtubeUrl") || ""),
-    tiktokUrl: String(formData.get("tiktokUrl") || ""),
-    linkedinUrl: String(formData.get("linkedinUrl") || "")
-  });
+    const parsed = contactSettingsSchema.parse({
+      email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
+      address: String(formData.get("address") || ""),
+      city: String(formData.get("city") || ""),
+      schedule: String(formData.get("schedule") || ""),
+      mapUrl: String(formData.get("mapUrl") || ""),
+      introText: String(formData.get("introText") || ""),
+      footerDescription: String(formData.get("footerDescription") || ""),
+      footerCopyright: String(formData.get("footerCopyright") || ""),
+      facebookUrl: String(formData.get("facebookUrl") || ""),
+      instagramUrl: String(formData.get("instagramUrl") || ""),
+      youtubeUrl: String(formData.get("youtubeUrl") || ""),
+      tiktokUrl: String(formData.get("tiktokUrl") || ""),
+      linkedinUrl: String(formData.get("linkedinUrl") || "")
+    });
 
-  await prisma.contactSettings.upsert({
-    where: { id: "default" },
-    update: {
-      ...parsed,
-      email: parsed.email || null
-    },
-    create: {
-      id: "default",
-      ...parsed,
-      email: parsed.email || null
-    }
-  });
+    await prisma.contactSettings.upsert({
+      where: { id: "default" },
+      update: {
+        ...parsed,
+        email: parsed.email || null
+      },
+      create: {
+        id: "default",
+        ...parsed,
+        email: parsed.email || null
+      }
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Eroare necunoscută.";
+    return { error: message };
+  }
 
   revalidatePath("/", "layout");
   revalidatePath("/contact");

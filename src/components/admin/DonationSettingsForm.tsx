@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import { updateDonationSettingsAction } from "@/lib/actions/admin-donation-settings";
+import { useActionState } from "react";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { updateDonationSettingsAction, type DonationActionState } from "@/lib/actions/admin-donation-settings";
 
 type DonationSettingsFormProps = {
   settings: any;
@@ -24,10 +28,21 @@ function TextArea({ label, name, value, rows = 3 }: { label: string; name: strin
 }
 
 export function DonationSettingsForm({ settings }: DonationSettingsFormProps) {
+  const [state, formAction, isPending] = useActionState<DonationActionState, FormData>(
+    updateDonationSettingsAction,
+    null
+  );
   const amounts = Array.isArray(settings?.recommendedAmounts) ? settings.recommendedAmounts : [];
 
   return (
-    <form action={updateDonationSettingsAction} className="max-w-[1100px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <form action={formAction} className="max-w-[1100px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      {state?.error ? (
+        <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>{state.error}</span>
+        </div>
+      ) : null}
+
       <div className="grid gap-5 md:grid-cols-2">
         <Input label="Titlu pagina" name="title" value={settings?.title} />
         <Input label="Beneficiar" name="beneficiaryName" value={settings?.beneficiaryName} />
@@ -68,7 +83,13 @@ export function DonationSettingsForm({ settings }: DonationSettingsFormProps) {
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button className="focus-ring rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white">Salvează donațiile</button>
+        <button
+          disabled={isPending}
+          className="focus-ring inline-flex items-center justify-center gap-2 rounded-xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white hover:bg-starsim-blue disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+          {isPending ? "Se salvează..." : "Salvează donațiile"}
+        </button>
         <Link href="/doneaza" className="rounded-xl border border-slate-200 px-5 py-3 text-center text-sm font-bold text-starsim-navy">
           Vezi pagina Donează
         </Link>
