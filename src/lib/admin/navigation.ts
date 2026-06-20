@@ -1,5 +1,6 @@
 export const adminNavigation = [
   { label: "Dashboard", href: "/admin", icon: "LayoutDashboard" },
+  { label: "Prima pagina", href: "/admin/prima-pagina", icon: "Home" },
   { label: "Programe", href: "/admin/programe", icon: "Rocket" },
   { label: "Evenimente", href: "/admin/evenimente", icon: "CalendarDays" },
   { label: "Galerie", href: "/admin/galerie", icon: "Images" },

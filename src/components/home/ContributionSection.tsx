@@ -2,20 +2,27 @@ import { HandHeart, Handshake, Users } from "lucide-react";
 import { ContributionCard } from "@/components/cards/ContributionCard";
 import { Container } from "@/components/ui/Container";
 import { StarField } from "@/components/ui/StarField";
+import type { HomeContributionCard, HomepageSettings } from "@/lib/homepage-settings";
 
-export function ContributionSection() {
+const contributionIcons = {
+  donation: HandHeart,
+  volunteer: Users,
+  partnership: Handshake
+} satisfies Record<HomeContributionCard["icon"], typeof HandHeart>;
+
+export function ContributionSection({ settings }: { settings: HomepageSettings }) {
   return (
     <section className="navy-gradient relative overflow-hidden py-12 text-white">
       <StarField />
       <Container className="relative">
         <div className="text-center">
-          <h2 className="font-serif text-3xl font-semibold md:text-4xl">Fiecare gest conteaza</h2>
-          <p className="mt-3 text-white/78">Impreuna putem duce astronomia mai departe.</p>
+          <h2 className="font-serif text-3xl font-semibold md:text-4xl">{settings.contributionTitle}</h2>
+          <p className="mt-3 text-white/78">{settings.contributionSubtitle}</p>
         </div>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
-          <ContributionCard title="Sustine-ne" text="Donatia ta ajuta la finantarea programelor noastre educationale." href="/doneaza" action="Doneaza acum" icon={HandHeart} />
-          <ContributionCard title="Fii voluntar" text="Alatura-te echipei noastre si inspira generatiile viitoare." href="/implica-te" action="Afla cum te poti implica" icon={Users} />
-          <ContributionCard title="Parteneriate" text="Impreuna cu partenerii nostri, construim proiecte de impact." href="/parteneriate" action="Colaboreaza cu noi" icon={Handshake} />
+          {settings.contributionCards.map((card) => (
+            <ContributionCard key={card.icon} title={card.title} text={card.text} href={card.href} action={card.action} icon={contributionIcons[card.icon]} />
+          ))}
         </div>
       </Container>
     </section>

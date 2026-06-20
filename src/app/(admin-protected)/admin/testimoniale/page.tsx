@@ -1,3 +1,5 @@
-import { ModulePlaceholder } from "@/components/admin/ModulePlaceholder";
-import { adminModules } from "@/lib/admin/module-meta";
-export default function Page() { return <ModulePlaceholder {...adminModules.testimoniale} />; }
+import { ContentListPage } from "@/components/admin/ContentListPage";
+
+export default function Page() {
+  return <ContentListPage type="testimoniale" />;
+}

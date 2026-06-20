@@ -2,16 +2,23 @@ import { GraduationCap, Telescope, UsersRound } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { MissionCard } from "@/components/cards/MissionCard";
+import type { HomeMissionCard, HomepageSettings } from "@/lib/homepage-settings";
 
-export function MissionSection() {
+const missionIcons = {
+  education: GraduationCap,
+  telescope: Telescope,
+  community: UsersRound
+} satisfies Record<HomeMissionCard["icon"], typeof GraduationCap>;
+
+export function MissionSection({ settings }: { settings: HomepageSettings }) {
   return (
     <section className="section-padding pt-8">
       <Container>
-        <SectionHeading title="Misiunea noastra" subtitle="Inspiram curiozitatea. Impartasim cunoasterea. Construim visuri." />
+        <SectionHeading title={settings.missionTitle} subtitle={settings.missionSubtitle} />
         <div className="grid gap-5 md:grid-cols-3">
-          <MissionCard title="Educatie" icon={GraduationCap} text="Ateliere si activitati interactive care aduc stiinta mai aproape de copii si tineri." />
-          <MissionCard title="Nopti de observatii" icon={Telescope} text="Privim cerul impreuna si descoperim minunile Universului prin lentile si povesti." />
-          <MissionCard title="Comunitate" icon={UsersRound} text="Construim o comunitate unita in jurul pasiunii pentru astronomie si educatie." />
+          {settings.missionCards.map((card) => (
+            <MissionCard key={card.icon} title={card.title} icon={missionIcons[card.icon]} text={card.text} />
+          ))}
         </div>
       </Container>
     </section>

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/server/auth/password";
 import { legalBodyToTiptap, legalPageDefaults } from "../src/lib/legal-pages";
+import { defaultHomepageSettings } from "../src/lib/homepage-settings";
 
 const prisma = new PrismaClient();
 
@@ -159,6 +160,15 @@ async function main() {
       }
     });
   }
+
+  await prisma.siteSettings.upsert({
+    where: { key: "homepage" },
+    update: {},
+    create: {
+      key: "homepage",
+      value: defaultHomepageSettings
+    }
+  });
 
   await prisma.auditLog.create({
     data: { actorId: admin.id, action: "SEED", entity: "System", metadata: { message: "Seed initial Star Sim" } }

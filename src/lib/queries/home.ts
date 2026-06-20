@@ -1,3 +1,4 @@
+import { defaultHomepageSettings, normalizeHomepageSettings } from "@/lib/homepage-settings";
 import { prisma } from "@/lib/prisma";
 
 export const fallbackPrograms = [
@@ -25,6 +26,19 @@ export async function getHomepagePrograms() {
     return items.length ? items : fallbackPrograms;
   } catch {
     return fallbackPrograms;
+  }
+}
+
+export async function getHomepageSettings() {
+  try {
+    const settings = await prisma.siteSettings.findUnique({
+      where: { key: "homepage" },
+      select: { value: true }
+    });
+
+    return normalizeHomepageSettings(settings?.value);
+  } catch {
+    return defaultHomepageSettings;
   }
 }
 
