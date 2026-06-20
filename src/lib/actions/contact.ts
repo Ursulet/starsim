@@ -23,6 +23,6 @@ export async function submitContactForm(_: unknown, formData: FormData) {
     await prisma.contactMessage.create({ data: parsed.data });
     return { ok: true, message: "Multumim. Mesajul tau a ajuns la noi." };
   } catch {
-    return { ok: true, message: "Multumim. Mesajul tau a ajuns la noi." };
+    return { ok: false, message: "Mesajul nu a putut fi trimis momentan. Te rugam sa incerci din nou." };
   }
 }

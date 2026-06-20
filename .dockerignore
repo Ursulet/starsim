@@ -1,0 +1,10 @@
+.git
+.next
+node_modules
+public/uploads
+.env
+.env*.local
+desktop.ini
+starsim-etapa-*-prompts
+logo starsim.png
+mockup site asociatie.png

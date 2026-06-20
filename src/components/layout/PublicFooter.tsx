@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Facebook, Instagram, Mail, MapPin, Phone, Send, Youtube } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Youtube } from "lucide-react";
 import { Container } from "@/components/ui/Container";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { publicNavigation } from "@/lib/navigation";
 import { getContactSettings } from "@/lib/queries/settings";
 
@@ -44,10 +45,7 @@ export async function PublicFooter() {
             ))}
           </div>
           <h3 className="mt-6 font-semibold">Newsletter</h3>
-          <form className="mt-3 flex rounded-xl bg-white p-1">
-            <input className="min-w-0 flex-1 rounded-lg px-3 text-sm text-starsim-ink outline-none" placeholder="Adresa ta de email" aria-label="Email newsletter" />
-            <button className="rounded-lg bg-starsim-gold p-3 text-starsim-navy" aria-label="Abonare newsletter"><Send className="h-4 w-4" /></button>
-          </form>
+          <NewsletterForm />
         </div>
       </Container>
       <div className="border-t border-white/10">

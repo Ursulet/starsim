@@ -9,14 +9,28 @@ const doc = (text: string) => ({
 });
 
 async function main() {
-  const email = (process.env.SEED_ADMIN_EMAIL || "admin@starsim.ro").toLowerCase();
-  const password = process.env.SEED_ADMIN_PASSWORD || "change-this-password";
-  const name = process.env.SEED_ADMIN_NAME || "Star Sim Admin";
+  const isProduction = process.env.NODE_ENV === "production" || process.argv.includes("--production");
+  const email = (process.env.SEED_ADMIN_EMAIL || "").toLowerCase();
+  const password = process.env.SEED_ADMIN_PASSWORD || "";
+  const name = process.env.SEED_ADMIN_NAME || "";
+
+  if (isProduction && (!email || !password || !name)) {
+    throw new Error("Missing SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD or SEED_ADMIN_NAME in production.");
+  }
+
+  if (isProduction && password.length < 12) {
+    throw new Error("SEED_ADMIN_PASSWORD must be at least 12 characters in production.");
+  }
+
+  const adminEmail = email || "admin@starsim.ro";
+  const adminPassword = password || "change-this-password";
+  const adminName = name || "Star Sim Admin";
+  const adminPasswordHash = await hashPassword(adminPassword);
 
   const admin = await prisma.user.upsert({
-    where: { email },
-    update: { name, passwordHash: await hashPassword(password), role: "ADMIN", status: "ACTIVE" },
-    create: { email, name, passwordHash: await hashPassword(password), role: "ADMIN", status: "ACTIVE" }
+    where: { email: adminEmail },
+    update: { name: adminName, passwordHash: adminPasswordHash, role: "ADMIN", status: "ACTIVE" },
+    create: { email: adminEmail, name: adminName, passwordHash: adminPasswordHash, role: "ADMIN", status: "ACTIVE" }
   });
 
   const programs = [

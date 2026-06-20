@@ -27,6 +27,8 @@ Runtime:
 - pnpm 10.18.3
 - PostgreSQL 16 recommended
 
+Nixpacks install/build/start are configured in `nixpacks.toml`.
+
 Build command:
 
 ```bash
@@ -39,7 +41,13 @@ Start command:
 pnpm start
 ```
 
-The included `nixpacks.toml` uses `npx pnpm@10.18.3` during deploy so Coolify does not depend on Corepack.
+The included `nixpacks.toml` uses `npx -y pnpm@10.18.3` only for install, then `npm run build` and `npm run start:prod`.
+
+Production start applies migrations and seeds the first admin before starting Next.js:
+
+```bash
+prisma migrate deploy && tsx prisma/seed.ts && next start
+```
 
 Migration command:
 

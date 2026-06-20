@@ -23,21 +23,30 @@ Minimum production variables:
 
 `pnpm install --frozen-lockfile && pnpm build`
 
-The repository also includes `nixpacks.toml`, which pins the deployment runtime to Node 20 and runs pnpm 10.18.3 through `npx` to avoid Corepack and PATH issues in Nixpacks layers.
+The repository includes `nixpacks.toml`, which Coolify/Nixpacks should use automatically:
+
+- Node 20
+- install: `npx -y pnpm@10.18.3 install --frozen-lockfile --prod=false`
+- build: `npm run build`
+- start: `npm run start:prod`
+
+This avoids Corepack and pnpm PATH issues in Nixpacks layers.
 
 ## Start command
 
-`pnpm start`
+`npm run start:prod`
 
 ## Production migration command
 
 `pnpm prisma:deploy`
 
-Run this as a pre-deploy command or one-off command after the PostgreSQL service is attached.
+`start:prod` already runs migrations before starting the app. You can still run this as a one-off command if needed.
 
 ## First admin
 
-Set `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME`, then run once:
+Set `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME`. Production start runs the seed automatically.
+
+Manual seed command, if needed:
 
 `pnpm db:seed`
 
