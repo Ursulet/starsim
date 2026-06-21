@@ -23,7 +23,9 @@ export async function getHomepagePrograms() {
       orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
       take: 4
     });
-    return items.length ? items : fallbackPrograms;
+    const totalCount = await prisma.program.count();
+    if (totalCount === 0) return fallbackPrograms;
+    return items;
   } catch {
     return fallbackPrograms;
   }
@@ -50,14 +52,9 @@ export async function getHomepageEvents() {
       orderBy: [{ sortOrder: "asc" }, { startsAt: "asc" }],
       take: 4
     });
-    if (featured.length >= 4) return featured;
-    const more = await prisma.event.findMany({
-      where: { status: "PUBLISHED", startsAt: { gte: new Date() }, id: { notIn: featured.map((item) => item.id) } },
-      include: { heroImage: true },
-      orderBy: { startsAt: "asc" },
-      take: 4 - featured.length
-    });
-    return [...featured, ...more].length ? [...featured, ...more] : fallbackEvents;
+    const totalCount = await prisma.event.count();
+    if (totalCount === 0) return fallbackEvents;
+    return featured;
   } catch {
     return fallbackEvents;
   }
