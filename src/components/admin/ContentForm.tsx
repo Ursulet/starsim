@@ -11,7 +11,7 @@ import {
 } from "@/lib/actions/admin-content";
 import { adminContentModules, type AdminContentType, type AdminField } from "@/lib/admin/content";
 import type { AdminMediaOption } from "@/lib/admin/content-data";
-import { extractPlainTextFromTiptapJson } from "@/lib/rich-text/extract-text";
+import { tiptapToPlainText } from "@/lib/rich-text/extract-text";
 import { DeleteConfirmButton } from "./DeleteConfirmButton";
 
 function dateInputValue(value: unknown) {
@@ -24,7 +24,7 @@ function dateInputValue(value: unknown) {
 function fieldValue(item: any, field: AdminField) {
   if (!item) return "";
   if (field.name === "body")
-    return item.content ? extractPlainTextFromTiptapJson(item.content).replace(/\. /g, ".\n\n") : "";
+    return item.content ? tiptapToPlainText(item.content) : "";
   if (field.name === "tags" && Array.isArray(item.tags)) return item.tags.join(", ");
   const value = item[field.name];
   if (field.type === "datetime") return dateInputValue(value);

@@ -49,6 +49,7 @@ function dateValue(formData: FormData, key: string, fallback?: Date) {
 
 function textToTiptap(text?: string) {
   const paragraphs = (text || "")
+    .replace(/\r\n/g, "\n")
     .split(/\n{2,}/)
     .map((item) => item.trim())
     .filter(Boolean);

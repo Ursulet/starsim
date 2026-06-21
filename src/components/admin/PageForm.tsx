@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { AlertCircle, ArrowLeft, ExternalLink, Loader2, Save } from "lucide-react";
 import { PageDeleteButton } from "@/components/admin/PageDeleteButton";
 import { createPageAction, updatePageAction, type PageActionState } from "@/lib/actions/admin-pages";
-import { extractPlainTextFromTiptapJson } from "@/lib/rich-text/extract-text";
+import { tiptapToPlainText } from "@/lib/rich-text/extract-text";
 
 type PageFormProps = {
   page?: {
@@ -24,7 +24,7 @@ type PageFormProps = {
 export function PageForm({ page }: PageFormProps) {
   const baseAction = page ? updatePageAction : createPageAction;
   const [state, formAction, isPending] = useActionState<PageActionState, FormData>(baseAction, null);
-  const body = page?.content ? extractPlainTextFromTiptapJson(page.content).replace(/\. /g, ".\n\n") : "";
+  const body = page?.content ? tiptapToPlainText(page.content) : "";
 
   return (
     <form action={formAction} className="max-w-[1000px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

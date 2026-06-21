@@ -23,7 +23,7 @@ function renderNode(node: any, index: number): React.ReactNode {
   if (node.type === "image" && node.attrs?.src) {
     return <Image key={index} src={node.attrs.src} alt={node.attrs.alt || ""} width={900} height={520} className="my-8 rounded-2xl" />;
   }
-  return <p key={index}>{children}</p>;
+  return <p key={index} className="whitespace-pre-wrap">{children}</p>;
 }
 
 export function RichTextRenderer({ content }: { content?: unknown }) {
