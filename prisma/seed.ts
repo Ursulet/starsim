@@ -148,117 +148,121 @@ async function main() {
         }
       });
 
-  const programs = [
-    ["Ateliere pentru copii", "ateliere-pentru-copii", "Învățăm prin joc, experimente și povești despre stele.", "graduation"],
-    ["Caravana Stelelor", "caravana-stelelor", "Aducem astronomia în școli și comunități din toată țara.", "bus"],
-    ["Observații astronomice", "observatii-astronomice", "Seri magice sub cerul liber, deschise tuturor.", "telescope"],
-    ["Educație STEM", "educatie-stem", "Proiecte care dezvoltă gândirea științifică și creativitatea.", "atom"]
-  ];
+  const alreadySeeded = (await prisma.auditLog.findFirst({ where: { action: "SEED" } })) || (await prisma.program.count() > 0);
 
-  for (const [title, slug, excerpt, icon] of programs) {
-    await prisma.program.upsert({
-      where: { slug },
-      update: { title, excerpt, icon, status: "PUBLISHED", featuredOnHome: true, publishedAt: new Date() },
-      create: { title, slug, excerpt, icon, content: doc(excerpt), status: "PUBLISHED", featuredOnHome: true, publishedAt: new Date() }
-    });
-  }
+  if (!alreadySeeded) {
+    const programs = [
+      ["Ateliere pentru copii", "ateliere-pentru-copii", "Învățăm prin joc, experimente și povești despre stele.", "graduation"],
+      ["Caravana Stelelor", "caravana-stelelor", "Aducem astronomia în școli și comunități din toată țara.", "bus"],
+      ["Observații astronomice", "observatii-astronomice", "Seri magice sub cerul liber, deschise tuturor.", "telescope"],
+      ["Educație STEM", "educatie-stem", "Proiecte care dezvoltă gândirea științifică și creativitatea.", "atom"]
+    ];
 
-  const events = [
-    ["Noapte de observații la Pădurea Băneasa", "noapte-observatii-padurea-baneasa", 24, "Pădurea Băneasa, București"],
-    ["Atelier: Sistemul Solar pentru copii", "atelier-sistemul-solar-copii", 7, "Biblioteca Metropolitană"],
-    ["Caravana Stelelor - Iași", "caravana-stelelor-iasi", 21, "Colegiul Național Iași"],
-    ["Noapte de observații la munte", "noapte-observatii-la-munte", 28, "Cabana Piatra Arsă"]
-  ];
-
-  const year = new Date().getFullYear() + 1;
-  for (const [title, slug, day, locationName] of events) {
-    await prisma.event.upsert({
-      where: { slug: String(slug) },
-      update: { title: String(title), locationName: String(locationName), status: "PUBLISHED", featuredOnHome: true },
-      create: {
-        title: String(title),
-        slug: String(slug),
-        excerpt: "O întâlnire pentru copii și familii sub cerul înstelat.",
-        content: doc("Ne bucurăm de cer, întrebări curajoase și descoperiri ghidate de echipa Star Sim."),
-        startsAt: new Date(`${year}-06-${String(day).padStart(2, "0")}T18:00:00+03:00`),
-        locationName: String(locationName),
-        city: "București",
-        status: "PUBLISHED",
-        featuredOnHome: true,
-        registrationEnabled: true,
-        publishedAt: new Date()
-      }
-    });
-  }
-
-  await prisma.donationSettings.upsert({
-    where: { id: "default" },
-    update: {},
-    create: {
-      id: "default",
-      title: "Susține educația prin astronomie",
-      description: "Donațiile ajută la finanțarea atelierelor, materialelor și evenimentelor pentru copii.",
-      bankAccount: "RO00 BANK 0000 0000 0000 0000",
-      bankName: "Banca Exemplu",
-      beneficiaryName: "Asociatia Star Sim",
-      fiscalCode: "00000000",
-      recommendedAmounts: [
-        { amount: 50, label: "Materiale pentru atelier", impact: "Ajută la pregătirea materialelor educaționale." },
-        { amount: 150, label: "O grupă de copii", impact: "Susține participarea unei grupe la o activitate Star Sim." },
-        { amount: 500, label: "O seară de observații", impact: "Contribuie la organizarea unei seri astronomice." }
-      ]
+    for (const [title, slug, excerpt, icon] of programs) {
+      await prisma.program.upsert({
+        where: { slug },
+        update: { title, excerpt, icon, status: "PUBLISHED", featuredOnHome: true, publishedAt: new Date() },
+        create: { title, slug, excerpt, icon, content: doc(excerpt), status: "PUBLISHED", featuredOnHome: true, publishedAt: new Date() }
+      });
     }
-  });
 
-  await prisma.contactSettings.upsert({
-    where: { id: "default" },
-    update: {},
-    create: {
-      id: "default",
-      email: "contact@starsim.ro",
-      phone: "+40 723 123 456",
-      address: "București, România",
-      city: "București",
-      schedule: "Luni - Vineri, 10:00 - 18:00",
-      introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate.",
-      footerDescription: "Asociație dedicată promovării astronomiei, educației științifice și inspirării copiilor să viseze mai departe.",
-      footerCopyright: "De la o stea, la un vis. Toate drepturile rezervate."
+    const events = [
+      ["Noapte de observații la Pădurea Băneasa", "noapte-observatii-padurea-baneasa", 24, "Pădurea Băneasa, București"],
+      ["Atelier: Sistemul Solar pentru copii", "atelier-sistemul-solar-copii", 7, "Biblioteca Metropolitană"],
+      ["Caravana Stelelor - Iași", "caravana-stelelor-iasi", 21, "Colegiul Național Iași"],
+      ["Noapte de observații la munte", "noapte-observatii-la-munte", 28, "Cabana Piatra Arsă"]
+    ];
+
+    const year = new Date().getFullYear() + 1;
+    for (const [title, slug, day, locationName] of events) {
+      await prisma.event.upsert({
+        where: { slug: String(slug) },
+        update: { title: String(title), locationName: String(locationName), status: "PUBLISHED", featuredOnHome: true },
+        create: {
+          title: String(title),
+          slug: String(slug),
+          excerpt: "O întâlnire pentru copii și familii sub cerul înstelat.",
+          content: doc("Ne bucurăm de cer, întrebări curajoase și descoperiri ghidate de echipa Star Sim."),
+          startsAt: new Date(`${year}-06-${String(day).padStart(2, "0")}T18:00:00+03:00`),
+          locationName: String(locationName),
+          city: "București",
+          status: "PUBLISHED",
+          featuredOnHome: true,
+          registrationEnabled: true,
+          publishedAt: new Date()
+        }
+      });
     }
-  });
 
-  for (const page of legalPageDefaults) {
-    await prisma.page.upsert({
-      where: { key: page.key },
+    await prisma.donationSettings.upsert({
+      where: { id: "default" },
       update: {},
       create: {
-        key: page.key,
-        title: page.title,
-        slug: page.slug,
-        excerpt: page.excerpt,
-        content: legalBodyToTiptap(page.body),
-        template: "legal",
-        status: "PUBLISHED",
-        publishedAt: new Date(),
-        metaTitle: page.title,
-        metaDescription: page.excerpt
+        id: "default",
+        title: "Susține educația prin astronomie",
+        description: "Donațiile ajută la finanțarea atelierelor, materialelor și evenimentelor pentru copii.",
+        bankAccount: "RO00 BANK 0000 0000 0000 0000",
+        bankName: "Banca Exemplu",
+        beneficiaryName: "Asociatia Star Sim",
+        fiscalCode: "00000000",
+        recommendedAmounts: [
+          { amount: 50, label: "Materiale pentru atelier", impact: "Ajută la pregătirea materialelor educaționale." },
+          { amount: 150, label: "O grupă de copii", impact: "Susține participarea unei grupe la o activitate Star Sim." },
+          { amount: 500, label: "O seară de observații", impact: "Contribuie la organizarea unei seri astronomice." }
+        ]
       }
+    });
+
+    await prisma.contactSettings.upsert({
+      where: { id: "default" },
+      update: {},
+      create: {
+        id: "default",
+        email: "contact@starsim.ro",
+        phone: "+40 723 123 456",
+        address: "București, România",
+        city: "București",
+        schedule: "Luni - Vineri, 10:00 - 18:00",
+        introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate.",
+        footerDescription: "Asociație dedicată promovării astronomiei, educației științifice și inspirării copiilor să viseze mai departe.",
+        footerCopyright: "De la o stea, la un vis. Toate drepturile rezervate."
+      }
+    });
+
+    for (const page of legalPageDefaults) {
+      await prisma.page.upsert({
+        where: { key: page.key },
+        update: {},
+        create: {
+          key: page.key,
+          title: page.title,
+          slug: page.slug,
+          excerpt: page.excerpt,
+          content: legalBodyToTiptap(page.body),
+          template: "legal",
+          status: "PUBLISHED",
+          publishedAt: new Date(),
+          metaTitle: page.title,
+          metaDescription: page.excerpt
+        }
+      });
+    }
+
+    await prisma.siteSettings.upsert({
+      where: { key: "homepage" },
+      update: {},
+      create: {
+        key: "homepage",
+        value: defaultHomepageSettings
+      }
+    });
+
+    await prisma.auditLog.create({
+      data: { actorId: admin.id, action: "SEED", entity: "System", metadata: { message: "Seed initial Star Sim" } }
     });
   }
 
-  await prisma.siteSettings.upsert({
-    where: { key: "homepage" },
-    update: {},
-    create: {
-      key: "homepage",
-      value: defaultHomepageSettings
-    }
-  });
-
   await normalizeExistingRomanianCopy();
-
-  await prisma.auditLog.create({
-    data: { actorId: admin.id, action: "SEED", entity: "System", metadata: { message: "Seed initial Star Sim" } }
-  });
 }
 
 main().finally(async () => prisma.$disconnect());
