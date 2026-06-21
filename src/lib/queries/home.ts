@@ -59,3 +59,58 @@ export async function getHomepageEvents() {
     return fallbackEvents;
   }
 }
+
+export async function getHomepageGallery() {
+  try {
+    return await prisma.galleryAlbum.findMany({
+      where: { status: "PUBLISHED", featuredOnHome: true },
+      include: {
+        coverImage: true,
+        images: { select: { id: true } }
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+      take: 3
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function getHomepageArticles() {
+  try {
+    return await prisma.article.findMany({
+      where: { status: "PUBLISHED", featuredOnHome: true },
+      include: { heroImage: true },
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+      take: 3
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function getHomepageTestimonials() {
+  try {
+    return await prisma.testimonial.findMany({
+      where: { status: "PUBLISHED", featuredOnHome: true },
+      include: { image: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+      take: 3
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function getHomepagePartners() {
+  try {
+    return await prisma.partner.findMany({
+      where: { status: "PUBLISHED", featuredOnHome: true },
+      include: { logo: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }]
+    });
+  } catch {
+    return [];
+  }
+}
+
