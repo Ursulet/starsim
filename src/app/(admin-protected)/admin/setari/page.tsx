@@ -7,6 +7,7 @@ const settingsLinks = [
   { title: "Donează", description: "Date bancare, sume recomandate și textul paginii de donații.", href: "/admin/doneaza" },
   { title: "Pagini statice", description: "Politica de confidențialitate, cookies, termeni și alte pagini editoriale.", href: "/admin/pagini" },
   { title: "Utilizatori", description: "Conturi admin/editor și roluri.", href: "/admin/utilizatori" },
+  { title: "SMTP Email", description: "Configurare server email (SMTP) și expediere mesaje test.", href: "/admin/smtp" },
   { title: "SEO Center", description: "Raport rapid pentru metadate lipsa.", href: "/admin/seo" }
 ];
 

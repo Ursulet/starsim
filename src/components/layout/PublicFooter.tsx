@@ -92,8 +92,28 @@ export async function PublicFooter() {
       </Container>
 
       <div className="border-t border-white/10">
-        <Container className="flex flex-col gap-3 py-4 text-xs text-white/65 md:flex-row md:items-center md:justify-between">
-          <p>&copy; {year} Star Sim - {footerCopyright}</p>
+        <Container className="flex flex-col gap-4 py-4 text-xs text-white/65 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
+            <p>&copy; {year} Star Sim - {footerCopyright}</p>
+            <div className="flex items-center gap-1.5 text-[11px] text-white/50">
+              <span>Realizat cu <span className="text-red-500">❤️</span> de</span>
+              <a 
+                href="https://smdg.ro" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center hover:opacity-100 transition opacity-80"
+                title="SMDG - Servicii IT & C"
+              >
+                <Image 
+                  src="/images/logo-smdg.png" 
+                  alt="SMDG" 
+                  width={80} 
+                  height={25} 
+                  className="h-5 w-auto object-contain bg-white/5 rounded px-1.5 py-0.5" 
+                />
+              </a>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-5">
             <Link href="/politica-de-confidentialitate">Politica de confidențialitate</Link>
             <Link href="/cookies">Cookies</Link>
