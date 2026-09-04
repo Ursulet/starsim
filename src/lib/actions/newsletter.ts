@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 const newsletterSchema = z.object({
   email: z.string().email(),
@@ -20,6 +21,12 @@ export async function subscribeNewsletter(_: unknown, formData: FormData) {
 
   if (parsed.data.website) {
     return { ok: true, message: "Mulțumim pentru abonare." };
+  }
+
+  // Rate limit: 5 subscriptions per minute per email
+  const { maxRequests, windowMs } = RATE_LIMITS.NEWSLETTER;
+  if (!rateLimit(`newsletter:${parsed.data.email}`, maxRequests, windowMs)) {
+    return { ok: false, message: "Prea multe încercări. Te rugăm să aștepți un minut." };
   }
 
   try {
@@ -44,3 +51,4 @@ export async function subscribeNewsletter(_: unknown, formData: FormData) {
     return { ok: false, message: "Abonarea nu a putut fi salvată momentan." };
   }
 }
+

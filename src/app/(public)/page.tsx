@@ -1,3 +1,5 @@
+export const revalidate = 60; // ISR: regenerate every 60 seconds
+
 import { ContributionSection } from "@/components/home/ContributionSection";
 import { EventsSection } from "@/components/home/EventsSection";
 import { HeroSection } from "@/components/home/HeroSection";

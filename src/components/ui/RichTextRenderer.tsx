@@ -1,5 +1,15 @@
 import Image from "next/image";
 
+function isSafeHref(href: string | undefined | null): boolean {
+  if (!href) return false;
+  const trimmed = href.trim();
+  if (trimmed.startsWith("/") || trimmed.startsWith("#")) return true;
+  if (/^https?:\/\//i.test(trimmed)) return true;
+  if (/^mailto:/i.test(trimmed)) return true;
+  if (/^tel:/i.test(trimmed)) return true;
+  return false;
+}
+
 function renderNode(node: any, index: number): React.ReactNode {
   if (!node) return null;
   const children = node.content?.map(renderNode) || node.text || null;
@@ -8,7 +18,9 @@ function renderNode(node: any, index: number): React.ReactNode {
     for (const mark of node.marks || []) {
       if (mark.type === "bold") content = <strong>{content}</strong>;
       if (mark.type === "italic") content = <em>{content}</em>;
-      if (mark.type === "link") content = <a href={mark.attrs?.href}>{content}</a>;
+      if (mark.type === "link" && isSafeHref(mark.attrs?.href)) {
+        content = <a href={mark.attrs.href} rel="noopener noreferrer">{content}</a>;
+      }
     }
     return content;
   }

@@ -39,7 +39,8 @@ export async function saveSmtpSettingsAction(
     revalidatePath("/admin/smtp");
     return { success: "Setările SMTP au fost salvate cu succes!" };
   } catch (err: any) {
-    return { error: `Salvarea a eșuat: ${err.message || err}` };
+    console.error("[SMTP Save] Error:", err);
+    return { error: "Salvarea setărilor SMTP a eșuat. Încearcă din nou." };
   }
 }
 
@@ -78,6 +79,7 @@ export async function sendTestEmailAction(
 
     return { success: `Email de test trimis cu succes către ${to}!` };
   } catch (err: any) {
-    return { error: `Conexiunea SMTP a eșuat sau email-ul nu a putut fi trimis: ${err.message || err}` };
+    console.error("[SMTP Test] Error:", err);
+    return { error: "Conexiunea SMTP a eșuat. Verifică datele de conectare și încearcă din nou." };
   }
 }

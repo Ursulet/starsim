@@ -7,7 +7,7 @@ export function PublicShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <PublicHeader />
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
       <PublicFooter />
       <WhatsAppButton />
       <CookieBanner />

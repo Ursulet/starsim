@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { Prisma } from "@prisma/client";
 import type { Session } from "next-auth";
 import type { AdminContentType } from "@/lib/admin/content";
 import { adminContentModules } from "@/lib/admin/content";
+import { createAuditLog } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 import { createMediaAssetFromUpload, deleteStoredUpload, saveUploadedFile, uploadedFileFromForm } from "@/lib/uploads";
@@ -69,6 +69,12 @@ function publishDate(status: string) {
   return status === "PUBLISHED" ? new Date() : null;
 }
 
+/** For updates: preserve existing publishedAt if already published */
+function publishDateForUpdate(status: string, existingPublishedAt?: Date | null) {
+  if (status === "PUBLISHED") return existingPublishedAt || new Date();
+  return null;
+}
+
 function typedModule(formData: FormData): AdminContentType {
   const type = str(formData, "type") as AdminContentType;
   if (!adminContentModules[type]) throw new Error("Modul admin invalid.");
@@ -85,18 +91,14 @@ async function requireAccess(type: AdminContentType) {
   return requireRole(["ADMIN", "EDITOR"]);
 }
 
+// logAdminAction delegates to the centralized createAuditLog
 async function logAdminAction(
   user: AdminUser,
   action: string,
   entity: string,
-  entityId?: string,
-  metadata?: Prisma.InputJsonObject
+  entityId?: string
 ) {
-  try {
-    await prisma.auditLog.create({
-      data: { actorId: user.id, action, entity, entityId, metadata }
-    });
-  } catch {}
+  await createAuditLog({ actorId: user.id, action, entity, entityId });
 }
 
 function redirectTo(type: AdminContentType) {
@@ -391,6 +393,7 @@ export async function updateAdminContentAction(
       case "programe": {
         const status = str(formData, "status") || "DRAFT";
         const title = str(formData, "title");
+        const existing = await prisma.program.findUnique({ where: { id }, select: { publishedAt: true } });
         await prisma.program.update({
           where: { id },
           data: {
@@ -406,7 +409,7 @@ export async function updateAdminContentAction(
             status: status as any,
             featuredOnHome: boolValue(formData, "featuredOnHome"),
             sortOrder: intValue(formData, "sortOrder"),
-            publishedAt: publishDate(status),
+            publishedAt: publishDateForUpdate(status, existing?.publishedAt),
             metaTitle: nullable(formData, "metaTitle"),
             metaDescription: nullable(formData, "metaDescription")
           }
@@ -416,6 +419,7 @@ export async function updateAdminContentAction(
       case "evenimente": {
         const status = str(formData, "status") || "DRAFT";
         const title = str(formData, "title");
+        const existing = await prisma.event.findUnique({ where: { id }, select: { publishedAt: true } });
         await prisma.event.update({
           where: { id },
           data: {
@@ -436,7 +440,7 @@ export async function updateAdminContentAction(
             status: status as any,
             featuredOnHome: boolValue(formData, "featuredOnHome"),
             sortOrder: intValue(formData, "sortOrder"),
-            publishedAt: publishDate(status),
+            publishedAt: publishDateForUpdate(status, existing?.publishedAt),
             metaTitle: nullable(formData, "metaTitle"),
             metaDescription: nullable(formData, "metaDescription")
           }
@@ -446,6 +450,7 @@ export async function updateAdminContentAction(
       case "galerie": {
         const status = str(formData, "status") || "DRAFT";
         const title = str(formData, "title");
+        const existing = await prisma.galleryAlbum.findUnique({ where: { id }, select: { publishedAt: true } });
         await prisma.galleryAlbum.update({
           where: { id },
           data: {
@@ -457,7 +462,7 @@ export async function updateAdminContentAction(
             status: status as any,
             featuredOnHome: boolValue(formData, "featuredOnHome"),
             sortOrder: intValue(formData, "sortOrder"),
-            publishedAt: publishDate(status),
+            publishedAt: publishDateForUpdate(status, existing?.publishedAt),
             metaTitle: nullable(formData, "metaTitle"),
             metaDescription: nullable(formData, "metaDescription")
           }
@@ -482,6 +487,7 @@ export async function updateAdminContentAction(
       case "articole": {
         const status = str(formData, "status") || "DRAFT";
         const title = str(formData, "title");
+        const existing = await prisma.article.findUnique({ where: { id }, select: { publishedAt: true } });
         await prisma.article.update({
           where: { id },
           data: {
@@ -498,7 +504,7 @@ export async function updateAdminContentAction(
               .filter(Boolean),
             status: status as any,
             featuredOnHome: boolValue(formData, "featuredOnHome"),
-            publishedAt: publishDate(status),
+            publishedAt: publishDateForUpdate(status, existing?.publishedAt),
             focusKeyword: nullable(formData, "focusKeyword"),
             metaTitle: nullable(formData, "metaTitle"),
             metaDescription: nullable(formData, "metaDescription")

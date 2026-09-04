@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { prisma } from "./prisma";
 import { verifyPassword } from "@/server/auth/password";
+import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -10,7 +11,7 @@ const loginSchema = z.object({
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 24 * 60 * 60 /* 24 hours */ },
   trustHost: true,
   providers: [
     Credentials({
@@ -22,6 +23,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
         const email = parsed.data.email.trim().toLowerCase();
+
+        // Rate limit: 5 login attempts per minute per email
+        const { maxRequests, windowMs } = RATE_LIMITS.LOGIN;
+        if (!rateLimit(`login:${email}`, maxRequests, windowMs)) return null;
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || user.status !== "ACTIVE") return null;
         const ok = await verifyPassword(parsed.data.password, user.passwordHash);

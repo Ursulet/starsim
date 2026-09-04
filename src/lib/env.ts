@@ -12,4 +12,17 @@ const envSchema = z.object({
   MAX_UPLOAD_MB: z.coerce.number().min(1).max(50).default(10)
 });
 
-export const env = envSchema.parse(process.env);
+const parsed = envSchema.parse(process.env);
+
+// Fail fast at runtime if critical vars are missing (but allow build without .env)
+if (typeof window === "undefined" && process.env.NODE_ENV !== "test") {
+  const missing: string[] = [];
+  if (!parsed.DATABASE_URL) missing.push("DATABASE_URL");
+  if (!parsed.AUTH_SECRET) missing.push("AUTH_SECRET");
+  if (missing.length && !process.env.NEXT_PHASE?.includes("build")) {
+    throw new Error(`Missing required environment variables: ${missing.join(", ")}`);
+  }
+}
+
+export const env = parsed;
+
