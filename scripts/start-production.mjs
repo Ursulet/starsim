@@ -49,7 +49,16 @@ async function runWithRetry(label, command, args) {
 }
 
 await runWithRetry("Prisma migrations", localBin("prisma"), ["migrate", "deploy"]);
-await runWithRetry("Database seed", localBin("tsx"), ["prisma/seed.ts", "--production"]);
+
+if (process.env.RUN_SEED === "true" || process.env.SEED_DATABASE === "true") {
+  try {
+    await runWithRetry("Database seed", localBin("tsx"), ["prisma/seed.ts", "--production"]);
+  } catch (err) {
+    console.warn(`[startup] Database seed skipped: ${err.message}`);
+  }
+} else {
+  console.log("[startup] Baza de date este deja configurată. Se omite rularea seed-ului.");
+}
 
 await run(localBin("next"), ["start", "-H", "0.0.0.0", "-p", process.env.PORT || "3000"], {
   env: process.env
