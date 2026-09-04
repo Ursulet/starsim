@@ -8,6 +8,7 @@ export const adminNavigation = [
   { label: "Pagini", href: "/admin/pagini", icon: "PanelsTopLeft" },
   { label: "Media Library", href: "/admin/media", icon: "Image" },
   { label: "Donează", href: "/admin/doneaza", icon: "HeartHandshake", adminOnly: true },
+  { label: "Despre Noi", href: "/admin/despre", icon: "Users", adminOnly: true },
   { label: "Contact", href: "/admin/contact", icon: "Mail", adminOnly: true },
   { label: "Mesaje", href: "/admin/contact/messages", icon: "Inbox" },
   { label: "Newsletter", href: "/admin/newsletter", icon: "Send" },

@@ -152,6 +152,11 @@ export function DonationCardsEditor({ initialCards, mediaOptions = [] }: Donatio
   const handleFileSelect = (cardId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 20 * 1024 * 1024) {
+        alert("Imaginea selectată este prea mare (peste 20MB). Te rugăm să alegi o imagine optimizată sub 20MB.");
+        e.target.value = "";
+        return;
+      }
       const previewUrl = URL.createObjectURL(file);
       setLocalPreviews((prev) => ({ ...prev, [cardId]: previewUrl }));
     }

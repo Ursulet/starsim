@@ -30,6 +30,18 @@ export default async function AdminContactPage({
         </div>
       ) : null}
 
+      <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-sm text-starsim-navy flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <span className="font-bold">Conducerea Asociației & Date Oficiale:</span> Președinte (Gîrdeanu Ștefan), Vicepreședinte (Claudiu Simion), 2 telefoane, Sediu Constanța și CUI se configurează în secțiunea dedicată.
+        </div>
+        <Link
+          href="/admin/despre"
+          className="whitespace-nowrap rounded-xl bg-starsim-navy px-4 py-2 text-xs font-bold text-white transition hover:bg-starsim-blue"
+        >
+          Editează Conducerea →
+        </Link>
+      </div>
+
       <div className="mt-8">
         <ContactSettingsForm settings={settings} />
       </div>

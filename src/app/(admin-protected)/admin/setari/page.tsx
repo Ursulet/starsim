@@ -3,6 +3,7 @@ import { requireRole } from "@/server/auth/session";
 
 const settingsLinks = [
   { title: "Prima pagină", description: "Hero, misiune, secțiuni și zona de contribuții.", href: "/admin/prima-pagina" },
+  { title: "Despre Noi & Conducere", description: "Președinte, vicepreședinte, sediu, CUI și date oficiale de contact.", href: "/admin/despre" },
   { title: "Contact și footer", description: "Email, telefon, adresă, social links, WhatsApp și textele din footer.", href: "/admin/contact" },
   { title: "Donează", description: "Date bancare, sume recomandate și textul paginii de donații.", href: "/admin/doneaza" },
   { title: "Pagini statice", description: "Politica de confidențialitate, cookies, termeni și alte pagini editoriale.", href: "/admin/pagini" },

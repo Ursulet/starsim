@@ -58,29 +58,25 @@ export function DonationSettingsForm({ settings, mediaOptions = [] }: DonationSe
         </div>
       ) : null}
 
-      {/* 1. Date Generale & Transfer Bancar */}
+      {/* 1. Informații Generale Pagină */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-starsim-navy">Informații Pagina & Date Bancare</h2>
+        <h2 className="text-base font-bold text-starsim-navy">Informații Pagina de Donații (Hero)</h2>
         <p className="mt-0.5 text-xs text-slate-500">
-          Aceste date sunt afișate în antetul paginii și în caseta de transfer bancar oficial.
+          Titlul și textul introductiv din antetul paginii de donații.
         </p>
 
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <Input
-            label="Titlu pagină (Hero)"
-            name="title"
-            value={settings?.title}
-            placeholder="Susține educația prin astronomie"
-          />
-          <Input
-            label="Nume Beneficiar Oficial"
-            name="beneficiaryName"
-            value={settings?.beneficiaryName}
-            placeholder="Asociația Star Sim"
-          />
+          <div className="sm:col-span-2">
+            <Input
+              label="Titlu pagină (Hero)"
+              name="title"
+              value={settings?.title}
+              placeholder="Susține educația prin astronomie"
+            />
+          </div>
           <div className="sm:col-span-2">
             <TextArea
-              label="Descriere scurtă / Introducere"
+              label="Descriere introductivă"
               name="description"
               value={settings?.description}
               rows={3}
@@ -88,35 +84,105 @@ export function DonationSettingsForm({ settings, mediaOptions = [] }: DonationSe
             />
           </div>
         </div>
+      </div>
 
-        <div className="mt-5 border-t border-slate-100 pt-5">
-          <p className="text-xs font-bold text-starsim-navy mb-3">Cont Bancar & Fiscalitate</p>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="sm:col-span-2">
-              <Input
-                label="IBAN (Cont bancar)"
-                name="bankAccount"
-                value={settings?.bankAccount}
-                placeholder="RO00 BANK 0000 0000 0000 0000"
-              />
+      {/* 2. CÂMP SEPARAT: Datele Oficiale ale Asociației & Date Bancare */}
+      <div className="rounded-2xl border-2 border-starsim-gold/40 bg-gradient-to-br from-white via-white to-amber-50/20 p-6 shadow-sm">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-starsim-gold/15 px-3 py-1 text-xs font-bold text-starsim-gold">
+              Secțiune Separată
             </div>
-            <div>
-              <Input
-                label="Bancă"
-                name="bankName"
-                value={settings?.bankName}
-                placeholder="ex: Banca Transilvania"
-              />
-            </div>
-            <div>
-              <Input
-                label="Cod Fiscal (CUI / CIF)"
-                name="fiscalCode"
-                value={settings?.fiscalCode}
-                placeholder="ex: 12345678"
-              />
-            </div>
+            <h2 className="mt-2 text-lg font-bold text-starsim-navy">Datele Oficiale ale Asociației (Transfer Bancar & Fiscale)</h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Aceste informații legale și bancare sunt afișate în caseta oficială de transfer bancar și transparență.
+            </p>
           </div>
+        </div>
+
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <Input
+            label="Nume Beneficiar Oficial"
+            name="beneficiaryName"
+            value={settings?.organizationDetails?.beneficiaryName || settings?.beneficiaryName}
+            placeholder="Asociația Star Sim"
+          />
+
+          <Input
+            label="Cod Fiscal (CUI / CIF)"
+            name="fiscalCode"
+            value={settings?.organizationDetails?.fiscalCode || settings?.fiscalCode}
+            placeholder="ex: 12345678"
+          />
+
+          <Input
+            label="Sediu Asociație"
+            name="headquarters"
+            value={settings?.organizationDetails?.headquarters || "Constanța"}
+            placeholder="Constanța"
+          />
+
+          <Input
+            label="Adresă oficială / Județ"
+            name="address"
+            value={settings?.organizationDetails?.address || "Constanța, România"}
+            placeholder="Constanța, România"
+          />
+
+          <Input
+            label="Nr. Înregistrare Reg. Asociații (opțional)"
+            name="regNumber"
+            value={settings?.organizationDetails?.regNumber || ""}
+            placeholder="ex: Dosar nr. ... / Reg. Asociații"
+          />
+
+          <Input
+            label="Bancă"
+            name="bankName"
+            value={settings?.organizationDetails?.bankName || settings?.bankName}
+            placeholder="ex: Banca Transilvania"
+          />
+
+          <div className="sm:col-span-2">
+            <Input
+              label="Cont IBAN Principal (RON)"
+              name="bankAccount"
+              value={settings?.organizationDetails?.bankAccount || settings?.bankAccount}
+              placeholder="RO00 BANK 0000 0000 0000 0000"
+            />
+          </div>
+
+          <div>
+            <Input
+              label="Cont IBAN Secundar (EUR / Valută - opțional)"
+              name="secondaryIban"
+              value={settings?.organizationDetails?.secondaryIban || ""}
+              placeholder="RO00 BANK 0000 0000 0000 0000 (EUR)"
+            />
+          </div>
+
+          <div className="sm:col-span-2 lg:col-span-3">
+            <Input
+              label="Mențiune recomandată la transfer"
+              name="paymentReference"
+              value={settings?.organizationDetails?.paymentReference || "Donație / Sprijin activități Star Sim"}
+              placeholder="Donație / Sprijin activități Star Sim"
+            />
+          </div>
+
+          <Input
+            label="Email contact donații"
+            name="contactEmail"
+            value={settings?.organizationDetails?.email || "contact@starsim.ro"}
+            placeholder="contact@starsim.ro"
+          />
+
+          <Input
+            label="Telefon contact donații"
+            name="contactPhone"
+            value={settings?.organizationDetails?.phone || ""}
+            placeholder="ex: +40 723 123 456"
+          />
         </div>
       </div>
 

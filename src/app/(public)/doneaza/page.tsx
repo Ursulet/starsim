@@ -4,13 +4,23 @@ import { PageHero } from "@/components/public/PageHero";
 import { Container } from "@/components/ui/Container";
 import { PublicButton } from "@/components/ui/PublicButton";
 import { RichTextRenderer } from "@/components/ui/RichTextRenderer";
-import { IbanCopyButton } from "@/components/public/IbanCopyButton";
+import { IbanCopyButton, CopyTextButton } from "@/components/public/IbanCopyButton";
 import { getDonationSettings } from "@/lib/queries/settings";
 
 export default async function DonatePage() {
   const settings: any = await getDonationSettings();
   const rawCards = Array.isArray(settings?.recommendedAmounts) ? settings.recommendedAmounts : [];
   const cards = rawCards.filter((item: any) => item && item.isActive !== false);
+
+  const orgDetails = settings?.organizationDetails || {};
+  const beneficiaryName = orgDetails.beneficiaryName || settings?.beneficiaryName || "Asociația Star Sim";
+  const fiscalCode = orgDetails.fiscalCode || settings?.fiscalCode || "—";
+  const bankAccount = orgDetails.bankAccount || settings?.bankAccount || "RO00 BANK 0000 0000 0000 0000";
+  const secondaryIban = orgDetails.secondaryIban || null;
+  const bankName = orgDetails.bankName || settings?.bankName || "Banca Transilvania";
+  const headquarters = orgDetails.headquarters || "Constanța";
+  const regNumber = orgDetails.regNumber || null;
+  const paymentReference = orgDetails.paymentReference || "Donație / Sprijin activități Star Sim";
 
   return (
     <>
@@ -107,51 +117,140 @@ export default async function DonatePage() {
             })}
           </div>
 
-          {/* Bank Transfer Box */}
+          {/* Bank Transfer & Association Details */}
           <div
             id="cont-bancar"
-            className="premium-card mt-16 grid scroll-mt-28 gap-8 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-amber-50/20 p-8 shadow-sm lg:grid-cols-[1fr_1.25fr]"
+            className="premium-card mt-16 scroll-mt-28 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-amber-50/20 p-6 md:p-10 shadow-sm"
           >
-            <div>
-              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100/70 text-starsim-gold shadow-xs">
-                <HandHeart className="h-7 w-7 text-amber-600" />
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-8 border-b border-slate-200/80">
+              <div className="flex items-start gap-4">
+                <div className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100/70 text-starsim-gold shadow-xs">
+                  <HandHeart className="h-7 w-7 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-starsim-navy">
+                    Donează prin transfer bancar
+                  </h2>
+                  <p className="mt-1 text-sm text-starsim-muted">
+                    Contribuțiile ajung direct în contul oficial al Asociației Star Sim pentru proiectele educaționale.
+                  </p>
+                </div>
               </div>
-              <h2 className="mt-4 font-serif text-3xl font-bold text-starsim-navy">
-                Donează prin transfer bancar
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-starsim-muted">
-                Fiecare transfer ajunge direct în contul Asociației Star Sim și este utilizat exclusiv pentru dotarea atelierelor, achiziția de materiale didactice și organizarea nopților astronomice deschise pentru copii.
-              </p>
-              <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100 max-w-fit">
+
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3.5 py-2 rounded-xl border border-emerald-100 self-start md:self-auto">
                 <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>Asociație non-profit înregistrată oficial</span>
+                <span>Organizație nonprofit înregistrată oficial</span>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-6 space-y-4">
-              <div>
-                <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">Beneficiar</dt>
-                <dd className="mt-0.5 text-base font-bold text-starsim-navy">{settings?.beneficiaryName || "Asociația Star Sim"}</dd>
+            {/* 2 Distinct Blocks: Datele Oficiale ale Asociației + Detalii Conturi Bancare */}
+            <div className="mt-8 grid gap-8 lg:grid-cols-12 items-stretch">
+              {/* CÂMP SEPARAT: Datele Oficiale ale Asociației */}
+              <div className="lg:col-span-5 rounded-2xl border-2 border-starsim-gold/40 bg-gradient-to-br from-white to-amber-50/40 p-6 flex flex-col justify-between shadow-xs">
+                <div>
+                  <div className="flex items-center justify-between pb-3 border-b border-amber-100">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-starsim-gold">
+                      <Building2 className="h-3.5 w-3.5" />
+                      Datele Asociației
+                    </span>
+                    <span className="text-[11px] font-semibold text-slate-400">Identificare legală</span>
+                  </div>
+
+                  <div className="mt-4 space-y-3.5 text-sm">
+                    <div>
+                      <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Beneficiar Oficial</dt>
+                      <dd className="mt-0.5 font-bold text-starsim-navy text-base">{beneficiaryName}</dd>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 pt-1">
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400">CUI / CIF</dt>
+                          {fiscalCode && fiscalCode !== "—" ? <CopyTextButton text={fiscalCode} label="Copiază" /> : null}
+                        </div>
+                        <dd className="mt-0.5 font-bold text-starsim-navy">{fiscalCode}</dd>
+                      </div>
+
+                      <div>
+                        <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sediu</dt>
+                        <dd className="mt-0.5 font-semibold text-slate-800">{headquarters}</dd>
+                      </div>
+                    </div>
+
+                    {regNumber ? (
+                      <div className="pt-1">
+                        <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Reg. Asociații & Fundații</dt>
+                        <dd className="mt-0.5 text-xs font-semibold text-slate-700">{regNumber}</dd>
+                      </div>
+                    ) : null}
+
+                    <div className="pt-1">
+                      <dt className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Mențiune transfer recomandată</dt>
+                      <dd className="mt-0.5 text-xs font-medium text-slate-700 bg-white p-2.5 rounded-xl border border-slate-200/80">
+                        {paymentReference}
+                      </dd>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-3 border-t border-amber-100/70 text-[11px] text-slate-500">
+                  Fondurile sunt utilizate transparent conform statutului nonprofit al asociației.
+                </div>
               </div>
 
-              <div className="border-t border-slate-200/60 pt-3">
-                <div className="flex items-center justify-between gap-2">
-                  <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">Cod IBAN (Cont RON)</dt>
-                  {settings?.bankAccount ? <IbanCopyButton iban={settings.bankAccount} /> : null}
-                </div>
-                <dd className="mt-1 font-mono text-base sm:text-lg font-bold tracking-wider text-starsim-navy break-all bg-white p-3 rounded-xl border border-slate-200 select-all">
-                  {settings?.bankAccount || "RO00 BANK 0000 0000 0000 0000"}
-                </dd>
-              </div>
+              {/* Detalii Conturi Bancare */}
+              <div className="lg:col-span-7 rounded-2xl border border-slate-200/90 bg-slate-50/70 p-6 space-y-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-200/70">
+                    <span className="text-xs font-bold uppercase tracking-wider text-starsim-navy">
+                      Conturi Bancare Oficiale
+                    </span>
+                    <span className="text-xs font-semibold text-slate-500">{bankName}</span>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-200/60 pt-3">
-                <div>
-                  <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">Banca</dt>
-                  <dd className="mt-0.5 text-sm font-semibold text-slate-800">{settings?.bankName || "Banca Transilvania"}</dd>
+                  {/* Cont RON */}
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">
+                        Cont Principal (RON)
+                      </dt>
+                      {bankAccount ? <IbanCopyButton iban={bankAccount} /> : null}
+                    </div>
+                    <dd className="mt-1 font-mono text-base sm:text-lg font-bold tracking-wider text-starsim-navy break-all bg-white p-3.5 rounded-xl border border-slate-200 select-all shadow-xs">
+                      {bankAccount}
+                    </dd>
+                  </div>
+
+                  {/* Cont EUR dacă este definit */}
+                  {secondaryIban ? (
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">
+                          Cont Secundar (EUR / Valută)
+                        </dt>
+                        <IbanCopyButton iban={secondaryIban} />
+                      </div>
+                      <dd className="mt-1 font-mono text-base sm:text-lg font-bold tracking-wider text-starsim-navy break-all bg-white p-3.5 rounded-xl border border-slate-200 select-all shadow-xs">
+                        {secondaryIban}
+                      </dd>
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4 grid grid-cols-2 gap-4 pt-2">
+                    <div>
+                      <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">Banca</dt>
+                      <dd className="mt-0.5 text-sm font-semibold text-slate-800">{bankName}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">Destinație</dt>
+                      <dd className="mt-0.5 text-sm font-semibold text-slate-800">Donații educaționale</dd>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <dt className="text-xs font-bold uppercase tracking-wider text-starsim-muted">Cod Fiscal (CIF / CUI)</dt>
-                  <dd className="mt-0.5 text-sm font-semibold text-slate-800">{settings?.fiscalCode || "—"}</dd>
+
+                <div className="rounded-xl bg-amber-50/80 p-3 border border-amber-200/60 text-xs text-amber-900">
+                  💡 Pentru companii: 20% din impozitul pe profit poate fi redirecționat prin contract de sponsorizare.
                 </div>
               </div>
             </div>

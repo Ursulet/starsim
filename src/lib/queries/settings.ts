@@ -81,22 +81,110 @@ export async function getDonationSettings() {
         buttonUrl: "#cont-bancar",
         isActive: true
       }
-    ]
+    ],
+    organizationDetails: {
+      beneficiaryName: "Asociația Star Sim",
+      fiscalCode: "",
+      headquarters: "Constanța",
+      address: "Constanța, România",
+      regNumber: "",
+      bankAccount: "RO00 BANK 0000 0000 0000 0000",
+      bankName: "Banca Transilvania",
+      secondaryIban: "",
+      paymentReference: "Donație / Sprijin activități Star Sim",
+      email: "contact@starsim.ro",
+      phone: ""
+    }
   };
 
   try {
     const settings = await prisma.donationSettings.findUnique({ where: { id: "default" } });
     if (settings) {
-      if (!settings.recommendedAmounts || (Array.isArray(settings.recommendedAmounts) && settings.recommendedAmounts.length === 0)) {
-        return {
-          ...settings,
-          recommendedAmounts: fallback.recommendedAmounts
-        };
-      }
-      return settings;
+      const contentObj = (settings.content && typeof settings.content === "object" ? settings.content : {}) as Record<string, any>;
+      const rawOrg = contentObj.organizationDetails || {};
+
+      const organizationDetails = {
+        beneficiaryName: String(rawOrg.beneficiaryName || settings.beneficiaryName || fallback.organizationDetails.beneficiaryName).trim(),
+        fiscalCode: String(rawOrg.fiscalCode || settings.fiscalCode || fallback.organizationDetails.fiscalCode).trim(),
+        headquarters: String(rawOrg.headquarters || fallback.organizationDetails.headquarters).trim(),
+        address: String(rawOrg.address || fallback.organizationDetails.address).trim(),
+        regNumber: String(rawOrg.regNumber || "").trim(),
+        bankAccount: String(rawOrg.bankAccount || settings.bankAccount || fallback.organizationDetails.bankAccount).trim(),
+        bankName: String(rawOrg.bankName || settings.bankName || fallback.organizationDetails.bankName).trim(),
+        secondaryIban: String(rawOrg.secondaryIban || "").trim(),
+        paymentReference: String(rawOrg.paymentReference || fallback.organizationDetails.paymentReference).trim(),
+        email: String(rawOrg.email || fallback.organizationDetails.email).trim(),
+        phone: String(rawOrg.phone || "").trim()
+      };
+
+      const recommendedAmounts =
+        !settings.recommendedAmounts || (Array.isArray(settings.recommendedAmounts) && settings.recommendedAmounts.length === 0)
+          ? fallback.recommendedAmounts
+          : settings.recommendedAmounts;
+
+      return {
+        ...settings,
+        organizationDetails,
+        recommendedAmounts
+      };
     }
     return fallback;
   } catch {
     return fallback;
+  }
+}
+
+export type OrganizationSettings = {
+  presidentName: string;
+  presidentRole: string;
+  vicePresidentName: string;
+  vicePresidentRole: string;
+  officialEmail: string;
+  phone1: string;
+  phone2: string;
+  headquarters: string;
+  cui: string;
+  address?: string;
+  regNumber?: string;
+};
+
+export const defaultOrganizationSettings: OrganizationSettings = {
+  presidentName: "Gîrdeanu Ștefan",
+  presidentRole: "Președinte",
+  vicePresidentName: "Claudiu Simion",
+  vicePresidentRole: "Vicepreședinte",
+  officialEmail: "contact@starsim.ro",
+  phone1: "",
+  phone2: "",
+  headquarters: "Constanța",
+  cui: "",
+  address: "Constanța, România",
+  regNumber: ""
+};
+
+export async function getOrganizationSettings(): Promise<OrganizationSettings> {
+  try {
+    const item = await prisma.siteSettings.findUnique({
+      where: { key: "organization" }
+    });
+    if (item?.value && typeof item.value === "object") {
+      const val = item.value as Record<string, any>;
+      return {
+        presidentName: String(val.presidentName ?? defaultOrganizationSettings.presidentName).trim(),
+        presidentRole: String(val.presidentRole ?? defaultOrganizationSettings.presidentRole).trim(),
+        vicePresidentName: String(val.vicePresidentName ?? defaultOrganizationSettings.vicePresidentName).trim(),
+        vicePresidentRole: String(val.vicePresidentRole ?? defaultOrganizationSettings.vicePresidentRole).trim(),
+        officialEmail: String(val.officialEmail ?? defaultOrganizationSettings.officialEmail).trim(),
+        phone1: String(val.phone1 ?? defaultOrganizationSettings.phone1).trim(),
+        phone2: String(val.phone2 ?? defaultOrganizationSettings.phone2).trim(),
+        headquarters: String(val.headquarters ?? defaultOrganizationSettings.headquarters).trim(),
+        cui: String(val.cui ?? defaultOrganizationSettings.cui).trim(),
+        address: String(val.address ?? defaultOrganizationSettings.address).trim(),
+        regNumber: String(val.regNumber ?? defaultOrganizationSettings.regNumber).trim()
+      };
+    }
+    return defaultOrganizationSettings;
+  } catch {
+    return defaultOrganizationSettings;
   }
 }

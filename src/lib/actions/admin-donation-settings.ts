@@ -103,32 +103,51 @@ export async function updateDonationSettingsAction(
   try {
     const cards = await processCards(formData, user?.id);
 
+    const beneficiaryName = text(formData, "beneficiaryName") || "Asociația Star Sim";
+    const fiscalCode = text(formData, "fiscalCode") || null;
+    const bankAccount = text(formData, "bankAccount") || null;
+    const bankName = text(formData, "bankName") || null;
+    const headquarters = text(formData, "headquarters") || "Constanța";
+    const address = text(formData, "address") || "Constanța, România";
+    const regNumber = text(formData, "regNumber") || null;
+    const secondaryIban = text(formData, "secondaryIban") || null;
+    const paymentReference = text(formData, "paymentReference") || "Donație / Sprijin activități Star Sim";
+    const contactEmail = text(formData, "contactEmail") || "contact@starsim.ro";
+    const contactPhone = text(formData, "contactPhone") || null;
+
+    const organizationDetails = {
+      beneficiaryName,
+      fiscalCode,
+      headquarters,
+      address,
+      regNumber,
+      bankAccount,
+      bankName,
+      secondaryIban,
+      paymentReference,
+      email: contactEmail,
+      phone: contactPhone
+    };
+
+    const updatePayload = {
+      title: text(formData, "title") || "Susține educația prin astronomie",
+      description: text(formData, "description") || null,
+      bankAccount,
+      bankName,
+      beneficiaryName,
+      fiscalCode,
+      recommendedAmounts: cards,
+      content: { cards, organizationDetails },
+      metaTitle: text(formData, "metaTitle") || null,
+      metaDescription: text(formData, "metaDescription") || null
+    };
+
     await prisma.donationSettings.upsert({
       where: { id: "default" },
-      update: {
-        title: text(formData, "title") || "Susține educația prin astronomie",
-        description: text(formData, "description") || null,
-        bankAccount: text(formData, "bankAccount") || null,
-        bankName: text(formData, "bankName") || null,
-        beneficiaryName: text(formData, "beneficiaryName") || null,
-        fiscalCode: text(formData, "fiscalCode") || null,
-        recommendedAmounts: cards,
-        content: { cards },
-        metaTitle: text(formData, "metaTitle") || null,
-        metaDescription: text(formData, "metaDescription") || null
-      },
+      update: updatePayload,
       create: {
         id: "default",
-        title: text(formData, "title") || "Susține educația prin astronomie",
-        description: text(formData, "description") || null,
-        bankAccount: text(formData, "bankAccount") || null,
-        bankName: text(formData, "bankName") || null,
-        beneficiaryName: text(formData, "beneficiaryName") || null,
-        fiscalCode: text(formData, "fiscalCode") || null,
-        recommendedAmounts: cards,
-        content: { cards },
-        metaTitle: text(formData, "metaTitle") || null,
-        metaDescription: text(formData, "metaDescription") || null
+        ...updatePayload
       }
     });
   } catch (error) {

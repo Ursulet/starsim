@@ -12,11 +12,18 @@ import {
   Quote,
   Compass,
   ArrowRight,
-  BookOpen
+  BookOpen,
+  Building2,
+  Mail,
+  Phone,
+  MapPin
 } from "lucide-react";
 import Link from "next/link";
+import { getOrganizationSettings } from "@/lib/queries/settings";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const org = await getOrganizationSettings();
+
   const activities = [
     "observații astronomice vizuale și digitale;",
     "observații solare realizate în siguranță, cu echipamente și filtre adecvate;",
@@ -274,6 +281,208 @@ export default function AboutPage() {
                 <p>
                   Toate resursele asociației sunt folosite pentru realizarea scopului său nonprofit, pentru dezvoltarea proiectelor și pentru sprijinirea beneficiarilor.
                 </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Conducerea Asociației & Contact Oficial */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-white via-slate-50/70 to-starsim-ivory/20 border-t border-starsim-border/50">
+        <Container>
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-starsim-gold/10 px-3.5 py-1 text-xs font-bold text-starsim-gold border border-starsim-gold/25">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Guvernanță & Reprezentanți Legali
+            </span>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-starsim-navy md:text-4xl">
+              Conducerea Asociației Star Sim
+            </h2>
+            <p className="mt-3 text-base text-starsim-muted leading-relaxed">
+              Echipa dedicată misiunii de a transforma curiozitatea în pasiune pentru știință și educație practică.
+            </p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-12 items-stretch">
+            {/* Leadership Cards (7 cols) */}
+            <div className="lg:col-span-7 grid gap-6 sm:grid-cols-2">
+              {/* Președinte */}
+              <div className="navy-gradient rounded-3xl p-7 text-white shadow-premium border border-white/10 flex flex-col justify-between relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 w-36 h-36 bg-starsim-gold/15 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none" />
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-starsim-gold/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-starsim-softGold border border-starsim-gold/30">
+                      {org.presidentRole || "Președinte"}
+                    </span>
+                    <span className="text-xs font-semibold text-white/50">Reprezentant legal</span>
+                  </div>
+
+                  <div className="mt-6 flex items-center gap-4">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-starsim-gold to-amber-600 text-starsim-navy font-serif font-black text-xl shadow-md">
+                      {org.presidentName ? org.presidentName.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("") : "GȘ"}
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-xl font-bold text-white">
+                        {org.presidentName || "Gîrdeanu Ștefan"}
+                      </h3>
+                      <p className="text-xs font-semibold text-starsim-softGold mt-0.5">
+                        {org.presidentRole || "Președinte"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="mt-5 text-xs text-slate-300 leading-relaxed">
+                    Coordonează direcțiile strategice, inițiativele educaționale și parteneriatele instituționale ale Asociației Star Sim.
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-starsim-softGold font-semibold">
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                  <span>Conducerea Asociației Star Sim</span>
+                </div>
+              </div>
+
+              {/* Vicepreședinte */}
+              <div className="navy-gradient rounded-3xl p-7 text-white shadow-premium border border-white/10 flex flex-col justify-between relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 w-36 h-36 bg-starsim-gold/15 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none" />
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-starsim-gold/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-starsim-softGold border border-starsim-gold/30">
+                      {org.vicePresidentRole || "Vicepreședinte"}
+                    </span>
+                    <span className="text-xs font-semibold text-white/50">Reprezentant legal</span>
+                  </div>
+
+                  <div className="mt-6 flex items-center gap-4">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-starsim-gold to-amber-600 text-starsim-navy font-serif font-black text-xl shadow-md">
+                      {org.vicePresidentName ? org.vicePresidentName.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("") : "CS"}
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-xl font-bold text-white">
+                        {org.vicePresidentName || "Claudiu Simion"}
+                      </h3>
+                      <p className="text-xs font-semibold text-starsim-softGold mt-0.5">
+                        {org.vicePresidentRole || "Vicepreședinte"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="mt-5 text-xs text-slate-300 leading-relaxed">
+                    Asigură coordonarea operațională a atelierelor STEM, logistica activităților de observare a cerului și relația cu beneficiarii.
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-starsim-softGold font-semibold">
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                  <span>Conducerea Asociației Star Sim</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Oficial & Date Asociație Card (5 cols) */}
+            <div className="lg:col-span-5 flex">
+              <div className="premium-card p-7 md:p-8 bg-white border border-starsim-border/70 rounded-3xl shadow-soft flex flex-col justify-between w-full">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-xl bg-starsim-gold/15 flex items-center justify-center text-starsim-gold">
+                      <Building2 className="h-4 w-4" />
+                    </div>
+                    <h3 className="font-serif text-xl font-bold text-starsim-navy">
+                      Contact oficial
+                    </h3>
+                  </div>
+                  <p className="mt-1 text-xs text-starsim-muted">
+                    Date oficiale de identificare și comunicare Asociația Star Sim.
+                  </p>
+
+                  <div className="mt-6 space-y-3.5 text-sm text-slate-700">
+                    {/* Email */}
+                    <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-100">
+                      <Mail className="h-5 w-5 text-starsim-gold shrink-0 mt-0.5" />
+                      <div className="min-w-0 flex-1">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                          Email oficial
+                        </span>
+                        <a
+                          href={`mailto:${org.officialEmail || "contact@starsim.ro"}`}
+                          className="font-semibold text-starsim-navy hover:text-starsim-blue transition break-all"
+                        >
+                          {org.officialEmail || "contact@starsim.ro"}
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Telefoane (2 numere) */}
+                    <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-100">
+                      <Phone className="h-5 w-5 text-starsim-gold shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                          Telefon oficial
+                        </span>
+                        {org.phone1 ? (
+                          <div>
+                            <a
+                              href={`tel:${org.phone1.replace(/\s+/g, "")}`}
+                              className="font-semibold text-starsim-navy hover:text-starsim-blue transition"
+                            >
+                              {org.phone1}
+                            </a>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-400 italic">[număr oficial, dacă dorești]</span>
+                        )}
+                        {org.phone2 ? (
+                          <div>
+                            <a
+                              href={`tel:${org.phone2.replace(/\s+/g, "")}`}
+                              className="font-semibold text-starsim-navy hover:text-starsim-blue transition text-xs text-slate-600"
+                            >
+                              {org.phone2} <span className="text-slate-400">(secundar)</span>
+                            </a>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    {/* Sediu & CUI */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-100">
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                          <MapPin className="h-3.5 w-3.5 text-starsim-gold shrink-0" />
+                          Sediu
+                        </div>
+                        <p className="mt-1 font-bold text-starsim-navy text-sm">
+                          {org.headquarters || "Constanța"}
+                        </p>
+                      </div>
+
+                      <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-100">
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                          <Building2 className="h-3.5 w-3.5 text-starsim-gold shrink-0" />
+                          CUI
+                        </div>
+                        <p className="mt-1 font-bold text-starsim-navy text-sm">
+                          {org.cui || "[CUI]"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <Link
+                    href="/contact"
+                    className="focus-ring inline-flex items-center gap-1.5 text-xs font-bold text-starsim-navy hover:text-starsim-blue transition"
+                  >
+                    Formular contact <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <Link
+                    href="/doneaza"
+                    className="focus-ring inline-flex items-center gap-1.5 rounded-xl bg-starsim-gold px-3.5 py-1.5 text-xs font-bold text-white hover:bg-starsim-softGold transition shadow-xs"
+                  >
+                    Susține asociația <HeartHandshake className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
