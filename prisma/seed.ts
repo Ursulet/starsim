@@ -196,13 +196,18 @@ async function main() {
 
     await prisma.donationSettings.upsert({
       where: { id: "default" },
-      update: {},
+      update: {
+        bankAccount: "RO05 RNCB 0296 1871 7895 0001",
+        bankName: "Banca Comercială Română (BCR)",
+        beneficiaryName: "Asociația Star Sim",
+        fiscalCode: "55521510"
+      },
       create: {
         id: "default",
         title: "Susține educația prin astronomie",
         description: "Donațiile ajută la finanțarea atelierelor, materialelor și evenimentelor pentru copii.",
-        bankAccount: "RO00 BANK 0000 0000 0000 0000",
-        bankName: "Banca Exemplu",
+        bankAccount: "RO05 RNCB 0296 1871 7895 0001",
+        bankName: "Banca Comercială Română (BCR)",
         beneficiaryName: "Asociația Star Sim",
         fiscalCode: "55521510",
         recommendedAmounts: [

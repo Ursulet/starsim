@@ -27,7 +27,8 @@ function run(command, args, options = {}) {
 
 function localBin(name) {
   const executable = process.platform === "win32" ? `${name}.cmd` : name;
-  return path.join(process.cwd(), "node_modules", ".bin", executable);
+  const binPath = path.join(process.cwd(), "node_modules", ".bin", executable);
+  return process.platform === "win32" ? `"${binPath}"` : binPath;
 }
 
 async function runWithRetry(label, command, args) {

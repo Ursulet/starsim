@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Shield, FileText, Calendar, Building2, CheckCircle2, ArrowRight } from "lucide-react";
+import { FileText, Calendar, Building2, Landmark, ArrowRight } from "lucide-react";
 import { PageHero } from "@/components/public/PageHero";
 import { Container } from "@/components/ui/Container";
 import { RichTextRenderer } from "@/components/ui/RichTextRenderer";
 import { getPublishedPageBySlug } from "@/lib/queries/pages";
 import { CookieConsentManager } from "@/components/public/CookieConsentManager";
 import { CookieInventoryTable } from "@/components/public/CookieInventoryTable";
+import { IbanCopyButton } from "@/components/public/IbanCopyButton";
 
 const legalNav = [
   { slug: "politica-de-confidentialitate", label: "Confidențialitate", href: "/politica-de-confidentialitate" },
@@ -60,20 +61,16 @@ export async function LegalPage({ slug }: { slug: string }) {
           <div className="mx-auto max-w-[860px]">
             <article className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 shadow-sm">
               {/* Header Articol Legal */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-100 text-xs text-slate-500">
+              <div className="flex items-center justify-between gap-3 pb-6 border-b border-slate-100 text-xs text-slate-500">
                 <div className="flex items-center gap-2 font-medium">
                   <Calendar className="h-4 w-4 text-starsim-gold" />
-                  <span>Ultima actualizare: <strong>Septembrie 2026</strong></span>
-                </div>
-                <div className="flex items-center gap-1.5 font-semibold text-starsim-navy bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200/60">
-                  <Shield className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>Versiune oficială starsim.ro</span>
+                  <span>Ultima actualizare: <strong className="text-slate-700">Septembrie 2026</strong></span>
                 </div>
               </div>
 
               {/* Caseta specială de date juridice pentru pagina de Transparență */}
               {isTransparency ? (
-                <div className="my-8 rounded-2xl border border-slate-200 bg-slate-50/60 p-6 shadow-xs">
+                <div className="my-8 rounded-2xl border border-slate-200 bg-slate-50/70 p-6 shadow-xs">
                   <div className="flex items-center gap-2 pb-3 border-b border-slate-200 text-starsim-navy">
                     <Building2 className="h-5 w-5 text-starsim-gold" />
                     <h2 className="font-serif text-lg font-bold">Identificare juridică și fiscală</h2>
@@ -96,7 +93,7 @@ export async function LegalPage({ slug }: { slug: string }) {
                       <p className="font-bold text-starsim-navy mt-0.5">Gîrdeanu Ștefan - Victor (Președinte)</p>
                     </div>
                     <div>
-                      <span className="text-[11px] uppercase font-bold text-slate-400 block tracking-wider">Contact protecție date / oficial</span>
+                      <span className="text-[11px] uppercase font-bold text-slate-400 block tracking-wider">E-mail oficial</span>
                       <p className="font-semibold text-slate-800 mt-0.5">contact@starsim.ro</p>
                     </div>
                     <div>
@@ -105,17 +102,48 @@ export async function LegalPage({ slug }: { slug: string }) {
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <p className="text-xs text-slate-500">
-                      Pentru siguranță, conturile bancare oficiale sunt afișate exclusiv pe pagina dedicată de donații.
-                    </p>
-                    <Link
-                      href="/doneaza#cont-bancar"
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-starsim-navy px-4 py-2 text-xs font-bold text-white hover:bg-starsim-blue transition shrink-0"
-                    >
-                      <span>Vezi conturile bancare</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
+                  {/* Cont bancar oficial direct pe pagina de transparență */}
+                  <div className="mt-6 pt-5 border-t border-slate-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Landmark className="h-4 w-4 text-starsim-gold" />
+                      <span className="text-xs uppercase font-bold text-starsim-navy tracking-wider">
+                        Cont bancar oficial pentru donații și sponsorizări
+                      </span>
+                    </div>
+                    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                          <span className="text-xs text-slate-500 font-medium block">Cod IBAN (RON):</span>
+                          <span className="font-mono text-sm sm:text-base font-bold text-starsim-navy tracking-wider select-all">
+                            RO05 RNCB 0296 1871 7895 0001
+                          </span>
+                        </div>
+                        <IbanCopyButton iban="RO05 RNCB 0296 1871 7895 0001" />
+                      </div>
+                      <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
+                        <div>
+                          <span className="text-slate-400">Banca:</span>{" "}
+                          <strong className="text-starsim-navy font-semibold">Banca Comercială Română (BCR)</strong>
+                        </div>
+                        <div>
+                          <span className="text-slate-400">Beneficiar:</span>{" "}
+                          <strong className="text-starsim-navy font-semibold">Asociația Star Sim</strong>
+                        </div>
+                        <div>
+                          <span className="text-slate-400">Monedă:</span>{" "}
+                          <strong className="text-starsim-navy font-semibold">RON (Lei)</strong>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-4 flex items-center justify-end">
+                      <Link
+                        href="/doneaza"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-starsim-navy hover:text-starsim-gold transition-colors"
+                      >
+                        <span>Pagina de susținere și donații</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ) : null}

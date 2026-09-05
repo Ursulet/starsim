@@ -14,10 +14,10 @@ export default async function DonatePage() {
 
   const orgDetails = settings?.organizationDetails || {};
   const beneficiaryName = orgDetails.beneficiaryName || settings?.beneficiaryName || "Asociația Star Sim";
-  const fiscalCode = orgDetails.fiscalCode || settings?.fiscalCode || "—";
-  const bankAccount = orgDetails.bankAccount || settings?.bankAccount || "RO00 BANK 0000 0000 0000 0000";
+  const fiscalCode = orgDetails.fiscalCode || settings?.fiscalCode || "55521510";
+  const bankAccount = orgDetails.bankAccount || settings?.bankAccount || "RO05 RNCB 0296 1871 7895 0001";
   const secondaryIban = orgDetails.secondaryIban || null;
-  const bankName = orgDetails.bankName || settings?.bankName || "Banca Transilvania";
+  const bankName = orgDetails.bankName || settings?.bankName || "Banca Comercială Română (BCR)";
   const headquarters = orgDetails.headquarters || "Constanța";
   const regNumber = orgDetails.regNumber || null;
   const paymentReference =

@@ -148,7 +148,7 @@ export function DonationSettingsForm({ settings, mediaOptions = [] }: DonationSe
               label="Cont IBAN Principal (RON)"
               name="bankAccount"
               value={settings?.organizationDetails?.bankAccount || settings?.bankAccount}
-              placeholder="RO00 BANK 0000 0000 0000 0000"
+              placeholder="RO05 RNCB 0296 1871 7895 0001"
             />
           </div>
 
