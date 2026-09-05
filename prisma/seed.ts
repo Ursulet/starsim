@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/server/auth/password";
-import { legalBodyToTiptap, legalPageDefaults } from "../src/lib/legal-pages";
+import { legalDefinitionToTiptap, legalPageDefaults } from "../src/lib/legal-pages";
 import { defaultHomepageSettings } from "../src/lib/homepage-settings";
 import { applyRomanianDiacritics, applyRomanianDiacriticsDeep } from "../src/lib/romanian-diacritics";
 
@@ -203,8 +203,8 @@ async function main() {
         description: "Donațiile ajută la finanțarea atelierelor, materialelor și evenimentelor pentru copii.",
         bankAccount: "RO00 BANK 0000 0000 0000 0000",
         bankName: "Banca Exemplu",
-        beneficiaryName: "Asociatia Star Sim",
-        fiscalCode: "00000000",
+        beneficiaryName: "Asociația Star Sim",
+        fiscalCode: "55521510",
         recommendedAmounts: [
           { amount: 50, label: "Materiale pentru atelier", impact: "Ajută la pregătirea materialelor educaționale." },
           { amount: 150, label: "O grupă de copii", impact: "Susține participarea unei grupe la o activitate Star Sim." },
@@ -219,9 +219,9 @@ async function main() {
       create: {
         id: "default",
         email: "contact@starsim.ro",
-        phone: "+40 723 123 456",
-        address: "București, România",
-        city: "București",
+        phone: "+40 730 991 523",
+        address: "Str. Viceamiral Ioan Murgescu 56, Constanța, România",
+        city: "Constanța",
         schedule: "Luni - Vineri, 10:00 - 18:00",
         introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate.",
         footerDescription: "Asociație dedicată promovării astronomiei, educației științifice și inspirării copiilor să viseze mai departe.",
@@ -232,17 +232,24 @@ async function main() {
     for (const page of legalPageDefaults) {
       await prisma.page.upsert({
         where: { key: page.key },
-        update: {},
+        update: {
+          title: page.title,
+          slug: page.slug,
+          excerpt: page.excerpt,
+          content: legalDefinitionToTiptap(page),
+          metaTitle: `${page.title} | Asociația Star Sim`,
+          metaDescription: page.excerpt
+        },
         create: {
           key: page.key,
           title: page.title,
           slug: page.slug,
           excerpt: page.excerpt,
-          content: legalBodyToTiptap(page.body),
+          content: legalDefinitionToTiptap(page),
           template: "legal",
           status: "PUBLISHED",
           publishedAt: new Date(),
-          metaTitle: page.title,
+          metaTitle: `${page.title} | Asociația Star Sim`,
           metaDescription: page.excerpt
         }
       });

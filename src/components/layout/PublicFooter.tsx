@@ -40,11 +40,11 @@ export async function PublicFooter() {
             </p>
             <p className="flex gap-3">
               <Phone className="h-4 w-4 shrink-0 text-starsim-gold" />
-              {contact?.phone || "+40 723 123 456"}
+              {!contact?.phone || contact.phone === "+40 723 123 456" ? "+40 730 991 523" : contact.phone}
             </p>
             <p className="flex gap-3">
               <MapPin className="h-4 w-4 shrink-0 text-starsim-gold" />
-              {contact?.address || "București, România"}
+              {!contact?.address || contact.address === "București, România" ? "Str. Viceamiral Ioan Murgescu 56, Constanța, România" : contact.address}
             </p>
             {contact?.schedule ? (
               <p className="flex gap-3">
@@ -110,12 +110,16 @@ export async function PublicFooter() {
       </Container>
 
       <div className="border-t border-white/10">
-        <Container className="flex flex-col gap-3 py-4 text-xs text-white/65 md:flex-row md:items-center md:justify-between">
-          <p>&copy; {year} Star Sim - {footerCopyright}</p>
-          <div className="flex flex-wrap gap-5">
-            <Link href="/politica-de-confidentialitate">Politica de confidențialitate</Link>
-            <Link href="/cookies">Cookies</Link>
-            <Link href="/termeni-si-conditii">Termeni și condiții</Link>
+        <Container className="flex flex-col gap-3 py-5 text-xs text-white/65 lg:flex-row lg:items-center lg:justify-between">
+          <p className="shrink-0">&copy; {year} Star Sim - {footerCopyright}</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link href="/politica-de-confidentialitate" className="hover:text-starsim-gold transition-colors">Confidențialitate</Link>
+            <Link href="/cookies" className="hover:text-starsim-gold transition-colors">Cookies</Link>
+            <Link href="/termeni-si-conditii" className="hover:text-starsim-gold transition-colors">Termeni și condiții</Link>
+            <Link href="/politica-donatii-sponsorizari" className="hover:text-starsim-gold transition-colors">Donații și sponsorizări</Link>
+            <Link href="/foto-video" className="hover:text-starsim-gold transition-colors">Foto-video și drept la imagine</Link>
+            <Link href="/protectia-copiilor" className="hover:text-starsim-gold transition-colors">Protecția copiilor</Link>
+            <Link href="/transparenta" className="hover:text-starsim-gold transition-colors">Transparență</Link>
           </div>
         </Container>
       </div>

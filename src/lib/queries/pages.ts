@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { legalBodyToTiptap, legalPageDefaults } from "@/lib/legal-pages";
+import { getLegalFallback as getFallbackFromLegalPages } from "@/lib/legal-pages";
 
 export type PublicPageContent = {
   title: string;
@@ -13,19 +13,7 @@ export type PublicPageContent = {
 };
 
 export function getLegalFallback(slug: string): PublicPageContent | null {
-  const fallback = legalPageDefaults.find((page) => page.slug === slug || page.key === slug);
-  if (!fallback) return null;
-
-  return {
-    title: fallback.title,
-    slug: fallback.slug,
-    excerpt: fallback.excerpt,
-    content: legalBodyToTiptap(fallback.body),
-    metaTitle: fallback.title,
-    metaDescription: fallback.excerpt,
-    robotsIndex: true,
-    robotsFollow: true
-  };
+  return getFallbackFromLegalPages(slug);
 }
 
 export async function getPublishedPageBySlug(slug: string): Promise<PublicPageContent | null> {

@@ -18,7 +18,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/parteneriate",
     "/politica-de-confidentialitate",
     "/cookies",
-    "/termeni-si-conditii"
+    "/termeni-si-conditii",
+    "/politica-donatii-sponsorizari",
+    "/foto-video",
+    "/protectia-copiilor",
+    "/transparenta"
   ].map((path) => ({
     url: absoluteUrl(path),
     lastModified: new Date(),

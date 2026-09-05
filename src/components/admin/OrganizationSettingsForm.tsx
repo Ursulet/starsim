@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import Image from "next/image";
+import { useActionState, useState, ChangeEvent } from "react";
 import {
   AlertCircle,
   Building2,
-  Check,
   ExternalLink,
   Loader2,
   Mail,
@@ -13,7 +13,8 @@ import {
   Phone,
   Save,
   ShieldCheck,
-  UserCheck,
+  Upload,
+  User,
   Users
 } from "lucide-react";
 import {
@@ -35,16 +36,43 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
   // Live preview state
   const [presidentName, setPresidentName] = useState(settings.presidentName || "Gîrdeanu Ștefan");
   const [presidentRole, setPresidentRole] = useState(settings.presidentRole || "Președinte");
+  const [presidentBio, setPresidentBio] = useState(
+    settings.presidentBio || "Coordonează direcțiile strategice, inițiativele educaționale și parteneriatele instituționale ale asociației."
+  );
+  const [presidentImageUrl, setPresidentImageUrl] = useState(settings.presidentImageUrl || "");
+
   const [vicePresidentName, setVicePresidentName] = useState(settings.vicePresidentName || "Claudiu Simion");
   const [vicePresidentRole, setVicePresidentRole] = useState(settings.vicePresidentRole || "Vicepreședinte");
+  const [vicePresidentBio, setVicePresidentBio] = useState(
+    settings.vicePresidentBio || "Asigură organizarea atelierelor practice STEM, logistica evenimentelor de observare și legătura cu comunitatea."
+  );
+  const [vicePresidentImageUrl, setVicePresidentImageUrl] = useState(settings.vicePresidentImageUrl || "");
+
   const [officialEmail, setOfficialEmail] = useState(settings.officialEmail || "contact@starsim.ro");
   const [phone1, setPhone1] = useState(settings.phone1 || "");
   const [phone2, setPhone2] = useState(settings.phone2 || "");
   const [headquarters, setHeadquarters] = useState(settings.headquarters || "Constanța");
   const [cui, setCui] = useState(settings.cui || "");
 
+  // Local file preview handlers
+  const handlePresidentFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setPresidentImageUrl(objectUrl);
+    }
+  };
+
+  const handleVicePresidentFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setVicePresidentImageUrl(objectUrl);
+    }
+  };
+
   return (
-    <form action={formAction} className="max-w-[1100px] space-y-8">
+    <form action={formAction} encType="multipart/form-data" className="max-w-[1100px] space-y-8">
       {state?.error ? (
         <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
@@ -61,19 +89,25 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
           <div>
             <h2 className="text-base font-bold text-starsim-navy">Conducerea Asociației Star Sim</h2>
             <p className="text-xs text-slate-500">
-              Persoanele oficiale din conducere afișate pe pagina „Despre noi”.
+              Reprezentanții din conducere afișați pe pagina „Despre noi”.
             </p>
           </div>
         </div>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {/* Președinte */}
-          <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-5 space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-starsim-gold/20 text-xs font-bold text-starsim-gold">
-                1
+          {/* Președinte (Reprezentant legal unic) */}
+          <div className="rounded-2xl border-2 border-starsim-gold/40 bg-gradient-to-br from-white to-amber-50/20 p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-starsim-gold text-xs font-bold text-white">
+                  1
+                </span>
+                <h3 className="text-sm font-bold text-starsim-navy">Președinte</h3>
+              </div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 border border-emerald-200">
+                <ShieldCheck className="h-3 w-3" />
+                Reprezentant legal unic
               </span>
-              <h3 className="text-sm font-bold text-starsim-navy">Președinte</h3>
             </div>
 
             <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
@@ -88,7 +122,7 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
             </label>
 
             <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
-              Funcție / Rol oficial
+              Funcție
               <input
                 name="presidentRole"
                 value={presidentRole}
@@ -97,15 +131,73 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
                 className="focus-ring rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-normal text-slate-800"
               />
             </label>
+
+            {/* Poză Președinte */}
+            <div className="space-y-2 rounded-xl bg-white p-3.5 border border-slate-200/80">
+              <span className="text-xs font-semibold text-starsim-navy block">
+                Poză de profil
+              </span>
+              <div className="flex items-center gap-3">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-400">
+                  {presidentImageUrl ? (
+                    <Image
+                      src={presidentImageUrl}
+                      alt={presidentName || "Președinte"}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  ) : (
+                    <User className="h-6 w-6" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  <label className="focus-ring inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+                    <Upload className="h-3.5 w-3.5 text-starsim-gold" />
+                    <span>Încarcă poză</span>
+                    <input
+                      type="file"
+                      name="presidentImageFile"
+                      accept="image/*"
+                      onChange={handlePresidentFileChange}
+                      className="sr-only"
+                    />
+                  </label>
+                  <input
+                    type="hidden"
+                    name="presidentImageUrl"
+                    value={presidentImageUrl.startsWith("blob:") ? settings.presidentImageUrl || "" : presidentImageUrl}
+                  />
+                  <p className="text-[11px] text-slate-400">Recomandat: format pătrat sau portret (JPG, PNG, WEBP)</p>
+                </div>
+              </div>
+            </div>
+
+            <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
+              Descriere / Rol în asociație
+              <textarea
+                name="presidentBio"
+                rows={2}
+                value={presidentBio}
+                onChange={(e) => setPresidentBio(e.target.value)}
+                placeholder="Coordonează direcțiile strategice, inițiativele educaționale..."
+                className="focus-ring rounded-xl border border-slate-200 bg-white px-3.5 py-2 font-normal text-slate-800 leading-relaxed text-xs"
+              />
+            </label>
           </div>
 
           {/* Vicepreședinte */}
-          <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-5 space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-starsim-gold/20 text-xs font-bold text-starsim-gold">
-                2
+          <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-starsim-navy text-xs font-bold text-white">
+                  2
+                </span>
+                <h3 className="text-sm font-bold text-starsim-navy">Vicepreședinte</h3>
+              </div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600 border border-slate-200">
+                Conducere executivă
               </span>
-              <h3 className="text-sm font-bold text-starsim-navy">Vicepreședinte</h3>
             </div>
 
             <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
@@ -120,7 +212,7 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
             </label>
 
             <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
-              Funcție / Rol oficial
+              Funcție
               <input
                 name="vicePresidentRole"
                 value={vicePresidentRole}
@@ -129,20 +221,73 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
                 className="focus-ring rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-normal text-slate-800"
               />
             </label>
+
+            {/* Poză Vicepreședinte */}
+            <div className="space-y-2 rounded-xl bg-white p-3.5 border border-slate-200/80">
+              <span className="text-xs font-semibold text-starsim-navy block">
+                Poză de profil
+              </span>
+              <div className="flex items-center gap-3">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-400">
+                  {vicePresidentImageUrl ? (
+                    <Image
+                      src={vicePresidentImageUrl}
+                      alt={vicePresidentName || "Vicepreședinte"}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  ) : (
+                    <User className="h-6 w-6" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  <label className="focus-ring inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+                    <Upload className="h-3.5 w-3.5 text-starsim-gold" />
+                    <span>Încarcă poză</span>
+                    <input
+                      type="file"
+                      name="vicePresidentImageFile"
+                      accept="image/*"
+                      onChange={handleVicePresidentFileChange}
+                      className="sr-only"
+                    />
+                  </label>
+                  <input
+                    type="hidden"
+                    name="vicePresidentImageUrl"
+                    value={vicePresidentImageUrl.startsWith("blob:") ? settings.vicePresidentImageUrl || "" : vicePresidentImageUrl}
+                  />
+                  <p className="text-[11px] text-slate-400">Recomandat: format pătrat sau portret (JPG, PNG, WEBP)</p>
+                </div>
+              </div>
+            </div>
+
+            <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
+              Descriere / Rol în asociație
+              <textarea
+                name="vicePresidentBio"
+                rows={2}
+                value={vicePresidentBio}
+                onChange={(e) => setVicePresidentBio(e.target.value)}
+                placeholder="Asigură organizarea atelierelor practice STEM..."
+                className="focus-ring rounded-xl border border-slate-200 bg-white px-3.5 py-2 font-normal text-slate-800 leading-relaxed text-xs"
+              />
+            </label>
           </div>
         </div>
       </div>
 
-      {/* 2. Contact Oficial & Date de Identificare */}
+      {/* 2. Contact & Date de Identificare */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-starsim-navy/5 text-starsim-navy">
             <Building2 className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-starsim-navy">Contact Oficial și Date de Identificare</h2>
+            <h2 className="text-base font-bold text-starsim-navy">Contact & Date de Identificare</h2>
             <p className="text-xs text-slate-500">
-              Datele oficiale ale asociației afișate alături de cardul conducerii.
+              Afișate pe cardul de contact de pe pagina „Despre noi”.
             </p>
           </div>
         </div>
@@ -161,7 +306,7 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
           </label>
 
           <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
-            Telefon oficial 1 (Principal)
+            Telefon 1 (Principal)
             <input
               name="phone1"
               value={phone1}
@@ -172,7 +317,7 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
           </label>
 
           <label className="grid gap-1.5 text-xs font-semibold text-starsim-navy">
-            Telefon oficial 2 (Secundar)
+            Telefon 2 (Secundar)
             <input
               name="phone2"
               value={phone2}
@@ -235,81 +380,149 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
               Previzualizare Live pe pagina „Despre noi”
             </span>
           </div>
-          <span className="text-xs text-slate-400">Actualizare instantanee la tastare</span>
+          <span className="text-xs text-slate-400">Design nou • 3 carduri</span>
         </div>
 
-        <div className="mt-5 rounded-3xl border border-starsim-border/60 bg-gradient-to-br from-slate-900 via-starsim-navy to-slate-950 p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
-          {/* Subtle star glow */}
-          <div className="absolute -top-16 -right-16 w-52 h-52 bg-starsim-gold/15 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-starsim-gold/15 px-3 py-1 text-xs font-bold text-starsim-softGold border border-starsim-gold/30">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Reprezentanți Oficiali
-            </div>
-
-            <h3 className="mt-3 font-serif text-2xl font-bold text-white md:text-3xl">
+        {/* Live Preview Container */}
+        <div className="mt-5 rounded-3xl bg-slate-50 p-6 md:p-8 border border-slate-200">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <h3 className="font-serif text-2xl font-bold text-starsim-navy md:text-3xl">
               Conducerea Asociației Star Sim
             </h3>
-            <p className="mt-1 text-sm text-slate-300">
-              Organizație nonprofit dedicată promovării astronomiei și educației practice.
+            <p className="mt-2 text-xs text-starsim-muted">
+              Echipa dedicată promovării astronomiei, educației practice și inspirării tinerelor generații.
             </p>
+          </div>
 
-            {/* Leadership Cards Grid */}
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {/* President */}
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md transition-all hover:bg-white/10">
-                <div className="flex items-center gap-3.5">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-starsim-gold/20 text-starsim-softGold font-serif font-black text-lg border border-starsim-gold/30">
-                    {presidentName ? presidentName.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("") : "GȘ"}
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+            {/* Card 1: Președinte */}
+            <div className="navy-gradient rounded-2xl p-6 text-white shadow-md border border-white/10 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-starsim-gold/20 px-2.5 py-0.5 text-[11px] font-bold text-starsim-softGold border border-starsim-gold/30">
+                    <ShieldCheck className="h-3 w-3" />
+                    Reprezentant legal
+                  </span>
+                </div>
+
+                <div className="mt-5 flex items-center gap-3.5">
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border-2 border-starsim-gold/40 bg-white/10 shadow-sm">
+                    {presidentImageUrl ? (
+                      <Image
+                        src={presidentImageUrl}
+                        alt={presidentName || "Președinte"}
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-starsim-gold to-amber-600 font-serif text-lg font-bold text-starsim-navy">
+                        {presidentName ? presidentName.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("") : "GȘ"}
+                      </div>
+                    )}
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-white">{presidentName || "Gîrdeanu Ștefan"}</h4>
-                    <p className="text-xs font-semibold text-starsim-softGold">{presidentRole || "Președinte"}</p>
+                    <h4 className="font-serif text-base font-bold text-white leading-tight">
+                      {presidentName || "Gîrdeanu Ștefan"}
+                    </h4>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-starsim-softGold mt-0.5">
+                      {presidentRole || "Președinte"}
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              {/* Vice President */}
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md transition-all hover:bg-white/10">
-                <div className="flex items-center gap-3.5">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-starsim-gold/20 text-starsim-softGold font-serif font-black text-lg border border-starsim-gold/30">
-                    {vicePresidentName ? vicePresidentName.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("") : "CS"}
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-white">{vicePresidentName || "Claudiu Simion"}</h4>
-                    <p className="text-xs font-semibold text-starsim-softGold">{vicePresidentRole || "Vicepreședinte"}</p>
-                  </div>
-                </div>
+                <p className="mt-4 text-xs text-slate-300 leading-relaxed">
+                  {presidentBio || "Coordonează direcțiile strategice, inițiativele educaționale..."}
+                </p>
               </div>
             </div>
 
-            {/* Official Contact Pill Row */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-starsim-softGold mb-3">
-                Contact Oficial & Date Identificare
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
-                <div className="flex items-center gap-2 text-slate-200">
-                  <Mail className="h-4 w-4 text-starsim-gold shrink-0" />
-                  <span className="truncate">{officialEmail || "contact@starsim.ro"}</span>
+            {/* Card 2: Vicepreședinte */}
+            <div className="navy-gradient rounded-2xl p-6 text-white shadow-md border border-white/10 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-semibold text-slate-300 border border-white/10">
+                    Conducere executivă
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-slate-200">
-                  <Phone className="h-4 w-4 text-starsim-gold shrink-0" />
-                  <span>{phone1 || "[Telefon 1]"}</span>
-                  {phone2 ? <span className="text-slate-400">/ {phone2}</span> : null}
+                <div className="mt-5 flex items-center gap-3.5">
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border-2 border-starsim-gold/40 bg-white/10 shadow-sm">
+                    {vicePresidentImageUrl ? (
+                      <Image
+                        src={vicePresidentImageUrl}
+                        alt={vicePresidentName || "Vicepreședinte"}
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-starsim-gold to-amber-600 font-serif text-lg font-bold text-starsim-navy">
+                        {vicePresidentName ? vicePresidentName.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("") : "CS"}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-serif text-base font-bold text-white leading-tight">
+                      {vicePresidentName || "Claudiu Simion"}
+                    </h4>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-starsim-softGold mt-0.5">
+                      {vicePresidentRole || "Vicepreședinte"}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-slate-200">
-                  <MapPin className="h-4 w-4 text-starsim-gold shrink-0" />
-                  <span>Sediu: {headquarters || "Constanța"}</span>
+                <p className="mt-4 text-xs text-slate-300 leading-relaxed">
+                  {vicePresidentBio || "Asigură organizarea atelierelor practice STEM..."}
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Contact */}
+            <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-xl bg-starsim-gold/15 flex items-center justify-center text-starsim-gold">
+                    <Building2 className="h-4 w-4" />
+                  </div>
+                  <h4 className="font-serif text-lg font-bold text-starsim-navy">
+                    Contact
+                  </h4>
                 </div>
 
-                <div className="flex items-center gap-2 text-slate-200">
-                  <Building2 className="h-4 w-4 text-starsim-gold shrink-0" />
-                  <span>CUI: {cui || "[CUI Asociație]"}</span>
+                <div className="mt-4 space-y-2.5 text-xs text-slate-700">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2">
+                    <Mail className="h-4 w-4 text-starsim-gold shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <span className="text-[9px] font-bold uppercase text-slate-400 block">Email</span>
+                      <span className="font-semibold text-starsim-navy truncate block">{officialEmail || "contact@starsim.ro"}</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2">
+                    <Phone className="h-4 w-4 text-starsim-gold shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <span className="text-[9px] font-bold uppercase text-slate-400 block">Telefon</span>
+                      <span className="font-semibold text-starsim-navy block">{phone1 || "[Telefon 1]"} {phone2 ? `/ ${phone2}` : ""}</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
+                      <span className="text-[9px] font-bold uppercase text-slate-400 block">Sediu</span>
+                      <span className="font-bold text-starsim-navy text-xs block">{headquarters || "Constanța"}</span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
+                      <span className="text-[9px] font-bold uppercase text-slate-400 block">CUI</span>
+                      <span className="font-bold text-starsim-navy text-xs block">{cui || "—"}</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="font-semibold text-starsim-navy">Formular contact →</span>
+                <span className="font-bold text-starsim-gold">Susține asociația</span>
               </div>
             </div>
           </div>
@@ -331,7 +544,7 @@ export function OrganizationSettingsForm({ settings }: OrganizationSettingsFormP
           ) : (
             <>
               <Save className="h-4 w-4" />
-              <span>Salvează Conducerea & Contactul Oficial</span>
+              <span>Salvează Conducerea & Contactul</span>
             </>
           )}
         </button>

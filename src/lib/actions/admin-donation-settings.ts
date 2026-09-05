@@ -111,7 +111,7 @@ export async function updateDonationSettingsAction(
     const address = text(formData, "address") || "Constanța, România";
     const regNumber = text(formData, "regNumber") || null;
     const secondaryIban = text(formData, "secondaryIban") || null;
-    const paymentReference = text(formData, "paymentReference") || "Donație / Sprijin activități Star Sim";
+    const paymentReference = text(formData, "paymentReference") || "Donație – Asociația Star Sim";
     const contactEmail = text(formData, "contactEmail") || "contact@starsim.ro";
     const contactPhone = text(formData, "contactPhone") || null;
 

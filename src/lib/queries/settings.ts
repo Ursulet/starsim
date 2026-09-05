@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 export async function getContactSettings() {
   const fallback = {
     email: "contact@starsim.ro",
-    phone: "+40 723 123 456",
-    address: "București, România",
-    city: "București",
+    phone: "+40 730 991 523",
+    address: "Str. Viceamiral Ioan Murgescu 56, Constanța, România",
+    city: "Constanța",
     introText: "Scrie-ne pentru programe, evenimente, voluntariat sau parteneriate.",
     schedule: "Luni - Vineri, 10:00 - 18:00",
     footerDescription: "Asociație dedicată promovării astronomiei, educației științifice și inspirării copiilor să viseze mai departe.",
@@ -84,16 +84,16 @@ export async function getDonationSettings() {
     ],
     organizationDetails: {
       beneficiaryName: "Asociația Star Sim",
-      fiscalCode: "",
+      fiscalCode: "55521510",
       headquarters: "Constanța",
-      address: "Constanța, România",
+      address: "Str. Viceamiral Ioan Murgescu 56, Constanța, România",
       regNumber: "",
       bankAccount: "RO00 BANK 0000 0000 0000 0000",
       bankName: "Banca Transilvania",
       secondaryIban: "",
-      paymentReference: "Donație / Sprijin activități Star Sim",
+      paymentReference: "Donație – Asociația Star Sim",
       email: "contact@starsim.ro",
-      phone: ""
+      phone: "+40 730 991 523"
     }
   };
 
@@ -137,8 +137,12 @@ export async function getDonationSettings() {
 export type OrganizationSettings = {
   presidentName: string;
   presidentRole: string;
+  presidentImageUrl?: string | null;
+  presidentBio?: string | null;
   vicePresidentName: string;
   vicePresidentRole: string;
+  vicePresidentImageUrl?: string | null;
+  vicePresidentBio?: string | null;
   officialEmail: string;
   phone1: string;
   phone2: string;
@@ -149,16 +153,20 @@ export type OrganizationSettings = {
 };
 
 export const defaultOrganizationSettings: OrganizationSettings = {
-  presidentName: "Gîrdeanu Ștefan",
+  presidentName: "Gîrdeanu Ștefan - Victor",
   presidentRole: "Președinte",
+  presidentImageUrl: null,
+  presidentBio: "Coordonează direcțiile strategice, inițiativele educaționale și parteneriatele instituționale ale asociației.",
   vicePresidentName: "Claudiu Simion",
   vicePresidentRole: "Vicepreședinte",
+  vicePresidentImageUrl: null,
+  vicePresidentBio: "Asigură organizarea atelierelor practice STEM, logistica evenimentelor de observare și legătura cu comunitatea.",
   officialEmail: "contact@starsim.ro",
-  phone1: "",
+  phone1: "+40 730 991 523",
   phone2: "",
   headquarters: "Constanța",
-  cui: "",
-  address: "Constanța, România",
+  cui: "55521510",
+  address: "Str. Viceamiral Ioan Murgescu 56, Constanța, România",
   regNumber: ""
 };
 
@@ -172,8 +180,12 @@ export async function getOrganizationSettings(): Promise<OrganizationSettings> {
       return {
         presidentName: String(val.presidentName ?? defaultOrganizationSettings.presidentName).trim(),
         presidentRole: String(val.presidentRole ?? defaultOrganizationSettings.presidentRole).trim(),
+        presidentImageUrl: val.presidentImageUrl ? String(val.presidentImageUrl).trim() : null,
+        presidentBio: val.presidentBio !== undefined ? String(val.presidentBio).trim() : defaultOrganizationSettings.presidentBio,
         vicePresidentName: String(val.vicePresidentName ?? defaultOrganizationSettings.vicePresidentName).trim(),
         vicePresidentRole: String(val.vicePresidentRole ?? defaultOrganizationSettings.vicePresidentRole).trim(),
+        vicePresidentImageUrl: val.vicePresidentImageUrl ? String(val.vicePresidentImageUrl).trim() : null,
+        vicePresidentBio: val.vicePresidentBio !== undefined ? String(val.vicePresidentBio).trim() : defaultOrganizationSettings.vicePresidentBio,
         officialEmail: String(val.officialEmail ?? defaultOrganizationSettings.officialEmail).trim(),
         phone1: String(val.phone1 ?? defaultOrganizationSettings.phone1).trim(),
         phone2: String(val.phone2 ?? defaultOrganizationSettings.phone2).trim(),

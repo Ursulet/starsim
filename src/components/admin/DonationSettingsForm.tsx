@@ -93,16 +93,16 @@ export function DonationSettingsForm({ settings, mediaOptions = [] }: DonationSe
             <div className="inline-flex items-center gap-1.5 rounded-full bg-starsim-gold/15 px-3 py-1 text-xs font-bold text-starsim-gold">
               Secțiune Separată
             </div>
-            <h2 className="mt-2 text-lg font-bold text-starsim-navy">Datele Oficiale ale Asociației (Transfer Bancar & Fiscale)</h2>
+            <h2 className="mt-2 text-lg font-bold text-starsim-navy">Datele Asociației (Transfer Bancar & Fiscale)</h2>
             <p className="mt-0.5 text-xs text-slate-500">
-              Aceste informații legale și bancare sunt afișate în caseta oficială de transfer bancar și transparență.
+              Aceste informații legale și bancare sunt afișate în caseta de transfer bancar.
             </p>
           </div>
         </div>
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <Input
-            label="Nume Beneficiar Oficial"
+            label="Nume Beneficiar"
             name="beneficiaryName"
             value={settings?.organizationDetails?.beneficiaryName || settings?.beneficiaryName}
             placeholder="Asociația Star Sim"
@@ -163,10 +163,10 @@ export function DonationSettingsForm({ settings, mediaOptions = [] }: DonationSe
 
           <div className="sm:col-span-2 lg:col-span-3">
             <Input
-              label="Mențiune recomandată la transfer"
+              label="Detalii plată recomandate"
               name="paymentReference"
-              value={settings?.organizationDetails?.paymentReference || "Donație / Sprijin activități Star Sim"}
-              placeholder="Donație / Sprijin activități Star Sim"
+              value={settings?.organizationDetails?.paymentReference || "Donație – Asociația Star Sim"}
+              placeholder="Donație – Asociația Star Sim"
             />
           </div>
 
