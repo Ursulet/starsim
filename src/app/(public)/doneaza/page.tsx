@@ -1,11 +1,27 @@
 import Image from "next/image";
-import { HandHeart, ArrowRight, Sparkles, Building2 } from "lucide-react";
+import { HandHeart, ArrowRight, Sparkles, Building2, Telescope, Star } from "lucide-react";
 import { PageHero } from "@/components/public/PageHero";
 import { Container } from "@/components/ui/Container";
 import { PublicButton } from "@/components/ui/PublicButton";
 import { RichTextRenderer } from "@/components/ui/RichTextRenderer";
 import { IbanCopyButton, CopyTextButton } from "@/components/public/IbanCopyButton";
+import { DonorboxWidget } from "@/components/public/DonorboxWidget";
+import { DonorboxMeter } from "@/components/public/DonorboxMeter";
 import { getDonationSettings } from "@/lib/queries/settings";
+import { parseDonorboxEmbedCode, parseDonorboxMeterCode } from "@/lib/donorbox";
+
+// Echipamente incluse în campanie (hardcodat conform brief, editat prin campaignBody)
+const CAMPAIGN_EQUIPMENT = [
+  "telescop Newtonian GoTo",
+  "oculare și accesorii astronomice",
+  "echipamente pentru observații solare în condiții de siguranță",
+  "planisfere și hărți stelare",
+  "materiale STEM și fișe educaționale",
+  "echipamente de colimare, întreținere și protecție",
+  "transportul și logistica proiectului",
+  "instalarea și configurarea echipamentelor",
+  "activități și ateliere susținute de un instructor de astronomie",
+];
 
 export default async function DonatePage() {
   const settings: any = await getDonationSettings();
@@ -25,6 +41,20 @@ export default async function DonatePage() {
       ? "Donație – Asociația Star Sim"
       : orgDetails.paymentReference;
 
+  // Donorbox widget
+  const donorboxEnabled = settings?.donorboxEnabled === true;
+  const donorboxMeterEnabled = settings?.donorboxMeterEnabled === true;
+  const rawEmbedCode = settings?.donorboxEmbedCode || null;
+  const rawMeterCode = settings?.donorboxMeterCode || null;
+
+  const parsedWidget = donorboxEnabled && rawEmbedCode ? parseDonorboxEmbedCode(rawEmbedCode) : null;
+  const parsedMeter = donorboxEnabled && donorboxMeterEnabled && rawMeterCode ? parseDonorboxMeterCode(rawMeterCode) : null;
+
+  // Campaign content
+  const campaignTitle = settings?.campaignTitle || "Adu Universul într-o școală rurală din România";
+  const campaignBody = settings?.campaignBody || null;
+  const campaignGoal = settings?.campaignGoal || "10.000 lei";
+
   return (
     <>
       <PageHero
@@ -35,92 +65,191 @@ export default async function DonatePage() {
 
       <section className="section-padding">
         <Container>
-          {/* Donation Cards Grid */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {cards.map((item: any, index: number) => {
-              const amountDisplay = item.amount ? `${item.amount} ${item.currency || "lei"}` : null;
-              const title = item.title || item.label || `Cauză #${index + 1}`;
-              const buttonText = item.buttonText || (amountDisplay ? `Donează ${amountDisplay}` : "Donează prin transfer");
-              const buttonUrl = item.buttonUrl || "#cont-bancar";
 
-              return (
-                <article
-                  key={item.id || item.amount || index}
-                  className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-starsim-gold/50 hover:shadow-xl"
-                >
-                  {/* Card Image Banner */}
-                  {item.imageUrl ? (
-                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.imageAlt || title}
-                        fill
-                        unoptimized
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-60" />
-                      
-                      {item.badge ? (
-                        <span className="absolute top-3.5 right-3.5 z-10 inline-flex items-center gap-1 rounded-full border border-starsim-gold/40 bg-starsim-navy/85 px-3 py-1 text-xs font-bold text-starsim-gold shadow-md backdrop-blur-md">
-                          <Sparkles className="h-3 w-3" />
-                          {item.badge}
-                        </span>
-                      ) : null}
-                    </div>
-                  ) : (
-                    item.badge ? (
-                      <div className="px-6 pt-6">
-                        <span className="inline-flex items-center gap-1 rounded-full border border-starsim-gold/40 bg-starsim-navy/5 px-3 py-1 text-xs font-bold text-starsim-navy">
-                          <Sparkles className="h-3 w-3 text-starsim-gold" />
-                          {item.badge}
-                        </span>
-                      </div>
-                    ) : null
-                  )}
+          {/* ── Secțiunea Donorbox (campanie + widget) ─────────────────────── */}
+          {donorboxEnabled && parsedWidget ? (
+            <>
+              <div className="mb-16">
+                {/* Titlu campanie */}
+                <h2 className="font-serif text-3xl font-bold text-starsim-navy md:text-4xl">
+                  {campaignTitle}
+                </h2>
 
-                  {/* Card Content */}
-                  <div className={`flex flex-1 flex-col p-6 ${!item.imageUrl && !item.badge ? "pt-8" : ""}`}>
-                    {/* Amount Header */}
-                    {item.amount ? (
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="font-serif text-3xl font-black tracking-tight text-starsim-navy sm:text-4xl">
-                          {item.amount}
-                        </span>
-                        <span className="text-sm font-bold uppercase tracking-wider text-starsim-muted">
-                          {item.currency || "lei"}
-                        </span>
+                {/* Intro campanie */}
+                {campaignBody ? (
+                  <div className="mt-5 max-w-3xl space-y-4 text-base leading-relaxed text-slate-700">
+                    {campaignBody.split(/\n{2,}/).map((para: string, i: number) => (
+                      <p key={i}>{para.trim()}</p>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-5 max-w-3xl space-y-4 text-base leading-relaxed text-slate-700">
+                    <p>
+                      <strong>Pentru mulți copii, astronomia începe și se termină cu o imagine din manual. Noi vrem să schimbăm asta.</strong>
+                    </p>
+                    <p>
+                      În multe comunități rurale din România, accesul la echipamente științifice moderne, activități STEM și experiențe educaționale practice este mult mai limitat decât în marile centre urbane.
+                    </p>
+                    <p>
+                      <strong>Asociația Star Sim își propune să creeze un laborator complet de astronomie și STEM într-o școală rurală</strong>, în care elevii să poată observa Luna, planetele, stelele și Soarele și să participe la experimente practice și activități științifice.
+                    </p>
+                  </div>
+                )}
+
+                {/* Obiectiv + Echipamente */}
+                {campaignGoal ? (
+                  <div className="mt-8">
+                    <h3 className="font-serif text-xl font-bold text-starsim-navy">
+                      Obiectivul campaniei: {campaignGoal}
+                    </h3>
+                    <p className="mt-1 text-sm text-starsim-muted">Fondurile vor susține:</p>
+                    <ul className="mt-3 space-y-1.5">
+                      {CAMPAIGN_EQUIPMENT.map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
+                          <Star className="mt-0.5 h-3.5 w-3.5 shrink-0 text-starsim-gold" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
+                {/* Citat evidențiat — stil existent (border-left cu starsim-gold) */}
+                <blockquote className="mt-8 border-l-4 border-starsim-gold pl-5">
+                  <p className="text-base font-semibold italic leading-relaxed text-starsim-navy">
+                    „Nu dorim doar să lăsăm un telescop într-o școală. Dorim să ne asigurăm că elevii și profesorii învață să îl folosească și că laboratorul devine o resursă educațională utilizată pe termen lung."
+                  </p>
+                </blockquote>
+
+                {/* CTA */}
+                <div className="mt-10">
+                  <h3 className="font-serif text-2xl font-bold text-starsim-navy">
+                    Susține proiectul
+                  </h3>
+                  <p className="mt-2 text-sm text-starsim-muted">
+                    <strong>Orice contribuție ne apropie de primul laborator Star Sim într-o școală rurală.</strong>
+                  </p>
+                </div>
+
+                {/* Donation Meter */}
+                {parsedMeter ? (
+                  <div className="mt-6">
+                    <DonorboxMeter meter={parsedMeter} />
+                  </div>
+                ) : null}
+
+                {/* Widget Donorbox */}
+                <div className="mt-6 flex justify-center">
+                  <div className="w-full max-w-2xl">
+                    <DonorboxWidget widget={parsedWidget} />
+                  </div>
+                </div>
+
+                {/* Tagline */}
+                <p className="mt-8 text-center text-sm font-semibold italic text-starsim-muted">
+                  De la o stea la un vis.
+                </p>
+              </div>
+
+              {/* Separator discret înaintea pachetelor bancare */}
+              <div className="mb-12 flex items-center gap-4">
+                <div className="h-px flex-1 bg-slate-200" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-starsim-muted">
+                  Preferi transferul bancar?
+                </h3>
+                <div className="h-px flex-1 bg-slate-200" />
+              </div>
+            </>
+          ) : null}
+
+          {/* ── Carduri donație prin transfer bancar ──────────────────────── */}
+          {cards.length > 0 ? (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {cards.map((item: any, index: number) => {
+                const amountDisplay = item.amount ? `${item.amount} ${item.currency || "lei"}` : null;
+                const title = item.title || item.label || `Cauză #${index + 1}`;
+                const buttonText = item.buttonText || (amountDisplay ? `Donează ${amountDisplay}` : "Donează prin transfer");
+                const buttonUrl = item.buttonUrl || "#cont-bancar";
+
+                return (
+                  <article
+                    key={item.id || item.amount || index}
+                    className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-starsim-gold/50 hover:shadow-xl"
+                  >
+                    {/* Card Image Banner */}
+                    {item.imageUrl ? (
+                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.imageAlt || title}
+                          fill
+                          unoptimized
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-60" />
+                        
+                        {item.badge ? (
+                          <span className="absolute top-3.5 right-3.5 z-10 inline-flex items-center gap-1 rounded-full border border-starsim-gold/40 bg-starsim-navy/85 px-3 py-1 text-xs font-bold text-starsim-gold shadow-md backdrop-blur-md">
+                            <Sparkles className="h-3 w-3" />
+                            {item.badge}
+                          </span>
+                        ) : null}
                       </div>
                     ) : (
-                      <div className="text-xs font-bold uppercase tracking-wider text-starsim-gold">
-                        Donație liberă
-                      </div>
+                      item.badge ? (
+                        <div className="px-6 pt-6">
+                          <span className="inline-flex items-center gap-1 rounded-full border border-starsim-gold/40 bg-starsim-navy/5 px-3 py-1 text-xs font-bold text-starsim-navy">
+                            <Sparkles className="h-3 w-3 text-starsim-gold" />
+                            {item.badge}
+                          </span>
+                        </div>
+                      ) : null
                     )}
 
-                    {/* Card Title */}
-                    <h2 className="mt-3 font-serif text-xl font-bold text-starsim-navy leading-snug transition-colors group-hover:text-starsim-blue">
-                      {title}
-                    </h2>
+                    {/* Card Content */}
+                    <div className={`flex flex-1 flex-col p-6 ${!item.imageUrl && !item.badge ? "pt-8" : ""}`}>
+                      {/* Amount Header */}
+                      {item.amount ? (
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="font-serif text-3xl font-black tracking-tight text-starsim-navy sm:text-4xl">
+                            {item.amount}
+                          </span>
+                          <span className="text-sm font-bold uppercase tracking-wider text-starsim-muted">
+                            {item.currency || "lei"}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="text-xs font-bold uppercase tracking-wider text-starsim-gold">
+                          Donație liberă
+                        </div>
+                      )}
 
-                    {/* WYSIWYG Description */}
-                    <div className="mt-3 flex-1 text-sm text-slate-600">
-                      <RichTextRenderer content={item.content || item.impact} />
+                      {/* Card Title */}
+                      <h2 className="mt-3 font-serif text-xl font-bold text-starsim-navy leading-snug transition-colors group-hover:text-starsim-blue">
+                        {title}
+                      </h2>
+
+                      {/* WYSIWYG Description */}
+                      <div className="mt-3 flex-1 text-sm text-slate-600">
+                        <RichTextRenderer content={item.content || item.impact} />
+                      </div>
+
+                      {/* Card Action Button */}
+                      <a
+                        href={buttonUrl}
+                        className="focus-ring mt-6 inline-flex items-center justify-center gap-2 rounded-2xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-starsim-blue hover:shadow-md"
+                      >
+                        <span>{buttonText}</span>
+                        <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                      </a>
                     </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : null}
 
-                    {/* Card Action Button */}
-                    <a
-                      href={buttonUrl}
-                      className="focus-ring mt-6 inline-flex items-center justify-center gap-2 rounded-2xl bg-starsim-navy px-5 py-3 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-starsim-blue hover:shadow-md"
-                    >
-                      <span>{buttonText}</span>
-                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                    </a>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
-          {/* Bank Transfer */}
+          {/* ── Casetă transfer bancar ────────────────────────────────────── */}
           <div
             id="cont-bancar"
             className="mt-16 scroll-mt-28 overflow-hidden rounded-3xl border border-slate-200/90 bg-white p-6 md:p-10 shadow-sm"
@@ -245,7 +374,7 @@ export default async function DonatePage() {
             </div>
           </div>
 
-          {/* Secțiune separată de sponsorizare pentru companii */}
+          {/* ── Secțiune sponsorizare companii ──────────────────────────── */}
           <div className="mt-12 rounded-3xl border border-slate-200/90 bg-starsim-navy p-8 text-center text-white shadow-md sm:p-10">
             <Building2 className="mx-auto h-10 w-10 text-starsim-gold" />
             <h3 className="mt-3 font-serif text-2xl font-bold sm:text-3xl">

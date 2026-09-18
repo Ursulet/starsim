@@ -355,6 +355,18 @@ model DonationSettings {
   robotsFollow       Boolean  @default(true)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  // Donorbox widget integration
+  donorboxEnabled      Boolean @default(false)
+  donorboxTitle        String? // Titlu intern / identificare (ex: "Telescop STEM 2026")
+  donorboxEmbedCode    String? // Embed code complet copiat din Donorbox
+  donorboxMeterEnabled Boolean @default(false)
+  donorboxMeterCode    String? // Donation Meter embed code copiat din Donorbox
+
+  // Conținut editorial al campaniei (afișat pe /doneaza deasupra widgetului)
+  campaignTitle        String? // ex: "Adu Universul într-o școală rurală din România"
+  campaignBody         String? // Descriere campanie (text cu newline-uri)
+  campaignGoal         String? // ex: "10.000 lei"
 }
 
 model ContactSettings {

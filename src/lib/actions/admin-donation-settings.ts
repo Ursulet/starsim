@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/server/auth/session";
 import { createMediaAssetFromUpload, saveUploadedFile, uploadedFileFromForm } from "@/lib/uploads";
+import { parseDonorboxEmbedCode, parseDonorboxMeterCode } from "@/lib/donorbox";
 
 export type DonationActionState = { error: string } | null;
 
@@ -129,6 +130,44 @@ export async function updateDonationSettingsAction(
       phone: contactPhone
     };
 
+    // ── Donorbox widget fields ──────────────────────────────────────────────
+    const donorboxEnabled = formData.get("donorboxEnabled") === "true";
+    const donorboxTitle = text(formData, "donorboxTitle") || null;
+    const donorboxMeterEnabled = formData.get("donorboxMeterEnabled") === "true";
+
+    const rawEmbedCode = text(formData, "donorboxEmbedCode");
+    const rawMeterCode = text(formData, "donorboxMeterCode");
+
+    // Validare embed code (dacă e completat)
+    if (rawEmbedCode) {
+      const parsed = parseDonorboxEmbedCode(rawEmbedCode);
+      if (!parsed) {
+        return {
+          error:
+            "Donorbox Embed Code invalid. Acceptăm numai codul oficial Donorbox cu <dbox-widget> și scriptul de la https://donorbox.org/widgets.js. Verifică că nu conține alte scripturi, event handlers sau HTML arbitrar."
+        };
+      }
+    }
+
+    // Validare meter code (dacă e completat)
+    if (rawMeterCode) {
+      const parsedMeter = parseDonorboxMeterCode(rawMeterCode);
+      if (!parsedMeter) {
+        return {
+          error:
+            "Donation Meter Embed Code invalid. Acceptăm numai codul oficial Donorbox cu <iframe> de la https://donorbox.org/embed/..."
+        };
+      }
+    }
+
+    const donorboxEmbedCode = rawEmbedCode || null;
+    const donorboxMeterCode = rawMeterCode || null;
+
+    // ── Campaign editorial fields ───────────────────────────────────────────
+    const campaignTitle = text(formData, "campaignTitle") || null;
+    const campaignBody = text(formData, "campaignBody") || null;
+    const campaignGoal = text(formData, "campaignGoal") || null;
+
     const updatePayload = {
       title: text(formData, "title") || "Susține educația prin astronomie",
       description: text(formData, "description") || null,
@@ -139,7 +178,17 @@ export async function updateDonationSettingsAction(
       recommendedAmounts: cards,
       content: { cards, organizationDetails },
       metaTitle: text(formData, "metaTitle") || null,
-      metaDescription: text(formData, "metaDescription") || null
+      metaDescription: text(formData, "metaDescription") || null,
+      // Donorbox
+      donorboxEnabled,
+      donorboxTitle,
+      donorboxEmbedCode,
+      donorboxMeterEnabled,
+      donorboxMeterCode,
+      // Campaign
+      campaignTitle,
+      campaignBody,
+      campaignGoal,
     };
 
     await prisma.donationSettings.upsert({

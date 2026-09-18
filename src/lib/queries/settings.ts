@@ -94,7 +94,17 @@ export async function getDonationSettings() {
       paymentReference: "Donație – Asociația Star Sim",
       email: "contact@starsim.ro",
       phone: "+40 730 991 523"
-    }
+    },
+    // Donorbox widget (disabled by default)
+    donorboxEnabled: false,
+    donorboxTitle: null as string | null,
+    donorboxEmbedCode: null as string | null,
+    donorboxMeterEnabled: false,
+    donorboxMeterCode: null as string | null,
+    // Conținut editorial campanie
+    campaignTitle: null as string | null,
+    campaignBody: null as string | null,
+    campaignGoal: null as string | null,
   };
 
   try {
@@ -122,10 +132,22 @@ export async function getDonationSettings() {
           ? fallback.recommendedAmounts
           : settings.recommendedAmounts;
 
+      // Cast to any: Prisma generated types may lag behind schema until migration is applied
+      const s = settings as any;
       return {
         ...settings,
         organizationDetails,
-        recommendedAmounts
+        recommendedAmounts,
+        // Donorbox fields
+        donorboxEnabled: s.donorboxEnabled ?? false,
+        donorboxTitle: s.donorboxTitle ?? null,
+        donorboxEmbedCode: s.donorboxEmbedCode ?? null,
+        donorboxMeterEnabled: s.donorboxMeterEnabled ?? false,
+        donorboxMeterCode: s.donorboxMeterCode ?? null,
+        // Campaign editorial fields
+        campaignTitle: s.campaignTitle ?? null,
+        campaignBody: s.campaignBody ?? null,
+        campaignGoal: s.campaignGoal ?? null,
       };
     }
     return fallback;
@@ -133,6 +155,7 @@ export async function getDonationSettings() {
     return fallback;
   }
 }
+
 
 export type OrganizationSettings = {
   presidentName: string;
