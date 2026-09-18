@@ -23,6 +23,38 @@ const CAMPAIGN_EQUIPMENT = [
   "activități și ateliere susținute de un instructor de astronomie",
 ];
 
+// Funcție helper pentru a curăța textul narativ din stânga
+// elimină dublurile care sunt deja prezentate vizual în cardul din dreapta și în citat
+function getCleanNarrativeParagraphs(body: string | null): string[] | null {
+  if (!body) return null;
+  const rawParagraphs = body.split(/\r?\n+/).map(p => p.trim()).filter(Boolean);
+
+  const filtered = rawParagraphs.filter(para => {
+    const lower = para.toLowerCase();
+    if (lower.includes("obiectivul campaniei") || lower.includes("obiectivul proiectului")) return false;
+    if (lower.includes("fondurile vor susține") || lower.includes("fondurile vor sustine") || lower.includes("fondurile colectate")) return false;
+    if (
+      lower.startsWith("telescop") ||
+      lower.startsWith("oculare") ||
+      lower.startsWith("echipamente") ||
+      lower.startsWith("planisfere") ||
+      lower.startsWith("materiale stem") ||
+      lower.startsWith("transportul") ||
+      lower.startsWith("instalarea") ||
+      lower.startsWith("activități și ateliere") ||
+      lower.startsWith("activitati si ateliere")
+    ) {
+      return false;
+    }
+    if (lower.includes("nu dorim doar să lăsăm") || lower.includes("nu dorim doar sa lasam")) {
+      return false;
+    }
+    return true;
+  });
+
+  return filtered.length > 0 ? filtered : null;
+}
+
 export default async function DonatePage() {
   const settings: any = await getDonationSettings();
   const rawCards = Array.isArray(settings?.recommendedAmounts) ? settings.recommendedAmounts : [];
@@ -53,6 +85,7 @@ export default async function DonatePage() {
   // Campaign content
   const campaignTitle = settings?.campaignTitle || "Adu Universul într-o școală rurală din România";
   const campaignBody = settings?.campaignBody || null;
+  const cleanParagraphs = getCleanNarrativeParagraphs(campaignBody);
   const campaignGoal = settings?.campaignGoal || "10.000 lei";
 
   return (
@@ -83,22 +116,18 @@ export default async function DonatePage() {
               {/* Grid 2 Coloane pe Desktop: Stânga Text/Poveste, Dreapta Obiective */}
               <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-start xl:gap-12">
                 
-                {/* 1. STÂNGA: Textul / Povestea + Citatul inspirațional */}
+                {/* 1. STÂNGA: Doar Textul narativ / Povestea + Citatul inspirațional */}
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4 text-base sm:text-lg leading-relaxed text-slate-700">
-                    {campaignBody ? (
-                      campaignBody.split(/\r?\n+/).map((para: string, i: number) => {
-                        const trimmed = para.trim();
-                        if (!trimmed) return null;
-                        return (
-                          <p key={i} className={i === 0 ? "text-lg font-medium text-starsim-navy leading-relaxed" : ""}>
-                            {trimmed}
-                          </p>
-                        );
-                      })
+                    {cleanParagraphs ? (
+                      cleanParagraphs.map((para: string, i: number) => (
+                        <p key={i} className={i === 0 ? "text-lg font-semibold text-starsim-navy leading-relaxed" : ""}>
+                          {para}
+                        </p>
+                      ))
                     ) : (
                       <>
-                        <p className="text-lg font-medium text-starsim-navy leading-relaxed">
+                        <p className="text-lg font-semibold text-starsim-navy leading-relaxed">
                           Pentru mulți copii, astronomia începe și se termină cu o imagine din manual. Noi vrem să schimbăm asta.
                         </p>
                         <p>
@@ -124,25 +153,25 @@ export default async function DonatePage() {
                   </blockquote>
                 </div>
 
-                {/* 2. DREAPTA: Card Obiective & Echipamente (Catchy & Premium) */}
+                {/* 2. DREAPTA: Card Obiective & Echipamente (Contrast ridicat & Catchy) */}
                 <div className="lg:col-span-5">
-                  <div className="relative overflow-hidden rounded-3xl border border-starsim-gold/30 bg-gradient-to-br from-starsim-navy via-[#0d2342] to-slate-950 p-6 sm:p-8 text-white shadow-xl">
+                  <div className="relative overflow-hidden rounded-3xl border border-starsim-gold/40 bg-gradient-to-br from-starsim-navy via-[#0d2342] to-slate-950 p-6 sm:p-8 text-white shadow-xl">
                     {/* Glow decorativ subtil */}
                     <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-starsim-gold/15 blur-3xl" />
                     <div className="absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-starsim-blue/20 blur-3xl" />
 
                     <div className="relative z-10">
                       {/* Top Header Card */}
-                      <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-4">
+                      <div className="flex items-center justify-between gap-2 border-b border-white/15 pb-4">
                         <div className="flex items-center gap-2">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-starsim-gold/20 text-starsim-gold">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-starsim-gold/25 text-starsim-gold">
                             <Target className="h-4 w-4" />
                           </div>
                           <span className="text-xs font-bold uppercase tracking-wider text-starsim-gold">
                             Obiectivul campaniei
                           </span>
                         </div>
-                        <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-semibold text-slate-300">
+                        <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-semibold text-slate-200">
                           1 Școală Rurală
                         </span>
                       </div>
@@ -159,26 +188,26 @@ export default async function DonatePage() {
                         </div>
                       ) : null}
 
-                      {/* Donation Meter dacă este activ */}
+                      {/* Donation Meter dacă este activ - container cu fundal alb pentru contrast maxim */}
                       {parsedMeter ? (
-                        <div className="mt-4 rounded-xl bg-white/5 p-3 backdrop-blur-sm border border-white/10">
+                        <div className="mt-4 rounded-2xl bg-white p-3.5 shadow-lg border border-slate-100">
                           <DonorboxMeter meter={parsedMeter} />
                         </div>
                       ) : null}
 
                       {/* Lista cu ce susțin fondurile */}
-                      <div className="mt-5 pt-4 border-t border-white/10">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-1.5">
+                      <div className="mt-6 pt-5 border-t border-white/15">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-starsim-gold mb-3.5 flex items-center gap-1.5">
                           <Star className="h-3.5 w-3.5 text-starsim-gold fill-starsim-gold" />
                           Fondurile vor susține:
                         </h4>
-                        <ul className="space-y-2 text-xs sm:text-sm">
+                        <ul className="space-y-2.5 text-xs sm:text-sm">
                           {CAMPAIGN_EQUIPMENT.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2 text-slate-200">
-                              <div className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-starsim-gold/20 text-starsim-gold">
-                                <Check className="h-2 w-2 stroke-[3]" />
+                            <li key={i} className="flex items-start gap-2.5 text-slate-100 font-medium">
+                              <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-starsim-gold/25 text-starsim-gold">
+                                <Check className="h-2.5 w-2.5 stroke-[3]" />
                               </div>
-                              <span className="leading-tight">{item}</span>
+                              <span className="leading-tight capitalize-first">{item}</span>
                             </li>
                           ))}
                         </ul>
@@ -196,6 +225,7 @@ export default async function DonatePage() {
                   </div>
                 </div>
               </div>
+
 
               {/* 3. DEDESUBT: Formularul / Widgetul de Donație Donorbox */}
               <div id="formular-donatie" className="mt-16 pt-12 border-t border-slate-200/80 scroll-mt-24">
