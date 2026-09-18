@@ -141,7 +141,8 @@ export function parseDonorboxMeterCode(raw: string): ParsedDonorboxMeter | null 
   const input = raw.trim();
 
   // Verifică că nu există alte scripturi în afara celui Donorbox
-  const scriptTagRe = /<script([^>]*)>(?:.*?)<\/script>/gi;
+  // Regex acceptă orice conținut între <script>...</script> (unele Donorbox-uri au conținut gol sau spații)
+  const scriptTagRe = /<script((?:[^>"']|"[^"]*"|'[^']*')*)>[\s\S]*?<\/script>/gi;
   for (const sm of [...input.matchAll(scriptTagRe)]) {
     const scriptAttrs = parseAttributes(sm[1]);
     if (!scriptAttrs) return null;
@@ -151,8 +152,8 @@ export function parseDonorboxMeterCode(raw: string): ParsedDonorboxMeter | null 
     if (src && !src.startsWith(DONORBOX_ORIGIN + "/")) return null;
   }
 
-  // Extrage <iframe>
-  const iframeRe = /<iframe((?:\s[^>]*)?)(?:\/>|><\/iframe>)/i;
+  // Extrage <iframe> — acceptă orice conținut text între tag-uri (Donorbox generează uneori `> </iframe>`)
+  const iframeRe = /<iframe((?:\s[^>]*)?)>\s*<\/iframe>/i;
   const iframeMatch = iframeRe.exec(input);
   if (!iframeMatch) return null;
 
