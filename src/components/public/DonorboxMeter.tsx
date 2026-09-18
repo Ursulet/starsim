@@ -17,7 +17,6 @@ export function DonorboxMeter({ meter }: DonorboxMeterProps) {
   // Extragem atributele cunoscute pentru a le pasa la iframe fără spread arbitrar
   const height = iframeProps["height"] || "93px";
   const width = iframeProps["width"] || "100%";
-  const style = iframeProps["style"] || "max-width: 500px; min-width: 250px; min-height: 90px; max-height: none !important;";
   const name = iframeProps["name"] || "donorbox";
 
   return (

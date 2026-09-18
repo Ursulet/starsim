@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { HandHeart, ArrowRight, Sparkles, Building2, Telescope, Star } from "lucide-react";
+import { HandHeart, ArrowRight, Sparkles, Building2, Star } from "lucide-react";
 import { PageHero } from "@/components/public/PageHero";
 import { Container } from "@/components/ui/Container";
 import { PublicButton } from "@/components/ui/PublicButton";
@@ -116,8 +116,10 @@ export default async function DonatePage() {
 
                 {/* Citat evidențiat — stil existent (border-left cu starsim-gold) */}
                 <blockquote className="mt-8 border-l-4 border-starsim-gold pl-5">
+                  {/* eslint-disable-next-line react/no-unescaped-entities */}
                   <p className="text-base font-semibold italic leading-relaxed text-starsim-navy">
-                    „Nu dorim doar să lăsăm un telescop într-o școală. Dorim să ne asigurăm că elevii și profesorii învață să îl folosească și că laboratorul devine o resursă educațională utilizată pe termen lung."
+                    {/* Citatul folosește ghilimele tipografice românești */}
+                    &#8222;Nu dorim doar să lăsăm un telescop într-o școală. Dorim să ne asigurăm că elevii și profesorii învață să îl folosească și că laboratorul devine o resursă educațională utilizată pe termen lung.&#8221;
                   </p>
                 </blockquote>
 
