@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { HandHeart, ArrowRight, Sparkles, Building2, Star } from "lucide-react";
+import { HandHeart, ArrowRight, Sparkles, Building2, Star, Target, ShieldCheck, Heart, Quote, Check } from "lucide-react";
 import { PageHero } from "@/components/public/PageHero";
 import { Container } from "@/components/ui/Container";
 import { PublicButton } from "@/components/ui/PublicButton";
@@ -66,102 +66,181 @@ export default async function DonatePage() {
       <section className="section-padding">
         <Container>
 
-          {/* ── Secțiunea Donorbox (campanie + widget) ─────────────────────── */}
+          {/* ── Secțiunea Campanie & Donorbox ──────────────────────────────── */}
           {donorboxEnabled && parsedWidget ? (
-            <>
-              <div className="mb-16">
-                {/* Titlu campanie */}
-                <h2 className="font-serif text-3xl font-bold text-starsim-navy md:text-4xl">
+            <div className="mb-20">
+              {/* Badge & Titlu Campanie */}
+              <div className="max-w-4xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-starsim-gold/40 bg-starsim-gold/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-starsim-navy mb-4">
+                  <Sparkles className="h-3.5 w-3.5 text-starsim-gold" />
+                  Campanie Specială
+                </div>
+                <h2 className="font-serif text-3xl font-extrabold tracking-tight text-starsim-navy sm:text-4xl lg:text-5xl leading-[1.15]">
                   {campaignTitle}
                 </h2>
+              </div>
 
-                {/* Intro campanie */}
-                {campaignBody ? (
-                  <div className="mt-5 max-w-3xl space-y-4 text-base leading-relaxed text-slate-700">
-                    {campaignBody.split(/\n{2,}/).map((para: string, i: number) => (
-                      <p key={i}>{para.trim()}</p>
-                    ))}
+              {/* Grid 2 Coloane pe Desktop: Stânga Text/Poveste, Dreapta Obiective */}
+              <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-start xl:gap-12">
+                
+                {/* 1. STÂNGA: Textul / Povestea + Citatul inspirațional */}
+                <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+                  <div className="space-y-4 text-base sm:text-lg leading-relaxed text-slate-700">
+                    {campaignBody ? (
+                      campaignBody.split(/\r?\n+/).map((para: string, i: number) => {
+                        const trimmed = para.trim();
+                        if (!trimmed) return null;
+                        return (
+                          <p key={i} className={i === 0 ? "text-lg font-medium text-starsim-navy leading-relaxed" : ""}>
+                            {trimmed}
+                          </p>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <p className="text-lg font-medium text-starsim-navy leading-relaxed">
+                          Pentru mulți copii, astronomia începe și se termină cu o imagine din manual. Noi vrem să schimbăm asta.
+                        </p>
+                        <p>
+                          În multe comunități rurale din România, accesul la echipamente științifice moderne, activități STEM și experiențe educaționale practice este mult mai limitat decât în marile centre urbane.
+                        </p>
+                        <p>
+                          <strong>Asociația Star Sim își propune să creeze un laborator complet de astronomie și STEM într-o școală rurală</strong>, în care elevii să poată observa Luna, planetele, stelele și Soarele și să participe la experimente practice și activități științifice.
+                        </p>
+                      </>
+                    )}
                   </div>
-                ) : (
-                  <div className="mt-5 max-w-3xl space-y-4 text-base leading-relaxed text-slate-700">
-                    <p>
-                      <strong>Pentru mulți copii, astronomia începe și se termină cu o imagine din manual. Noi vrem să schimbăm asta.</strong>
+
+                  {/* Citat evidențiat elegant */}
+                  <blockquote className="relative rounded-2xl border-l-4 border-starsim-gold bg-gradient-to-r from-slate-50 to-white p-5 sm:p-6 shadow-xs">
+                    <Quote className="h-7 w-7 text-starsim-gold/40 mb-2" />
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <p className="font-serif text-base sm:text-lg italic font-medium leading-relaxed text-starsim-navy">
+                      &#8222;Nu dorim doar să lăsăm un telescop într-o școală. Dorim să ne asigurăm că elevii și profesorii învață să îl folosească și că laboratorul devine o resursă educațională utilizată pe termen lung.&#8221;
                     </p>
-                    <p>
-                      În multe comunități rurale din România, accesul la echipamente științifice moderne, activități STEM și experiențe educaționale practice este mult mai limitat decât în marile centre urbane.
-                    </p>
-                    <p>
-                      <strong>Asociația Star Sim își propune să creeze un laborator complet de astronomie și STEM într-o școală rurală</strong>, în care elevii să poată observa Luna, planetele, stelele și Soarele și să participe la experimente practice și activități științifice.
-                    </p>
+                    <footer className="mt-3 text-xs font-bold uppercase tracking-wider text-starsim-muted">
+                      — Echipa Asociația Star Sim
+                    </footer>
+                  </blockquote>
+                </div>
+
+                {/* 2. DREAPTA: Card Obiective & Echipamente (Catchy & Premium) */}
+                <div className="lg:col-span-5">
+                  <div className="relative overflow-hidden rounded-3xl border border-starsim-gold/30 bg-gradient-to-br from-starsim-navy via-[#0d2342] to-slate-950 p-6 sm:p-8 text-white shadow-xl">
+                    {/* Glow decorativ subtil */}
+                    <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-starsim-gold/15 blur-3xl" />
+                    <div className="absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-starsim-blue/20 blur-3xl" />
+
+                    <div className="relative z-10">
+                      {/* Top Header Card */}
+                      <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-starsim-gold/20 text-starsim-gold">
+                            <Target className="h-4 w-4" />
+                          </div>
+                          <span className="text-xs font-bold uppercase tracking-wider text-starsim-gold">
+                            Obiectivul campaniei
+                          </span>
+                        </div>
+                        <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-semibold text-slate-300">
+                          1 Școală Rurală
+                        </span>
+                      </div>
+
+                      {/* Valoare Obiectiv */}
+                      {campaignGoal ? (
+                        <div className="mt-4">
+                          <div className="font-serif text-3xl sm:text-4xl font-black tracking-tight text-starsim-gold">
+                            {campaignGoal}
+                          </div>
+                          <p className="mt-1 text-xs text-slate-300">
+                            Buget estimat pentru dotarea completă a laboratorului
+                          </p>
+                        </div>
+                      ) : null}
+
+                      {/* Donation Meter dacă este activ */}
+                      {parsedMeter ? (
+                        <div className="mt-4 rounded-xl bg-white/5 p-3 backdrop-blur-sm border border-white/10">
+                          <DonorboxMeter meter={parsedMeter} />
+                        </div>
+                      ) : null}
+
+                      {/* Lista cu ce susțin fondurile */}
+                      <div className="mt-5 pt-4 border-t border-white/10">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-1.5">
+                          <Star className="h-3.5 w-3.5 text-starsim-gold fill-starsim-gold" />
+                          Fondurile vor susține:
+                        </h4>
+                        <ul className="space-y-2 text-xs sm:text-sm">
+                          {CAMPAIGN_EQUIPMENT.map((item, i) => (
+                            <li key={i} className="flex items-start gap-2 text-slate-200">
+                              <div className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-starsim-gold/20 text-starsim-gold">
+                                <Check className="h-2 w-2 stroke-[3]" />
+                              </div>
+                              <span className="leading-tight">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Buton rapid de ancoră */}
+                      <a
+                        href="#formular-donatie"
+                        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-starsim-gold px-4 py-3 text-center text-sm font-bold text-starsim-navy shadow-md transition-all hover:bg-amber-400 hover:shadow-lg"
+                      >
+                        <Heart className="h-4 w-4 fill-starsim-navy" />
+                        <span>Donează pentru laborator</span>
+                      </a>
+                    </div>
                   </div>
-                )}
+                </div>
+              </div>
 
-                {/* Obiectiv + Echipamente */}
-                {campaignGoal ? (
-                  <div className="mt-8">
-                    <h3 className="font-serif text-xl font-bold text-starsim-navy">
-                      Obiectivul campaniei: {campaignGoal}
-                    </h3>
-                    <p className="mt-1 text-sm text-starsim-muted">Fondurile vor susține:</p>
-                    <ul className="mt-3 space-y-1.5">
-                      {CAMPAIGN_EQUIPMENT.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
-                          <Star className="mt-0.5 h-3.5 w-3.5 shrink-0 text-starsim-gold" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+              {/* 3. DEDESUBT: Formularul / Widgetul de Donație Donorbox */}
+              <div id="formular-donatie" className="mt-16 pt-12 border-t border-slate-200/80 scroll-mt-24">
+                <div className="mx-auto max-w-2xl text-center">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-starsim-navy/5 px-3 py-1 text-xs font-bold text-starsim-navy">
+                    <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500" />
+                    Susține Proiectul
                   </div>
-                ) : null}
-
-                {/* Citat evidențiat — stil existent (border-left cu starsim-gold) */}
-                <blockquote className="mt-8 border-l-4 border-starsim-gold pl-5">
-                  {/* eslint-disable-next-line react/no-unescaped-entities */}
-                  <p className="text-base font-semibold italic leading-relaxed text-starsim-navy">
-                    {/* Citatul folosește ghilimele tipografice românești */}
-                    &#8222;Nu dorim doar să lăsăm un telescop într-o școală. Dorim să ne asigurăm că elevii și profesorii învață să îl folosească și că laboratorul devine o resursă educațională utilizată pe termen lung.&#8221;
-                  </p>
-                </blockquote>
-
-                {/* CTA */}
-                <div className="mt-10">
-                  <h3 className="font-serif text-2xl font-bold text-starsim-navy">
-                    Susține proiectul
+                  <h3 className="mt-3 font-serif text-2xl sm:text-3xl font-bold text-starsim-navy">
+                    Fă o donație online
                   </h3>
-                  <p className="mt-2 text-sm text-starsim-muted">
-                    <strong>Orice contribuție ne apropie de primul laborator Star Sim într-o școală rurală.</strong>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Orice contribuție ne apropie de primul laborator Star Sim într-o școală rurală. Plata este securizată și directă prin Donorbox.
                   </p>
                 </div>
 
-                {/* Donation Meter */}
-                {parsedMeter ? (
-                  <div className="mt-6">
-                    <DonorboxMeter meter={parsedMeter} />
-                  </div>
-                ) : null}
-
-                {/* Widget Donorbox */}
-                <div className="mt-6 flex justify-center">
-                  <div className="w-full max-w-2xl">
+                {/* Container Widget */}
+                <div className="mt-8 flex justify-center">
+                  <div className="w-full max-w-2xl rounded-3xl border border-slate-200/90 bg-white p-4 sm:p-6 shadow-lg shadow-slate-100">
                     <DonorboxWidget widget={parsedWidget} />
                   </div>
                 </div>
 
-                {/* Tagline */}
-                <p className="mt-8 text-center text-sm font-semibold italic text-starsim-muted">
-                  De la o stea la un vis.
-                </p>
+                {/* Notă de securitate & Tagline */}
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
+                  <div className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                    <span>Tranzacție criptată & securizată SSL</span>
+                  </div>
+                  <div className="hidden sm:block h-1 w-1 rounded-full bg-slate-300" />
+                  <p className="italic font-medium text-starsim-navy">
+                    &#8222;De la o stea la un vis.&#8221;
+                  </p>
+                </div>
               </div>
 
               {/* Separator discret înaintea pachetelor bancare */}
-              <div className="mb-12 flex items-center gap-4">
+              <div className="mt-16 flex items-center gap-4">
                 <div className="h-px flex-1 bg-slate-200" />
-                <h3 className="text-sm font-bold uppercase tracking-wider text-starsim-muted">
+                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-starsim-muted">
                   Preferi transferul bancar?
                 </h3>
                 <div className="h-px flex-1 bg-slate-200" />
               </div>
-            </>
+            </div>
           ) : null}
 
           {/* ── Carduri donație prin transfer bancar ──────────────────────── */}
